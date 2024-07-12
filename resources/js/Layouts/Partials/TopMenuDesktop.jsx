@@ -22,7 +22,6 @@ const TopMenuDesktop = ({auth}) => {
     const currentUrl = props.ziggy.location;
     const activeUrl = currentUrl.split(baseUrl)[1];
 
-    console.log(menus);
     return (
         <div className="bg-primary">
             <div className="container mx-auto lg:w-[1500px] h-[55px] flex items-center gap-2">
@@ -34,6 +33,7 @@ const TopMenuDesktop = ({auth}) => {
                         href={menu.href}
                         label={menu.label}
                         icon={menu.icon}
+                        roles={menu.roles}
                         subMenus={menu.subMenus}
                         showSubMenu={showSubMenu}
                         indexSubMenu={indexSubMenu}

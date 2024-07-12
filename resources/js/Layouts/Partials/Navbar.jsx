@@ -19,10 +19,10 @@ function Navbar({ auth, setting }) {
                             <Dropdown.Trigger>
                                 <div className="flex items-center justify-start gap-3 md:w-[165px] group cursor-pointer">
                                     <div>
-                                        {auth.user.avatar ? (
+                                        {auth.user.foto ? (
                                             <div className="rounded-full w-[40px] h-[40px] group-hover:bg-white transition duration-300 overflow-hidden">
                                                 <img
-                                                    src={auth.user.avatar}
+                                                    src={`/images/${auth.user.foto}`}
                                                     alt={auth.user.name}
                                                     className="object-cover object-top"
                                                 />

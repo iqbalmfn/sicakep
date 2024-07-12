@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import Icon from "./Icon";
 import { darken } from "polished";
-import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 function Button({
@@ -17,7 +16,6 @@ function Button({
     warning = false,
     ...props
 }) {
-    const { setting } = usePage().props;
     const [isHovered, setIsHovered] = useState(false);
     const darkenedColor = darken(0.1, '#163826');
 

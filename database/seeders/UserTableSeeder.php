@@ -13,21 +13,26 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = [
+        $iqbal = User::create(
             [
                 'name' => 'Iqbal Muhammad Fajar N',
                 'username' => 'iqbalmfn',
                 'email' => 'iqbalmfn@gmail.com',
                 'password' => bcrypt('Iqbal_2804'),
-            ],
+                'foto' => 'iqbal.jpg'
+            ]
+        );
+        $iqbal->assignRole('Admin');
+
+        $evi = User::create(
             [
                 'name' => 'Evi Novitasari',
                 'username' => 'evinvita',
                 'email' => 'evinovita@gmail.com',
                 'password' => bcrypt('evi123'),
+                'foto' => 'evi.jpg'
             ]
-        ];
-
-        User::insert($data);
+        );
+        $evi->assignRole('User');
     }
 }
