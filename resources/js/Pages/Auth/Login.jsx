@@ -15,21 +15,29 @@ export default function Login() {
             <Head title="Login" />
 
             <div className="flex flex-col justify-center gap-10 h-full md:py-10">
-                <img
+                {/* <img
                     src={`/data/setting/`}
                     alt="logo"
                     className="img-fluid lg:w-[60%] mx-auto"
-                />
+                /> */}
+                <div className="flex flex-col items-center">
+                    <h1 className="font-extrabold text-4xl text-center">
+                        <span className="text-danger">SI</span>
+                        <span className="text-primary">CAKEP</span>
+                    </h1>
+                    <h5>Sistem Informasi Catatan Keuangan Pribadi</h5>
+                </div>
+                <Divider
+                    style={{ marginTop: "-10px", marginBottom: "-10px" }}
+                    className="font-bold"
+                >
+                    Login
+                </Divider>
                 <div className="flex flex-col gap-5">
-                    <div>
-                        <h1 className="text-lg font-medium">
-                            Login dengan akun Anda
-                        </h1>
-                    </div>
                     <form onSubmit={submit} className="flex flex-col gap-5">
                         <FormInput
                             name="username"
-                            placeholder="Username/Email"
+                            placeholder="Username"
                             onChange={handleOnChange}
                             value={data.username}
                         />

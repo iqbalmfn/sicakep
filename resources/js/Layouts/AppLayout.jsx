@@ -8,7 +8,7 @@ function AppLayout({ children }) {
         <div
             className="min-h-screen flex flex-col justify-center items-center sm:pt-0 bg-gray-100 relative"
             style={{
-                backgroundImage: `url('/data/setting/')`,
+                backgroundImage: `url('/images/background.jpg')`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
