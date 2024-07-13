@@ -11,6 +11,8 @@ import AppContentLayout from "@/Layouts/AppContentLayout";
 import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
 import { Head } from "@inertiajs/react";
 import React from "react";
+import KategoriCreate from "./Modals/KategoriCreate";
+import { handleDelete } from "@/Utils/GlobalFunction";
 
 const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
     const {
@@ -20,6 +22,7 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
         submit,
         update,
         handleChange,
+        handleCheckboxChange,
         // page controller
         setParams,
         setFetching,
@@ -73,7 +76,7 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                             label="Hapus"
                             onClick={() =>
                                 handleDelete(
-                                    "master.luaran.destroy",
+                                    "master.kategori.destroy",
                                     data.id,
                                     "Data berhasil dihapus"
                                 )
@@ -151,6 +154,19 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
             </ContentWrapper>
 
             {/* modal CRUD create/update */}
+            <KategoriCreate
+                title={title}
+                showModal={showModal}
+                closeModal={handleCloseModal}
+                mode={mode}
+                data={data}
+                handleChange={handleChange}
+                handleCheckboxChange={handleCheckboxChange}
+                errors={errors}
+                submit={submit}
+                update={update}
+                processing={processing}
+            />
         </AppContentLayout>
     );
 };

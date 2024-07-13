@@ -10,6 +10,7 @@ const UseMasterKategori = (filtered, flash) => {
     const { data, setData, reset } = useForm({
         nama: "",
         jenis: "",
+        status: 1,
     });
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(null);
@@ -54,6 +55,7 @@ const UseMasterKategori = (filtered, flash) => {
                 id: initialData.id,
                 nama: initialData.nama,
                 jenis: initialData.jenis,
+                status: initialData.status
             });
         }
     }, [initialData]);
@@ -64,6 +66,14 @@ const UseMasterKategori = (filtered, flash) => {
             e.target.name,
             e.target.type === "file" ? e.target.files[0] : e.target.value
         );
+    };
+
+    const handleCheckboxChange = (e) => {
+        if (e.target.checked) {
+            setData(e.target.name, 1);
+        } else {
+            setData(e.target.name, 0);
+        }
     };
 
     const submit = (e) => {
@@ -90,6 +100,7 @@ const UseMasterKategori = (filtered, flash) => {
         submit,
         update,
         handleChange,
+        handleCheckboxChange,
         // page controller
         mode,
         params,
