@@ -28,7 +28,7 @@ const Footer = () => {
                 Development{" "}
                 <a
                     target="_blank"
-                    href="https://santren.id"
+                    href="https://iqbalmfn.com"
                     className="text-primary hover:text-primary-hover "
                 >
                     {props.app.name}

@@ -23,9 +23,9 @@ export default function Login() {
                 <div className="flex flex-col items-center">
                     <h1 className="font-extrabold text-4xl text-center">
                         <span className="text-danger">SI</span>
-                        <span className="text-primary">CAKEP</span>
+                        <span className="text-primary">CAKAP</span>
                     </h1>
-                    <h5>Sistem Informasi Catatan Keuangan Pribadi</h5>
+                    <h5>Sistem Informasi Catatan Keuangan Pasutri</h5>
                 </div>
                 <Divider
                     style={{ marginTop: "-10px", marginBottom: "-10px" }}
