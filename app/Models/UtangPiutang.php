@@ -5,26 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Perencanaan extends Model
+class UtangPiutang extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'kategori_id',
-        'nama',
+        'judul',
+        'tipe',
         'nominal',
+        'jatuh_tempo',
         'deskripsi',
-        'bulan',
-        'tanggal',
         'status'
     ];
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    public function kategori() {
-        return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
     }
 }

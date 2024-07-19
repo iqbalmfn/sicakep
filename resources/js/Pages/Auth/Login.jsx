@@ -4,7 +4,7 @@ import FormInput from "@/Components/Atoms/FormInput";
 import Icon from "@/Components/Atoms/Icon";
 import UseLogin from "@/Hooks/Auth/UseLogin";
 import AppLayout from "@/Layouts/AppLayout";
-import { Head, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {

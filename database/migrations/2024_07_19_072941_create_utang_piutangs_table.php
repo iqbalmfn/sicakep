@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('perencanaans', function (Blueprint $table) {
+        Schema::create('utang_piutangs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('kategori_id')->constrained();
-            $table->string('nama');
+            $table->string('judul');
+            $table->enum('tipe', ['piutang', 'utang']);
             $table->integer('nominal');
-            $table->string('bulan');
-            $table->string('tahun');
+            $table->date('jatuh_tempo');
             $table->text('deskripsi')->nullable();
             $table->boolean('status')->nullable();
             $table->timestamps();
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('perencanaans');
+        Schema::dropIfExists('utang_piutangs');
     }
 };

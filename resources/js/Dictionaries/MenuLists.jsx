@@ -29,12 +29,12 @@ export const menus = [
     },
     {
         href: null,
-        label: "Hutang & Piutang",
+        label: "Utang & Piutang",
         icon: "arrow-left-right",
         subMenus: [
             {
-                href: "/hutang",
-                label: "Hutang",
+                href: "/utang",
+                label: "Utang",
                 icon: "journal-text",
                 subMenus: [],
                 roles: [1,2],
