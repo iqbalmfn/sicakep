@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::resource('perencanaan', PerencanaanController::class)->names('perencanaan');
+    Route::put('perencanaan/confirm/{perencanaan}', [PerencanaanController::class, 'confirm'])->name('perencanaan.confirm');
 });
 
 Route::middleware('auth')->group(function () {

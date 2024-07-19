@@ -12,9 +12,17 @@ import Table from "@/Components/Organisms/Table";
 import UsePerencanaan from "@/Hooks/UsePerencanaan";
 import AppContentLayout from "@/Layouts/AppContentLayout";
 import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
-import { formatRupiah, handleDelete, listMonths, listYears, monthNumberToIndonesian } from "@/Utils/GlobalFunction";
-import { Head } from "@inertiajs/react";
+import {
+    formatRupiah,
+    handleDelete,
+    listMonths,
+    listYears,
+    monthNumberToIndonesian,
+} from "@/Utils/GlobalFunction";
+import { Head, usePage } from "@inertiajs/react";
 import PerencanaanCreate from "./Modals/PerencanaanCreate";
+import PerencanaanDetail from "./Modals/PerencanaanDetail";
+import PerencanaanConfirm from "./Modals/PerencanaanConfirm";
 
 const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
     const {
@@ -35,22 +43,33 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
         handleShowModal,
         handleEditModal,
         handleCloseModal,
+        // tambahan
+        detailData,
+        showDetailModal,
+        handleShowDetailModal,
+        handleCloseDetailModal,
+        showConfirmModal,
+        handleShowConfirmModal,
+        handleCloseConfirmModal,
+        confirm
     } = UsePerencanaan(filtered, flash);
+
+    const { auth } = usePage().props;
 
     const status = [
         {
-            value: 'waiting',
-            label: 'Waiting'
+            value: "waiting",
+            label: "Waiting",
         },
         {
             value: 1,
-            label: 'Accept'
-        }, 
+            label: "Accept",
+        },
         {
             value: 0,
-            label: 'Reject'
-        }
-    ]
+            label: "Reject",
+        },
+    ];
 
     const dataRender = () => {
         return datas.data.length > 0 ? (
@@ -99,12 +118,23 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
                         </Label>
                     </Table.Td>
                     <Table.Td className="text-end pe-3">
-                        <ActionButton
-                            variant="success"
-                            icon="check-lg"
-                            label="Konfirmasi"
-                            onClick={() => handleEditModal(data)}
-                        />
+                        {auth.user.roles.find(
+                            (role) => role.name === "Admin"
+                        ) && data.status == null ? (
+                            <ActionButton
+                                variant="success"
+                                icon="check-lg"
+                                label="Konfirmasi"
+                                onClick={() => handleShowConfirmModal(data)}
+                            />
+                        ) : (
+                            <ActionButton
+                                variant="warning"
+                                icon="search"
+                                label="Detail"
+                                onClick={() => handleShowDetailModal(data)}
+                            />
+                        )}
                         <ActionButton
                             variant="info"
                             icon="pencil"
@@ -136,7 +166,7 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
             <Head title={title} />
             <Breadcrumbs title={title} breadcrumbs={breadcrumbs} />
             <ContentWrapper>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <CreateButton onClick={handleShowModal} />
                     <div className="flex justify-end gap-2">
                         <div>
@@ -170,10 +200,7 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
                             >
                                 <option value="">Semua Status</option>
                                 {status.map((stat) => (
-                                    <option
-                                        key={stat.value}
-                                        value={stat.value}
-                                    >
+                                    <option key={stat.value} value={stat.value}>
                                         {stat.label}
                                     </option>
                                 ))}
@@ -210,10 +237,7 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
                             >
                                 <option value="">Semua Tahun</option>
                                 {listYears().map((year) => (
-                                    <option
-                                        key={year}
-                                        value={year}
-                                    >
+                                    <option key={year} value={year}>
                                         {year}
                                     </option>
                                 ))}
@@ -327,6 +351,26 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
                 errors={errors}
                 submit={submit}
                 update={update}
+                processing={processing}
+            />
+
+            {/* modal Detail */}
+            <PerencanaanDetail
+                title={title}
+                showModal={showDetailModal}
+                closeModal={handleCloseDetailModal}
+                data={detailData}
+            />
+
+            <PerencanaanConfirm
+                title={title}
+                showModal={showConfirmModal}
+                closeModal={handleCloseConfirmModal}
+                data={detailData}
+                formData={data}
+                handleChange={handleChange}
+                errors={errors}
+                submit={confirm}
                 processing={processing}
             />
         </AppContentLayout>

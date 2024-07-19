@@ -1,4 +1,5 @@
 import {
+    perencanaanConfirmData,
     perencanaanCreateData,
     perencanaanUpdateData,
 } from "@/Services/PerencanaanServices";
@@ -17,7 +18,7 @@ const UsePerencanaan = (filtered, flash) => {
         bulan: "",
         tahun: "",
         tipe: "cash",
-        deskripsi: ""
+        deskripsi: "",
     });
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(null);
@@ -38,6 +39,7 @@ const UsePerencanaan = (filtered, flash) => {
         handleEditModal,
         handleCloseModal,
         initialData,
+        setInitialData,
         setFetching,
         onHandleFilter,
         onHandleOrder,
@@ -95,8 +97,46 @@ const UsePerencanaan = (filtered, flash) => {
     };
     // end crud
 
+    // tambahan
+    const [detailData, setDetailData] = useState({});
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const handleShowDetailModal = (data) => {
+        setShowDetailModal(true);
+        setDetailData(data);
+    };
+    const handleCloseDetailModal = (data) => {
+        setShowDetailModal(false);
+        setInitialData({});
+        reset();
+    };
+
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const handleShowConfirmModal = (data) => {
+        setShowConfirmModal(true);
+        setDetailData(data);
+        setInitialData(data);
+    };
+    const handleCloseConfirmModal = (data) => {
+        setShowConfirmModal(false);
+        setInitialData({});
+        reset();
+    };
+
+    // confirm
+    const confirm = (e) => {
+        e.preventDefault();
+        setProcessing(toast.loading("Sedang memproses data..."));
+        perencanaanConfirmData(data, setErrors, clearErrors);
+    };
+
     // menampilkan toast notification
-    CrudToast(flash, errors, processing, setProcessing, handleCloseModal);
+    CrudToast(
+        flash,
+        errors,
+        processing,
+        setProcessing,
+        showConfirmModal ? handleCloseConfirmModal : handleCloseModal
+    );
 
     return {
         data,
@@ -117,6 +157,15 @@ const UsePerencanaan = (filtered, flash) => {
         handleShowModal,
         handleEditModal,
         handleCloseModal,
+        // tambahan
+        detailData,
+        showDetailModal,
+        handleShowDetailModal,
+        handleCloseDetailModal,
+        showConfirmModal,
+        handleShowConfirmModal,
+        handleCloseConfirmModal,
+        confirm,
     };
 };
 

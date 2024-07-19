@@ -12,8 +12,25 @@ export const perencanaanCreateData = (data, setErrors, clearErrors) => {
         preserveState: true,
     });
 };
+
 export const perencanaanUpdateData = (data, setErrors, clearErrors) => {
     router.post(route("perencanaan.update", {perencanaan: data.id}), {
+        ...data,
+        _method: "PUT"
+    }, {
+        onError: (errors) => {
+            setErrors(errors);
+        },
+        onSuccess: () => {
+            clearErrors();
+        },
+        preserveScroll: false,
+        preserveState: true,
+    });
+};
+
+export const perencanaanConfirmData = (data, setErrors, clearErrors) => {
+    router.post(route("perencanaan.confirm", {perencanaan: data.id}), {
         ...data,
         _method: "PUT"
     }, {

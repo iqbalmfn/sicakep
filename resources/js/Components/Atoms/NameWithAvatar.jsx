@@ -1,4 +1,6 @@
-const NameWithAvatar = ({ avatar, avatarSize = "md", name, isShowName = true }) => {
+import clsx from "clsx";
+
+const NameWithAvatar = ({ avatar, avatarSize = "md", name, isShowName = true, className }) => {
     let size;
     if (avatarSize === "md") {
         size = "35px";
@@ -7,7 +9,7 @@ const NameWithAvatar = ({ avatar, avatarSize = "md", name, isShowName = true }) 
     }
 
     return avatar ? (
-        <div className="flex gap-2 items-center">
+        <div className={clsx(className, "flex gap-2 items-center")}>
             <div className={`rounded-full w-[${size}] h-[${size}] group-hover:bg-white transition duration-300 overflow-hidden`}>
                 <img
                     src={avatar}

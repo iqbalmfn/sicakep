@@ -135,4 +135,23 @@ class PerencanaanController extends Controller
 
         return redirect()->back()->with($session['flash'], $session['flash_message']);
     }
+
+    public function confirm(Request $request, string $id)
+    {
+        $res = $this->perencanaanServices->confirmData($request, $id);
+
+        if ($res['success']) {
+            $session = [
+                'flash' => 'success',
+                'flash_message' => $res['message'],
+            ];
+        } else {
+            $session = [
+                'flash' => 'error',
+                'flash_message' => $res['message'],
+            ];
+        }
+
+        return redirect()->back()->with($session['flash'], $session['flash_message']);
+    }
 }
