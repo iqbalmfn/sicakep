@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('nominal');
             $table->date('tanggal');
             $table->text('deskripsi')->nullable();
+            $table->string('bukti_transaksi')->nullable();
             $table->timestamps();
         });
     }

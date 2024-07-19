@@ -17,7 +17,8 @@ class Transaksi extends Model
         'jenis',
         'nominal',
         'tanggal',
-        'deskripsi'
+        'deskripsi',
+        'bukti_transaksi'
     ];
 
     public function user() {

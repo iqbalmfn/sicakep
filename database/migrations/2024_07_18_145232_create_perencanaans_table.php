@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('kategori_id')->constrained();
-            $table->string('nama');
+            $table->string('judul');
             $table->integer('nominal');
             $table->string('bulan');
             $table->string('tahun');
+            $table->enum('tipe', ['cash', 'transfer']);
             $table->text('deskripsi')->nullable();
             $table->boolean('status')->nullable();
             $table->timestamps();

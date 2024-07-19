@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Master\KategoriController;
+use App\Http\Controllers\PerencanaanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,6 +19,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('master')->name('master.')->group(function () {
         Route::resource('kategori', KategoriController::class)->only(['index', 'store', 'update', 'destroy']);
     });
+
+    Route::resource('perencanaan', PerencanaanController::class)->names('perencanaan');
 });
 
 Route::middleware('auth')->group(function () {

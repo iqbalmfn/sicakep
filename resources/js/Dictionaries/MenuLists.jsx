@@ -33,16 +33,16 @@ export const menus = [
         icon: "arrow-left-right",
         subMenus: [
             {
-                href: "/utang",
+                href: "/utang-piutang/utang",
                 label: "Utang",
-                icon: "journal-text",
+                icon: "arrow-left-square",
                 subMenus: [],
                 roles: [1,2],
             },
             {
-                href: "/piutang",
-                label: "piutang",
-                icon: "wrench-adjustable",
+                href: "/utang-piutang/piutang",
+                label: "Piutang",
+                icon: "arrow-right-square",
                 subMenus: [],
                 roles: [1,2],
             },
@@ -50,17 +50,25 @@ export const menus = [
         roles: [1,2],
     },
     {
-        href: "/pemasukan",
-        label: "Pemasukan",
-        icon: "box-arrow-in-right",
-        subMenus: [],
-        roles: [1, 2],
+        href: null,
+        label: "Transaksi",
+        icon: "cart-check",
+        subMenus: [
+            {
+                href: "/transaksi/pemasukan",
+                label: "Pemasukan",
+                icon: "arrow-right-square",
+                subMenus: [],
+                roles: [1, 2],
+            },
+            {
+                href: "/transaksi/pengeluaran",
+                label: "Pengeluaran",
+                icon: "arrow-left-square",
+                subMenus: [],
+                roles: [1, 2],
+            }
+        ],
+        roles: [1,2],
     },
-    {
-        href: "/pengeluaran",
-        label: "Pengeluaran",
-        icon: "box-arrow-right",
-        subMenus: [],
-        roles: [1, 2],
-    }
 ];

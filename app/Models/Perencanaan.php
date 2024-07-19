@@ -12,11 +12,12 @@ class Perencanaan extends Model
     protected $fillable = [
         'user_id',
         'kategori_id',
-        'nama',
+        'judul',
         'nominal',
         'deskripsi',
         'bulan',
-        'tanggal',
+        'tahun',
+        'tipe',
         'status'
     ];
 

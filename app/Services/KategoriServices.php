@@ -5,12 +5,16 @@ namespace App\Services;
 use App\Models\Kategori;
 
 class KategoriServices {
-    public function getData($q, $orderBy, $orderDirection, $perPage, $jenis = null, $select2 = null)
+    public function getData($q, $orderBy, $orderDirection, $perPage, $jenis = null, $status = null, $select2 = null)
     {
         $data = Kategori::query();
 
         if ($jenis) {
             $data->whereJenis($jenis);
+        }
+
+        if ($status) {
+            $data->whereStatus($status);
         }
 
         if ($q) {
@@ -21,6 +25,7 @@ class KategoriServices {
 
         if ($select2 == true) {
             $data->select('id as value', 'nama as label');
+            return $data->get();
         }
 
         return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
