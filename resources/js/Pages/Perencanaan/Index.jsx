@@ -216,7 +216,7 @@ const Index = ({
             <ContentWrapper>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div className="flex items-center gap-2">
-                        <CreateButton onClick={handleShowModal} />
+                        <CreateButton onClick={handleShowModal} disabled={widget.limit_anggaran == 0} />
                         <Link
                             href={route("perencanaan.view", params)}
                             target="_blank"
