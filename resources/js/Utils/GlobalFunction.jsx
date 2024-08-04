@@ -220,7 +220,12 @@ export const formatDateTime = (tanggal) => {
 };
 
 export function formatRupiah(angka, isCurrency = false) {
-    return angka
+    // Ubah semua input ke string, lalu ke number
+    const number = Number(angka.toString().replace(/[^0-9.-]+/g,""));
+    if (isNaN(number)) {
+        return ''; // Mengembalikan string kosong jika input bukan angka yang valid
+    }
+    return number
         .toLocaleString("id-ID", { style: "currency", currency: "IDR" })
         .replace(/\,00$/, isCurrency ? ",00" : "");
 }
