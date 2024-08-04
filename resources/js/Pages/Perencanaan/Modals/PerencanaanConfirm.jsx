@@ -72,6 +72,11 @@ const PerencanaanConfirm = ({
                                         <td>{data?.user?.name}</td>
                                     </tr>
                                     <tr>
+                                        <th width="20%">Pemegang Anggaran</th>
+                                        <td width="3%">:</td>
+                                        <td>{data?.pic?.name}</td>
+                                    </tr>
+                                    <tr>
                                         <th width="20%">Kategori</th>
                                         <td width="3%">:</td>
                                         <td>{data?.kategori?.nama}</td>

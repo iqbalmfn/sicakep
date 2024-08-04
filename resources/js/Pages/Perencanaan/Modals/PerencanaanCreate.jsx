@@ -17,6 +17,7 @@ const PerencanaanCreate = ({
     mode,
     data,
     categories,
+    users,
     handleChange,
     errors,
     processing,
@@ -71,6 +72,33 @@ const PerencanaanCreate = ({
                                     ))}
                                 </FormSelect>
                                 <FormError message={errors?.kategori_id} />
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel
+                                    name="Pemegang Anggaran"
+                                    htmlFor="pic_id"
+                                    required
+                                />
+                                <FormSelect
+                                    size="sm"
+                                    id="pic_id"
+                                    name="pic_id"
+                                    onChange={handleChange}
+                                    value={data.pic_id}
+                                    isError={errors?.pic_id}
+                                    required
+                                >
+                                    <option value="">Pilih Pemegang Anggaran</option>
+                                    {users.map((user) => (
+                                        <option
+                                            key={user.id}
+                                            value={user.id}
+                                        >
+                                            {user.name}
+                                        </option>
+                                    ))}
+                                </FormSelect>
+                                <FormError message={errors?.pic_id} />
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel

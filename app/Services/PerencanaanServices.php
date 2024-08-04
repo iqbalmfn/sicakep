@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\DB;
 
 class PerencanaanServices
 {
-    protected $notificationServices;
+    protected $notificationServices, $pdfServices;
 
-    public function __construct(NotificationServices $notificationServices)
+    public function __construct(NotificationServices $notificationServices, PdfServices $pdfServices)
     {
         $this->notificationServices = $notificationServices;
+        $this->pdfServices = $pdfServices;
     }
 
     public function getData(
@@ -29,7 +30,7 @@ class PerencanaanServices
         $select2 = null
     ) {
         $data = Perencanaan::query()
-            ->with(['user', 'kategori', 'logs.user']);
+            ->with(['user', 'pic', 'kategori', 'logs.user']);
 
         if ($kategori_id) {
             $data->whereKategoriId($kategori_id);
@@ -37,10 +38,14 @@ class PerencanaanServices
 
         if ($bulan) {
             $data->whereBulan($bulan);
+        } else {
+            $data->whereBulan(date('m'));
         }
 
         if ($tahun) {
             $data->whereTahun($tahun);
+        } else {
+            $data->whereTahun(date('Y'));
         }
 
         if (isset($status)) { // Periksa apakah $status diset
@@ -71,6 +76,78 @@ class PerencanaanServices
             ->withQueryString();
     }
 
+    public function viewMode(
+        $q,
+        $orderBy,
+        $orderDirection,
+        $perPage,
+        $kategori_id = null,
+        $bulan = null,
+        $tahun = null,
+        $status = null,
+        $select2 = null
+    ) {
+        $datas = $this->getData(
+            $q,
+            $orderBy,
+            $orderDirection,
+            $perPage,
+            $kategori_id,
+            $bulan,
+            $tahun,
+            $status,
+            $select2
+        );
+
+        $raw = $datas->items();
+
+        $result = [
+            "bulan" => $datas->items() ? $datas->items()[0]["bulan"] : date('m'),
+            "tahun" => $datas->items() ? $datas->items()[0]["tahun"] : date('Y'),
+            "kategori_list" => [],
+            "total_cash" => 0,
+            "total_transfer" => 0,
+            "total" => 0
+        ];
+
+        $kategori_map = [];
+
+        foreach ($raw as $item) {
+            $kategori_id = $item["kategori_id"];
+            $kategori_nama = $item['kategori']['nama'];  // Gantilah dengan nama kategori yang sebenarnya dari sumber data Anda
+
+            if (!isset($kategori_map[$kategori_id])) {
+                $kategori_map[$kategori_id] = [
+                    "kategori" => $kategori_nama,
+                    "list" => [],
+                    "sub_total_cash" => 0,
+                    "sub_total_transfer" => 0,
+                    "sub_total" => 0
+                ];
+            }
+
+            $kategori_map[$kategori_id]["list"][] = $item;
+
+            if ($item["tipe"] == "cash") {
+                $kategori_map[$kategori_id]["sub_total_cash"] += $item["nominal"];
+            } elseif ($item["tipe"] == "transfer") {
+                $kategori_map[$kategori_id]["sub_total_transfer"] += $item["nominal"];
+            }
+
+            $kategori_map[$kategori_id]["sub_total"] += $item["nominal"];
+        }
+
+        $result["kategori_list"] = array_values($kategori_map);
+
+        foreach ($result["kategori_list"] as $kategori) {
+            $result["total_cash"] += $kategori["sub_total_cash"];
+            $result["total_transfer"] += $kategori["sub_total_transfer"];
+            $result["total"] += $kategori["sub_total"];
+        }
+
+        return $result;
+    }
+
     public function getDataById($id)
     {
         return Perencanaan::query()
@@ -81,6 +158,7 @@ class PerencanaanServices
     public function rules()
     {
         $create = [
+            "pic_id" => "required|numeric",
             "kategori_id" => "required|numeric",
             "judul" => "required",
             "nominal" => "required|numeric",
@@ -153,7 +231,7 @@ class PerencanaanServices
         DB::beginTransaction();
         try {
             $data = $this->getDataById($id);
-            
+
             if ($data->status == $request->status) {
                 if (!$data->status) {
                     $status = 2;
@@ -232,15 +310,17 @@ class PerencanaanServices
 
             // simpan ke notification
             if ($request->status == 1) {
-                
+                $message = 'Perencanaan anggaran dengan judul ' . $input['judul'] . ' telah diterima';
+            } else {
+                $message = 'Perencanaan anggaran dengan judul ' . $input['judul'] . ' telah ditolak';
             }
             $this->notificationServices->sendNotification(
                 Auth::user()->id,
                 'perencanaan',
                 'Konfirmasi Anggaran',
-                'Perencanaan anggaran dengan judul ' . $input['judul'] . ' perlu di konfirmasi',
-                $admin,
-                '/perencanaan'
+                $message,
+                $data->user_id,
+                '/perencanaan/' . $data->id
             );
 
             DB::commit();
@@ -251,5 +331,25 @@ class PerencanaanServices
 
             return responseError("Gagal, ada kesalahan pada sistem saat mengirim data " . $th->getMessage());
         }
+    }
+
+    public function generatePdf($request)
+    {
+        $data = $this->getData(
+            $request->q,
+            'id',
+            'asc',
+            1000,
+            $request->kategori_id,
+            $request->bulan,
+            $request->tahun,
+            $request->status
+        );
+
+        return $this->pdfServices->generate(
+            '/print/pdf/perencanaan',
+            $data->items(),
+            'Perencanaan',
+        );
     }
 }

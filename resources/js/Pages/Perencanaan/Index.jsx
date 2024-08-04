@@ -19,12 +19,12 @@ import {
     listYears,
     monthNumberToIndonesian,
 } from "@/Utils/GlobalFunction";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import PerencanaanCreate from "./Modals/PerencanaanCreate";
 import PerencanaanDetail from "./Modals/PerencanaanDetail";
 import PerencanaanConfirm from "./Modals/PerencanaanConfirm";
 
-const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
+const Index = ({ title, breadcrumbs, datas, categories, users, filtered, flash }) => {
     const {
         data,
         processing,
@@ -51,7 +51,7 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
         showConfirmModal,
         handleShowConfirmModal,
         handleCloseConfirmModal,
-        confirm
+        confirm,
     } = UsePerencanaan(filtered, flash);
 
     const { auth } = usePage().props;
@@ -167,7 +167,26 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
             <Breadcrumbs title={title} breadcrumbs={breadcrumbs} />
             <ContentWrapper>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                    <CreateButton onClick={handleShowModal} />
+                    <div className="flex items-center gap-2">
+                        <CreateButton onClick={handleShowModal} />
+                        <Link
+                            href={route('perencanaan.view', params)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-transparent text-primary border border-primary group hover:bg-primary hover:text-white w-[37px] h-[37px] flex justify-center items-center"
+                        >
+                            <i className="bi bi-file-text"></i>
+                        </Link>
+                        {/* <a
+                            href={route('perencanaan.print-pdf', params)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-transparent text-danger border border-danger group hover:bg-danger hover:text-white w-[37px] h-[37px] flex justify-center items-center"
+                        >
+                            <i className="bi bi-file-pdf"></i>
+                        </a> */}
+                        
+                    </div>
                     <div className="flex justify-end gap-2">
                         <div>
                             <FormSelectPrefix
@@ -347,6 +366,7 @@ const Index = ({ title, breadcrumbs, datas, categories, filtered, flash }) => {
                 mode={mode}
                 data={data}
                 categories={categories}
+                users={users}
                 handleChange={handleChange}
                 errors={errors}
                 submit={submit}

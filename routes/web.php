@@ -20,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('kategori', KategoriController::class)->only(['index', 'store', 'update', 'destroy']);
     });
 
+    Route::get('perencanaan/print-pdf', [PerencanaanController::class, 'printPdf'])->name('perencanaan.print-pdf');
+    Route::get('perencanaan/view', [PerencanaanController::class, 'view'])->name('perencanaan.view');
     Route::resource('perencanaan', PerencanaanController::class)->names('perencanaan');
     Route::put('perencanaan/confirm/{perencanaan}', [PerencanaanController::class, 'confirm'])->name('perencanaan.confirm');
 });

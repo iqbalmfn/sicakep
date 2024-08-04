@@ -13,6 +13,7 @@ const UsePerencanaan = (filtered, flash) => {
     // form
     const { data, setData, reset } = useForm({
         kategori_id: "",
+        pic_id: "",
         judul: "",
         nominal: "",
         bulan: "",
@@ -58,6 +59,7 @@ const UsePerencanaan = (filtered, flash) => {
             setData({
                 id: initialData.id,
                 kategori_id: initialData.kategori_id,
+                pic_id: initialData.pic_id,
                 judul: initialData.judul,
                 nominal: initialData.nominal,
                 bulan: initialData.bulan,

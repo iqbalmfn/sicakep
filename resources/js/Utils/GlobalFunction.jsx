@@ -239,7 +239,7 @@ export const formatText = (text) => {
 export function diffForHumans(date) {
     const now = new Date();
     const tanggal = new Date(date);
-    const localTime = new Date(now.setHours(now.getHours() + 7));
+    const localTime = new Date(now.setHours(now.getHours()));
     const diffInSeconds = (tanggal - localTime) / 1000;
 
     let postfix = "lagi";

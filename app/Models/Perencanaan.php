@@ -11,6 +11,7 @@ class Perencanaan extends Model
 
     protected $fillable = [
         'user_id',
+        'pic_id',
         'kategori_id',
         'judul',
         'nominal',
@@ -23,6 +24,10 @@ class Perencanaan extends Model
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function pic() {
+        return $this->belongsTo(User::class, 'pic_id', 'id');
     }
 
     public function kategori() {
