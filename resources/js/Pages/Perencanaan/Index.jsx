@@ -242,6 +242,26 @@ const Index = ({
                     <div className="flex justify-end gap-2">
                         <div>
                             <FormSelectPrefix
+                                prefix={<Icon icon="person-check" />}
+                                size="sm"
+                                name="pic_id"
+                                value={params.pic_id}
+                                onChange={onHandleFilter}
+                                className="w-[218px]"
+                            >
+                                <option value="">Semua Pemegang Anggaran</option>
+                                {users.map((user) => (
+                                    <option
+                                        key={user.id}
+                                        value={user.id}
+                                    >
+                                        {user.name}
+                                    </option>
+                                ))}
+                            </FormSelectPrefix>
+                        </div>
+                        <div>
+                            <FormSelectPrefix
                                 prefix={<Icon icon="tag" />}
                                 size="sm"
                                 name="kategori_id"
@@ -284,7 +304,7 @@ const Index = ({
                                 name="bulan"
                                 value={params.bulan}
                                 onChange={onHandleFilter}
-                                className="w-[150px]"
+                                className="w-[125px]"
                             >
                                 <option value="">Semua Bulan</option>
                                 {listMonths().map((month) => (
@@ -304,7 +324,7 @@ const Index = ({
                                 name="tahun"
                                 value={params.tahun}
                                 onChange={onHandleFilter}
-                                className="w-[150px]"
+                                className="w-[125px]"
                             >
                                 <option value="">Semua Tahun</option>
                                 {listYears().map((year) => (

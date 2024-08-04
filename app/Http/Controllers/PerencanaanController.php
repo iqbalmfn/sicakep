@@ -38,7 +38,8 @@ class PerencanaanController extends Controller
             $request->bulan,
             $request->tahun,
             $request->status,
-            $request->select2
+            $request->select2,
+            $request->pic_id
         );
 
         $categories = $this->kategoriServices->getData(
@@ -103,6 +104,7 @@ class PerencanaanController extends Controller
             $bulan,
             $tahun,
             null,
+            null,
             null
         );
 
@@ -122,6 +124,7 @@ class PerencanaanController extends Controller
             $bulan,
             $tahun,
             1,
+            null,
             null
         );
 
@@ -248,7 +251,8 @@ class PerencanaanController extends Controller
             $request->bulan,
             $request->tahun,
             $request->status,
-            $request->select2
+            $request->select2,
+            $request->pic_id
         );
 
         $pemasukan_raw = $this->transaksiServices->getData(

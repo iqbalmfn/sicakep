@@ -27,13 +27,18 @@ class PerencanaanServices
         $bulan = null,
         $tahun = null,
         $status = null,
-        $select2 = null
+        $select2 = null,
+        $pic_id
     ) {
         $data = Perencanaan::query()
             ->with(['user', 'pic', 'kategori', 'logs.user']);
 
         if ($kategori_id) {
             $data->whereKategoriId($kategori_id);
+        }
+
+        if ($pic_id) {
+            $data->wherePicId($pic_id);
         }
 
         if ($bulan) {
@@ -85,7 +90,8 @@ class PerencanaanServices
         $bulan = null,
         $tahun = null,
         $status = null,
-        $select2 = null
+        $select2 = null,
+        $user_id = null
     ) {
         $datas = $this->getData(
             $q,
@@ -96,7 +102,8 @@ class PerencanaanServices
             $bulan,
             $tahun,
             $status,
-            $select2
+            $select2,
+            $user_id
         );
 
         $raw = $datas->items();
@@ -347,7 +354,9 @@ class PerencanaanServices
             $request->kategori_id,
             $request->bulan,
             $request->tahun,
-            $request->status
+            $request->status,
+            null,
+            null
         );
 
         return $this->pdfServices->generate(
