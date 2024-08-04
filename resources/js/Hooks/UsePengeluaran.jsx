@@ -40,7 +40,7 @@ const UsePengeluaran = (filtered, flash) => {
         setFetching,
         onHandleFilter,
         onHandleOrder,
-    } = UsePageController(filtered, clearErrors, reset, "transaksi.pemasukan.index");
+    } = UsePageController(filtered, clearErrors, reset, "transaksi.pengeluaran.index");
 
     // fetching data
     useEffect(() => {
