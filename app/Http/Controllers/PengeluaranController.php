@@ -59,6 +59,7 @@ class PengeluaranController extends Controller
             $request->bulan, 
             $request->tahun, 
             1, 
+            null,
             null
         );
         $perencanaans = collect($perencanaan_raw->items())->map(function ($item) {
