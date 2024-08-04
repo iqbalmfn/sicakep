@@ -1,1 +1,0 @@
-import{j as o}from"./app-B_92siTH.js";import{c as t}from"./clsx-B-dksMZM.js";const a=({children:s,variant:r="primary",...e})=>o.jsx("span",{className:t(`border border-${r} text-${r} uppercase rounded text-xs px-2`),...e,children:s});export{a as L};
