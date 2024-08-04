@@ -53,12 +53,16 @@ class PerencanaanController extends Controller
 
         $users = User::all();
 
+        // widget
+        $widget = $this->widget($request->kategori_id, $request->bulan, $request->tahun);
+
         return Inertia::render('Perencanaan/Index', [
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
             "datas" => $datas,
             "categories" => $categories,
             "users" => $users,
+            "widget" => $widget,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',
@@ -67,6 +71,71 @@ class PerencanaanController extends Controller
                 'orderDirection' => $request->orderDirection ?? 'desc'
             ],
         ]);
+    }
+
+    public function widget($kategori_id, $bulan, $tahun) {
+        // start : limit anggaran
+        $pemasukan_raw = $this->transaksiServices->getData(
+            null,
+            null,
+            null,
+            null,
+            null,
+            $bulan,
+            $tahun,
+            'pemasukan',
+            null
+        );
+
+        $limit_anggaran = 0;
+        foreach ($pemasukan_raw as $pemasukan) {
+            $limit_anggaran += $pemasukan->nominal;
+        }
+        // end : limit anggaran
+
+        // start : total anggaran
+        $anggaran_raw = $this->perencanaanServices->getData(
+            null,
+            null,
+            null,
+            100,
+            $kategori_id,
+            $bulan,
+            $tahun,
+            null,
+            null
+        );
+
+        $total_anggaran = 0;
+        foreach ($anggaran_raw->items() as $anggaran) {
+            $total_anggaran += $anggaran->nominal;
+        }
+        // end : total anggaran
+
+        // start : anggaran acc
+        $anggaran_acc_raw = $this->perencanaanServices->getData(
+            null,
+            null,
+            null,
+            100,
+            $kategori_id,
+            $bulan,
+            $tahun,
+            1,
+            null
+        );
+
+        $total_anggaran_acc = 0;
+        foreach ($anggaran_acc_raw->items() as $anggaran) {
+            $total_anggaran_acc += $anggaran->nominal;
+        }
+        // end : anggaran acc
+
+        return [
+            'limit_anggaran'    => $limit_anggaran,
+            'total_anggaran'    => $total_anggaran,
+            'total_anggaran_acc'=> $total_anggaran_acc,
+        ];
     }
 
     public function store(Request $request)
@@ -189,9 +258,9 @@ class PerencanaanController extends Controller
             null,
             $request->bulan,
             $request->tahun,
-            null,
+            'pemasukan',
             $request->select2
-        ); //
+        );
 
         $limit_anggaran = 0;
         foreach ($pemasukan_raw as $pemasukan) {

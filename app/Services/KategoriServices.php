@@ -3,11 +3,77 @@
 namespace App\Services;
 
 use App\Models\Kategori;
+use App\Models\Perencanaan;
 
 class KategoriServices {
     public function getData($q, $orderBy, $orderDirection, $perPage, $jenis = null, $status = null, $select2 = null)
     {
         $data = Kategori::query();
+
+        if ($jenis) {
+            $data->whereJenis($jenis);
+        }
+
+        if ($status) {
+            $data->whereStatus($status);
+        }
+
+        if ($q) {
+            $data->where(function ($query) use ($q) {
+                $query->where('nama', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($select2 == true) {
+            $data->select('id as value', 'nama as label');
+            return $data->get();
+        }
+
+        return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+            ->paginate($perPage ?? 10)
+            ->withQueryString();
+    }
+
+    public function getDataNonUtangPiutang($q, $orderBy, $orderDirection, $perPage, $jenis = null, $status = null, $select2 = null)
+    {
+        $data = Kategori::query()
+            ->whereNotIn('id', [9,21]);
+
+        if ($jenis) {
+            $data->whereJenis($jenis);
+        }
+
+        if ($status) {
+            $data->whereStatus($status);
+        }
+
+        if ($q) {
+            $data->where(function ($query) use ($q) {
+                $query->where('nama', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($select2 == true) {
+            $data->select('id as value', 'nama as label');
+            return $data->get();
+        }
+
+        return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+            ->paginate($perPage ?? 10)
+            ->withQueryString();
+    }
+
+    public function getDataPengeluaran($q, $orderBy, $orderDirection, $perPage, $jenis = null, $status = null, $select2 = null)
+    {
+        $kategori_acc_id = Perencanaan::query()
+            ->whereStatus(1)
+            ->whereBulan(date('m'))
+            ->groupBy('kategori_id')
+            ->pluck('kategori_id');
+
+        $data = Kategori::query()
+            ->whereNotIn('id', [9,21])
+            ->whereIn('id', $kategori_acc_id);
 
         if ($jenis) {
             $data->whereJenis($jenis);

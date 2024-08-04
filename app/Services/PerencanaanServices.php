@@ -91,7 +91,7 @@ class PerencanaanServices
             $q,
             $orderBy,
             $orderDirection,
-            $perPage,
+            100,
             $kategori_id,
             $bulan,
             $tahun,
@@ -268,6 +268,10 @@ class PerencanaanServices
     public function deleteData($id)
     {
         try {
+            // hapus log
+            LogPerencanaan::wherePerencanaanId($id)->delete();
+
+            // hapus data perencanaan
             $data = $this->getDataById($id);
             $delete = $data->delete();
 

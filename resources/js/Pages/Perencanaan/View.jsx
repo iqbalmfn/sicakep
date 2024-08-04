@@ -66,7 +66,7 @@ const View = ({
                                         Status
                                     </th>
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600"
+                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
                                         width="10%"
                                     >
                                         Besarnya

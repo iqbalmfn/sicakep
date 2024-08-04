@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Master\KategoriController;
+use App\Http\Controllers\PemasukanController;
+use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PerencanaanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('perencanaan/view', [PerencanaanController::class, 'view'])->name('perencanaan.view');
     Route::resource('perencanaan', PerencanaanController::class)->names('perencanaan');
     Route::put('perencanaan/confirm/{perencanaan}', [PerencanaanController::class, 'confirm'])->name('perencanaan.confirm');
+    Route::prefix('transaksi')->name('transaksi.')->group(function () {
+        Route::resource('pemasukan', PemasukanController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('pengeluaran', PengeluaranController::class)->only(['index', 'store', 'update', 'destroy']);
+    });
 });
 
 Route::middleware('auth')->group(function () {
