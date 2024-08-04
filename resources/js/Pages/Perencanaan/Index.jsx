@@ -175,8 +175,8 @@ const Index = ({
             <Head title={title} />
             <Breadcrumbs title={title} breadcrumbs={breadcrumbs} />
 
-            <div className="grid grid-cols-3 gap-5 mb-5">
-                <div className="col-span-3 lg:col-span-1">
+            <div className="grid grid-cols-4 gap-5 mb-5">
+                <div className="col-span-4 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
                         <span className="text-xl font-semibold">
                             Limit Anggaran
@@ -186,7 +186,7 @@ const Index = ({
                         </span>
                     </ContentWrapper>
                 </div>
-                <div className="col-span-3 lg:col-span-1">
+                <div className="col-span-4 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-info border border-2 border-info">
                         <span className="text-xl font-semibold">
                             Anggaran Diajukan
@@ -196,7 +196,7 @@ const Index = ({
                         </span>
                     </ContentWrapper>
                 </div>
-                <div className="col-span-3 lg:col-span-1">
+                <div className="col-span-4 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-success border border-2 border-success">
                         <span className="text-xl font-semibold">
                             Anggaran Disetujui
@@ -206,11 +206,16 @@ const Index = ({
                         </span>
                     </ContentWrapper>
                 </div>
-                {/* <div className="col-span-3 lg:col-span-1">
-                    <ContentWrapper className="text-primary border border-2 border-primary">
-                        <h5 className="text-xl font-semibold">Grafik</h5>
+                <div className="col-span-4 lg:col-span-1">
+                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-warning border border-2 border-warning">
+                        <span className="text-xl font-semibold">
+                            Selisih Anggaran
+                        </span>
+                        <span className="text-4xl font-bold">
+                            {formatRupiah(widget.selisih_anggaran)}
+                        </span>
                     </ContentWrapper>
-                </div> */}
+                </div>
             </div>
 
             <ContentWrapper>

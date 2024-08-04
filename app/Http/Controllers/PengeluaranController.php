@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Perencanaan;
 use App\Models\User;
 use App\Services\KategoriServices;
+use App\Services\PerencanaanServices;
 use App\Services\TransaksiServices;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PengeluaranController extends Controller
 {
-    protected $transaksiServices, $kategoriServices;
+    protected $transaksiServices, $kategoriServices, $perencanaanServices;
 
     public function __construct() {
         $this->transaksiServices = app(TransaksiServices::class);
         $this->kategoriServices = app(KategoriServices::class);
+        $this->perencanaanServices = app(PerencanaanServices::class);
     }
 
     public function index(Request $request)
@@ -47,6 +50,26 @@ class PengeluaranController extends Controller
             true
         );
 
+        $perencanaan_raw = $this->perencanaanServices->getData(
+            null, 
+            null, 
+            null, 
+            100, 
+            null, 
+            $request->bulan, 
+            $request->tahun, 
+            1, 
+            null
+        );
+        $perencanaans = collect($perencanaan_raw->items())->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'judul' => $item->judul,
+                'nominal' => $item->nominal,
+                'kategori_id' => $item->kategori_id
+            ];
+        });
+
         $users = User::all();
 
         return Inertia::render('Transaksi/Pengeluaran/Index', [
@@ -55,6 +78,7 @@ class PengeluaranController extends Controller
             "datas" => $datas,
             "categories" => $categories,
             "users" => $users,
+            "perencanaans" => $perencanaans,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',

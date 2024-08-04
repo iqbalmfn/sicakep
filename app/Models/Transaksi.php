@@ -12,6 +12,7 @@ class Transaksi extends Model
     protected $fillable = [
         'user_id',
         'kategori_id',
+        'perencanaan_id',
         'judul',
         'tipe',
         'jenis',
@@ -27,5 +28,9 @@ class Transaksi extends Model
 
     public function kategori() {
         return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
+    }
+
+    public function perencanaan() {
+        return $this->belongsTo(Perencanaan::class, 'perencanaan_id', 'id');
     }
 }

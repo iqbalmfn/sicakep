@@ -29,6 +29,7 @@ const Index = ({
     datas,
     categories,
     users,
+    perencanaans,
     filtered,
     flash,
 }) => {
@@ -57,8 +58,6 @@ const Index = ({
         handleCloseDetailModal,
     } = UsePengeluaran(filtered, flash);
 
-    const { auth } = usePage().props;
-
     const dataRender = () => {
         return datas.data.length > 0 ? (
             datas.data.map((data, i) => (
@@ -77,6 +76,7 @@ const Index = ({
                         </div>
                     </Table.Td>
                     <Table.Td>{data.kategori.nama}</Table.Td>
+                    <Table.Td>{data.perencanaan.judul}</Table.Td>
                     <Table.Td>{data.judul}</Table.Td>
                     <Table.Td>{formatRupiah(data.nominal)}</Table.Td>
                     <Table.Td>{formatDateWithDay(data.tanggal)}</Table.Td>
@@ -220,7 +220,7 @@ const Index = ({
                                 >
                                     no
                                 </Table.Th>
-                                <Table.Th width="15">Pengguna Dana</Table.Th>
+                                <Table.Th width="12">Pengguna Dana</Table.Th>
                                 <Table.Th
                                     width="15"
                                     ordered
@@ -230,6 +230,16 @@ const Index = ({
                                     orderDirection={filtered.orderDirection}
                                 >
                                     Kategori
+                                </Table.Th>
+                                <Table.Th
+                                    width="12"
+                                    ordered
+                                    onHandleOrder={onHandleOrder}
+                                    column="perencanaan_id"
+                                    orderBy={filtered.orderBy}
+                                    orderDirection={filtered.orderDirection}
+                                >
+                                    Sub Kategori
                                 </Table.Th>
                                 <Table.Th width="15">Judul</Table.Th>
                                 <Table.Th
@@ -243,7 +253,7 @@ const Index = ({
                                     nominal
                                 </Table.Th>
                                 <Table.Th
-                                    width="10"
+                                    width="13"
                                     ordered
                                     onHandleOrder={onHandleOrder}
                                     column="tanggal"
@@ -262,7 +272,7 @@ const Index = ({
                                 >
                                     jenis
                                 </Table.Th>
-                                <Table.Th align="end" width="10">
+                                <Table.Th align="end" width="9">
                                     <span className="me-3">opsi</span>
                                 </Table.Th>
                             </Table.TrHead>
@@ -286,8 +296,10 @@ const Index = ({
                 closeModal={handleCloseModal}
                 mode={mode}
                 data={data}
+                pengeluaranData={datas.data}
                 categories={categories}
                 users={users}
+                perencanaans={perencanaans}
                 handleChange={handleChange}
                 errors={errors}
                 submit={submit}

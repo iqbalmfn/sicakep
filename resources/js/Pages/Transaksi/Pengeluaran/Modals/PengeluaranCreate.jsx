@@ -6,6 +6,8 @@ import FormSelect from "@/Components/Atoms/FormSelect";
 import FormTextarea from "@/Components/Atoms/FormTextarea";
 import Modal from "@/Components/Atoms/Modal";
 import RegularSubmitModal from "@/Components/Molecules/RegularSubmitModal";
+import { formatRupiah } from "@/Utils/GlobalFunction";
+import clsx from "clsx";
 
 const PengeluaranCreate = ({
     title,
@@ -17,11 +19,31 @@ const PengeluaranCreate = ({
     data,
     categories,
     users,
+    perencanaans,
+    pengeluaranData,
     handleChange,
     errors,
     processing,
 }) => {
     const types = ["online", "cash"];
+
+    let subKategoris = [];
+    subKategoris = perencanaans.filter(
+        (item) => item.kategori_id == data.kategori_id
+    );
+
+    let sumberAnggaran = {};
+    sumberAnggaran = subKategoris.find(
+        (item) => item.id == data.perencanaan_id
+    );
+    console.log(sumberAnggaran);
+
+    let anggaranTerpakai = 0;
+    anggaranTerpakai = pengeluaranData
+        .filter((item) => item.perencanaan_id == data.perencanaan_id)
+        .reduce((total, item) => {
+            return total + item.nominal;
+        }, 0);
 
     return (
         <Modal
@@ -37,6 +59,46 @@ const PengeluaranCreate = ({
                 <Modal.Body>
                     <div className="grid grid-cols-1 gap-5 py-5">
                         <div className="col-span-1 flex flex-col gap-4">
+                            {data.perencanaan_id ? (
+                                <div className="flex flex-col border rounded-lg border-info px-3 py-2 text-info bg-blue-50">
+                                    <div className="flex gap-2">
+                                        <span className="font-bold">
+                                            Alokasi Anggaran
+                                        </span>
+                                        <span>:</span>
+                                        <span>
+                                            {formatRupiah(
+                                                sumberAnggaran?.nominal
+                                            )}
+                                        </span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <span className="font-bold">
+                                            Anggaran Terpakai
+                                        </span>
+                                        <span>:</span>
+                                        <span
+                                            className={clsx(
+                                                parseInt(
+                                                    sumberAnggaran?.nominal
+                                                ) <
+                                                    parseInt(anggaranTerpakai) +
+                                                        parseInt(data.nominal)
+                                                    ? "text-danger"
+                                                    : ""
+                                            )}
+                                        >
+                                            {formatRupiah(
+                                                data.nominal
+                                                    ? parseInt(
+                                                          anggaranTerpakai
+                                                      ) + parseInt(data.nominal)
+                                                    : anggaranTerpakai
+                                            )}
+                                        </span>
+                                    </div>
+                                </div>
+                            ) : null}
                             <FormGroup>
                                 <FormLabel
                                     name="Kategori"
@@ -66,6 +128,36 @@ const PengeluaranCreate = ({
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel
+                                    name="Sumber Anggaran"
+                                    htmlFor="perencanaan_id"
+                                    required
+                                />
+                                <FormSelect
+                                    size="sm"
+                                    id="perencanaan_id"
+                                    name="perencanaan_id"
+                                    onChange={handleChange}
+                                    value={data.perencanaan_id}
+                                    isError={errors?.perencanaan_id}
+                                    required
+                                    disabled={!data.kategori_id}
+                                >
+                                    <option value="">
+                                        Pilih Sumber Anggaran
+                                    </option>
+                                    {subKategoris.map((subKategori) => (
+                                        <option
+                                            key={subKategori.id}
+                                            value={subKategori.id}
+                                        >
+                                            {subKategori.judul}
+                                        </option>
+                                    ))}
+                                </FormSelect>
+                                <FormError message={errors?.perencanaan_id} />
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel
                                     name="Pengguna Dana"
                                     htmlFor="user_id"
                                     required
@@ -78,6 +170,7 @@ const PengeluaranCreate = ({
                                     value={data.user_id}
                                     isError={errors?.user_id}
                                     required
+                                    disabled={!data.perencanaan_id}
                                 >
                                     <option value="">
                                         Pilih Pengguna Dana
@@ -105,6 +198,7 @@ const PengeluaranCreate = ({
                                     placeholder="Masukkan Judul"
                                     isError={errors?.judul}
                                     required
+                                    disabled={!data.perencanaan_id}
                                 />
                                 <FormError message={errors?.judul} />
                             </FormGroup>
@@ -124,6 +218,7 @@ const PengeluaranCreate = ({
                                     placeholder="Masukkan Nominal"
                                     isError={errors?.nominal}
                                     required
+                                    disabled={!data.perencanaan_id}
                                 />
                                 <FormError message={errors?.nominal} />
                             </FormGroup>
@@ -141,6 +236,7 @@ const PengeluaranCreate = ({
                                     value={data.jenis}
                                     isError={errors?.jenis}
                                     required
+                                    disabled={!data.perencanaan_id}
                                 >
                                     {types.map((type) => (
                                         <option key={type} value={type}>
@@ -166,6 +262,7 @@ const PengeluaranCreate = ({
                                     placeholder="Masukkan Tanggal"
                                     isError={errors?.tanggal}
                                     required
+                                    disabled={!data.perencanaan_id}
                                 />
                                 <FormError message={errors?.tanggal} />
                             </FormGroup>
@@ -183,6 +280,7 @@ const PengeluaranCreate = ({
                                     placeholder="Tulis Deskripsi..."
                                     isError={errors?.deskripsi}
                                     rows="3"
+                                    disabled={!data.perencanaan_id}
                                 />
                                 <FormError message={errors?.deskripsi} />
                             </FormGroup>

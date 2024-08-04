@@ -8,8 +8,9 @@ import UsePageController from "./UsePageController";
 const UsePengeluaran = (filtered, flash) => {
     // form
     const { data, setData, reset } = useForm({
-        kategori_id: "",
         user_id: "",
+        kategori_id: "",
+        perencanaan_id: "",
         judul: "",
         nominal: "",
         tanggal: "",
@@ -55,6 +56,7 @@ const UsePengeluaran = (filtered, flash) => {
                 id: initialData.id,
                 user_id: initialData.user_id,
                 kategori_id: initialData.kategori_id,
+                perencanaan_id: initialData.perencanaan_id,
                 judul: initialData.judul,
                 nominal: initialData.nominal,
                 tanggal: initialData.tanggal,

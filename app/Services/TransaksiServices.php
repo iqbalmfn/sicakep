@@ -18,7 +18,7 @@ class TransaksiServices {
         $select2 = null
     ) {
         $data = Transaksi::query()
-            ->with(['user', 'kategori']);
+            ->with(['user', 'kategori', 'perencanaan']);
 
         if ($kategori_id) {
             $data->whereKategoriId($kategori_id);

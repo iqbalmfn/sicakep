@@ -135,6 +135,7 @@ class PerencanaanController extends Controller
             'limit_anggaran'    => $limit_anggaran,
             'total_anggaran'    => $total_anggaran,
             'total_anggaran_acc'=> $total_anggaran_acc,
+            'selisih_anggaran' => $limit_anggaran-$total_anggaran_acc,
         ];
     }
 
