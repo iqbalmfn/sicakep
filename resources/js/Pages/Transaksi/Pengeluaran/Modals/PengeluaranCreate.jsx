@@ -50,6 +50,14 @@ const PengeluaranCreate = ({
         anggaranTerpakai = anggaranTerpakai - data.nominal_strict;
     }
 
+    let anggaranTerpakaiSum = 0;
+    if (data.nominal) {
+        anggaranTerpakaiSum =
+            parseInt(anggaranTerpakai) + parseInt(data.nominal);
+    } else {
+        anggaranTerpakaiSum = parseInt(anggaranTerpakai);
+    }
+
     return (
         <Modal
             maxWidth="3xl"
@@ -82,16 +90,14 @@ const PengeluaranCreate = ({
                                     <span
                                         className={clsx(
                                             parseInt(sumberAnggaran?.nominal) <
-                                                parseInt(anggaranTerpakai) +
-                                                    parseInt(data.nominal)
+                                                anggaranTerpakaiSum
                                                 ? "text-danger"
                                                 : ""
                                         )}
                                     >
                                         {formatRupiah(
                                             data.nominal
-                                                ? parseInt(anggaranTerpakai) +
-                                                      parseInt(data.nominal)
+                                                ? anggaranTerpakaiSum
                                                 : parseInt(anggaranTerpakai)
                                         )}
                                     </span>
