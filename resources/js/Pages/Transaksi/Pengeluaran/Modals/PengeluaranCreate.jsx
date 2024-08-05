@@ -37,6 +37,7 @@ const PengeluaranCreate = ({
         (item) => item.id == data.perencanaan_id
     );
     console.log(sumberAnggaran);
+    console.log(data.nominal);
 
     let anggaranTerpakai = 0;
     anggaranTerpakai = pengeluaranData
@@ -45,9 +46,13 @@ const PengeluaranCreate = ({
             return total + item.nominal;
         }, 0);
 
+    if (mode == "edit") {
+        anggaranTerpakai = anggaranTerpakai - data.nominal_strict;
+    }
+
     return (
         <Modal
-            maxWidth="md"
+            maxWidth="3xl"
             show={showModal}
             onClose={closeModal}
             closeable={false}
@@ -57,48 +62,43 @@ const PengeluaranCreate = ({
             </Modal.Header>
             <form onSubmit={mode === "create" ? submit : update}>
                 <Modal.Body>
-                    <div className="grid grid-cols-1 gap-5 py-5">
-                        <div className="col-span-1 flex flex-col gap-4">
-                            {data.perencanaan_id ? (
-                                <div className="flex flex-col border rounded-lg border-info px-3 py-2 text-info bg-blue-50">
-                                    <div className="flex gap-2">
-                                        <span className="font-bold">
-                                            Alokasi Anggaran
-                                        </span>
-                                        <span>:</span>
-                                        <span>
-                                            {formatRupiah(
-                                                sumberAnggaran?.nominal
-                                            )}
-                                        </span>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <span className="font-bold">
-                                            Anggaran Terpakai
-                                        </span>
-                                        <span>:</span>
-                                        <span
-                                            className={clsx(
-                                                parseInt(
-                                                    sumberAnggaran?.nominal
-                                                ) <
-                                                    parseInt(anggaranTerpakai) +
-                                                        parseInt(data.nominal)
-                                                    ? "text-danger"
-                                                    : ""
-                                            )}
-                                        >
-                                            {formatRupiah(
-                                                data.nominal
-                                                    ? parseInt(
-                                                          anggaranTerpakai
-                                                      ) + parseInt(data.nominal)
-                                                    : anggaranTerpakai
-                                            )}
-                                        </span>
-                                    </div>
+                    <div className="grid grid-cols-2 gap-5 py-5">
+                        {data.perencanaan_id ? (
+                            <div className="col-span-2 flex flex-col border rounded-lg border-info px-3 py-2 text-info bg-blue-50">
+                                <div className="flex gap-2">
+                                    <span className="font-bold">
+                                        Alokasi Anggaran
+                                    </span>
+                                    <span>:</span>
+                                    <span>
+                                        {formatRupiah(sumberAnggaran?.nominal)}
+                                    </span>
                                 </div>
-                            ) : null}
+                                <div className="flex gap-2">
+                                    <span className="font-bold">
+                                        Anggaran Terpakai
+                                    </span>
+                                    <span>:</span>
+                                    <span
+                                        className={clsx(
+                                            parseInt(sumberAnggaran?.nominal) <
+                                                parseInt(anggaranTerpakai) +
+                                                    parseInt(data.nominal)
+                                                ? "text-danger"
+                                                : ""
+                                        )}
+                                    >
+                                        {formatRupiah(
+                                            data.nominal
+                                                ? parseInt(anggaranTerpakai) +
+                                                      parseInt(data.nominal)
+                                                : parseInt(anggaranTerpakai)
+                                        )}
+                                    </span>
+                                </div>
+                            </div>
+                        ) : null}
+                        <div className="col-span-1 flex flex-col gap-4">
                             <FormGroup>
                                 <FormLabel
                                     name="Kategori"
@@ -222,6 +222,8 @@ const PengeluaranCreate = ({
                                 />
                                 <FormError message={errors?.nominal} />
                             </FormGroup>
+                        </div>
+                        <div className="col-span-1 flex flex-col gap-4">
                             <FormGroup>
                                 <FormLabel
                                     name="Jenis"

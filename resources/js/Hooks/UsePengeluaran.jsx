@@ -1,4 +1,4 @@
-import { pengeluaranCreateData } from "@/Services/PengeluaranServices";
+import { pengeluaranCreateData, pengeluaranUpdateData } from "@/Services/PengeluaranServices";
 import { useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -59,6 +59,7 @@ const UsePengeluaran = (filtered, flash) => {
                 perencanaan_id: initialData.perencanaan_id,
                 judul: initialData.judul,
                 nominal: initialData.nominal,
+                nominal_strict: initialData.nominal,
                 tanggal: initialData.tanggal,
                 jenis: initialData.jenis,
                 deskripsi: initialData.deskripsi,

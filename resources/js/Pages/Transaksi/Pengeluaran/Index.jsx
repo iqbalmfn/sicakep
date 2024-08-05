@@ -19,7 +19,7 @@ import {
     listMonths,
     listYears,
 } from "@/Utils/GlobalFunction";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import PengeluaranCreate from "./Modals/PengeluaranCreate";
 import PengeluaranDetail from "./Modals/PengeluaranDetail";
 
@@ -27,6 +27,7 @@ const Index = ({
     title,
     breadcrumbs,
     datas,
+    dataAll,
     categories,
     users,
     perencanaans,
@@ -296,7 +297,7 @@ const Index = ({
                 closeModal={handleCloseModal}
                 mode={mode}
                 data={data}
-                pengeluaranData={datas.data}
+                pengeluaranData={dataAll.data}
                 categories={categories}
                 users={users}
                 perencanaans={perencanaans}

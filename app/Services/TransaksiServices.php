@@ -107,7 +107,7 @@ class TransaksiServices {
     {
         $request->validate($this->rules()["update"]);
 
-        $input = $request->all();
+        $input = $request->except('nominal_strict');
 
         DB::beginTransaction();
         try {

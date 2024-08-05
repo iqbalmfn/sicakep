@@ -40,6 +40,18 @@ class PengeluaranController extends Controller
             null
         );
 
+        $dataAll = $this->transaksiServices->getData(
+            $request->q,
+            $request->orderBy,
+            $request->orderDirection,
+            1000,
+            $request->kategori_id,
+            $request->bulan,
+            $request->tahun,
+            'pengeluaran',
+            null
+        );
+
         $categories = $this->kategoriServices->getDataPengeluaran(
             null,
             null,
@@ -77,6 +89,7 @@ class PengeluaranController extends Controller
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
             "datas" => $datas,
+            "dataAll" => $dataAll,
             "categories" => $categories,
             "users" => $users,
             "perencanaans" => $perencanaans,
