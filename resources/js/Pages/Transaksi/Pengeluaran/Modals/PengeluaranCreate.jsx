@@ -43,7 +43,7 @@ const PengeluaranCreate = ({
     anggaranTerpakai = pengeluaranData
         .filter((item) => item.perencanaan_id == data.perencanaan_id)
         .reduce((total, item) => {
-            return total + item.nominal;
+            return parseInt(total) + parseInt(item.nominal);
         }, 0);
 
     if (mode == "edit") {
