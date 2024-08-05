@@ -81,6 +81,67 @@ class PerencanaanServices
             ->withQueryString();
     }
 
+    public function getDataAll(
+        $q,
+        $orderBy,
+        $orderDirection,
+        $kategori_id = null,
+        $bulan = null,
+        $tahun = null,
+        $status = null,
+        $select2 = null,
+        $pic_id
+    ) {
+        $data = Perencanaan::query()
+            ->with(['user', 'pic', 'kategori', 'logs.user', 'transaksi']);
+
+        if ($kategori_id) {
+            $data->whereKategoriId($kategori_id);
+        }
+
+        if ($pic_id) {
+            $data->wherePicId($pic_id);
+        }
+
+        if ($bulan) {
+            $data->whereBulan($bulan);
+        } else {
+            $data->whereBulan(date('m'));
+        }
+
+        if ($tahun) {
+            $data->whereTahun($tahun);
+        } else {
+            $data->whereTahun(date('Y'));
+        }
+
+        if (isset($status)) { // Periksa apakah $status diset
+            if ($status !== 'all') {
+                if ($status === 'waiting') {
+                    $data->where('status', null);
+                } else {
+                    $data->where('status', $status);
+                }
+            }
+        }
+
+        if ($q) {
+            $data->where(function ($query) use ($q) {
+                $query->where('judul', 'like', '%' . $q . '%');
+                $query->orWhere('nominal', 'like', '%' . $q . '%');
+                $query->orWhere('deskripsi', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($select2 == true) {
+            $data->select('id as value', 'nama as label');
+            return $data->get();
+        }
+
+        return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+            ->get();
+    }
+
     public function viewMode(
         $q,
         $orderBy,

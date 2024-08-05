@@ -40,11 +40,10 @@ class PengeluaranController extends Controller
             null
         );
 
-        $dataAll = $this->transaksiServices->getData(
+        $dataAll = $this->transaksiServices->getDataAll(
             $request->q,
             $request->orderBy,
             $request->orderDirection,
-            1000,
             $request->kategori_id,
             $request->bulan,
             $request->tahun,
@@ -62,11 +61,10 @@ class PengeluaranController extends Controller
             true
         );
 
-        $perencanaan_raw = $this->perencanaanServices->getData(
+        $perencanaan_raw = $this->perencanaanServices->getDataAll(
             null, 
             null, 
             null, 
-            100, 
             null, 
             $request->bulan, 
             $request->tahun, 
@@ -74,7 +72,7 @@ class PengeluaranController extends Controller
             null,
             null
         );
-        $perencanaans = collect($perencanaan_raw->items())->map(function ($item) {
+        $perencanaans = collect($perencanaan_raw    )->map(function ($item) {
             return [
                 'id' => $item->id,
                 'judul' => $item->judul,
@@ -85,6 +83,8 @@ class PengeluaranController extends Controller
 
         $users = User::all();
 
+        $widget = $this->widget($request->kategori_id, $request->bulan, $request->tahun);
+
         return Inertia::render('Transaksi/Pengeluaran/Index', [
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
@@ -93,6 +93,7 @@ class PengeluaranController extends Controller
             "categories" => $categories,
             "users" => $users,
             "perencanaans" => $perencanaans,
+            "widget" => $widget,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',
@@ -101,6 +102,70 @@ class PengeluaranController extends Controller
                 'orderDirection' => $request->orderDirection ?? 'desc'
             ],
         ]);
+    }
+
+    public function widget($kategori_id, $bulan, $tahun) {
+        // start : total pemasukan
+        $pemasukan_raw = $this->transaksiServices->getDataAll(
+            null,
+            null,
+            null,
+            null,
+            $bulan,
+            $tahun,
+            'pemasukan',
+            null
+        );
+
+        $total_pemasukan = 0;
+        foreach ($pemasukan_raw as $pemasukan) {
+            $total_pemasukan += $pemasukan->nominal;
+        }
+        // end : total pemasukan
+
+        // start : total pengeluaran
+        $pengeluaran_raw = $this->transaksiServices->getDataAll(
+            null,
+            null,
+            null,
+            null,
+            $bulan,
+            $tahun,
+            'pengeluaran',
+            null
+        );
+
+        $total_pengeluaran = 0;
+        foreach ($pengeluaran_raw as $pengeluaran) {
+            $total_pengeluaran += $pengeluaran->nominal;
+        }
+        // end : total pengeluaran
+
+        // start : anggaran tersedia
+        $total_anggaran_raw = $this->perencanaanServices->getDataAll(
+            null,
+            null,
+            null,
+            $kategori_id,
+            $bulan,
+            $tahun,
+            1,
+            null,
+            null
+        );
+
+        $total_anggaran = 0;
+        foreach ($total_anggaran_raw as $anggaran) {
+            $total_anggaran += $anggaran->nominal;
+        }
+        // end : anggaran tersedia
+
+        return [
+            'total_pemasukan'   => $total_pemasukan,
+            'total_anggaran'    => $total_anggaran,
+            'total_pengeluaran' => $total_pengeluaran,
+            'dana_tersedia'     => $total_anggaran-$total_pengeluaran,
+        ];
     }
 
     public function view(Request $request) {
@@ -115,7 +180,6 @@ class PengeluaranController extends Controller
             $request->q,
             $request->orderBy,
             $request->orderDirection,
-            $request->perPage,
             $request->kategori_id,
             $request->bulan,
             $request->tahun,
@@ -124,8 +188,7 @@ class PengeluaranController extends Controller
             $request->user_id
         );
 
-        $pemasukan_raw = $this->transaksiServices->getData(
-            null,
+        $pemasukan_raw = $this->transaksiServices->getDataAll(
             null,
             null,
             null,
@@ -140,6 +203,8 @@ class PengeluaranController extends Controller
         foreach ($pemasukan_raw as $pemasukan) {
             $limit_anggaran += $pemasukan->nominal;
         }
+
+        // return $datas;
 
         return Inertia::render('Transaksi/Pengeluaran/View', [
             "title" => $title,

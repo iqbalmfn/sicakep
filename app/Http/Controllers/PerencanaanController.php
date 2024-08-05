@@ -76,8 +76,7 @@ class PerencanaanController extends Controller
 
     public function widget($kategori_id, $bulan, $tahun) {
         // start : limit anggaran
-        $pemasukan_raw = $this->transaksiServices->getData(
-            null,
+        $pemasukan_raw = $this->transaksiServices->getDataAll(
             null,
             null,
             null,
@@ -95,11 +94,10 @@ class PerencanaanController extends Controller
         // end : limit anggaran
 
         // start : total anggaran
-        $anggaran_raw = $this->perencanaanServices->getData(
+        $anggaran_raw = $this->perencanaanServices->getDataAll(
             null,
             null,
             null,
-            100,
             $kategori_id,
             $bulan,
             $tahun,
@@ -109,17 +107,16 @@ class PerencanaanController extends Controller
         );
 
         $total_anggaran = 0;
-        foreach ($anggaran_raw->items() as $anggaran) {
+        foreach ($anggaran_raw as $anggaran) {
             $total_anggaran += $anggaran->nominal;
         }
         // end : total anggaran
 
         // start : anggaran acc
-        $anggaran_acc_raw = $this->perencanaanServices->getData(
+        $anggaran_acc_raw = $this->perencanaanServices->getDataAll(
             null,
             null,
             null,
-            100,
             $kategori_id,
             $bulan,
             $tahun,
@@ -129,7 +126,7 @@ class PerencanaanController extends Controller
         );
 
         $total_anggaran_acc = 0;
-        foreach ($anggaran_acc_raw->items() as $anggaran) {
+        foreach ($anggaran_acc_raw as $anggaran) {
             $total_anggaran_acc += $anggaran->nominal;
         }
         // end : anggaran acc

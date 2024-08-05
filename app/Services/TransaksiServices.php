@@ -65,6 +65,56 @@ class TransaksiServices {
             ->withQueryString();
     }
 
+    public function getDataAll(
+        $q,
+        $orderBy,
+        $orderDirection,
+        $kategori_id = null,
+        $bulan = null,
+        $tahun = null,
+        $tipe = null,
+        $select2 = null
+    ) {
+        $data = Transaksi::query()
+            ->with(['user', 'kategori', 'perencanaan']);
+
+        if ($kategori_id) {
+            $data->whereKategoriId($kategori_id);
+        }
+
+        if ($bulan) {
+            $data->whereMonth('tanggal', $bulan);
+        } else {
+            $data->whereMonth('tanggal', date('m'));
+        }
+
+        if ($tahun) {
+            $data->whereYear('tanggal', $tahun);
+        } else {
+            $data->whereYear('tanggal', date('Y'));
+        }
+
+        if ($tipe) {
+            $data->whereTipe($tipe);
+        }
+
+        if ($q) {
+            $data->where(function ($query) use ($q) {
+                $query->where('judul', 'like', '%' . $q . '%');
+                $query->orWhere('nominal', 'like', '%' . $q . '%');
+                $query->orWhere('deskripsi', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($select2 == true) {
+            $data->select('id as value', 'judul as label');
+            return $data->get();
+        }
+
+        return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+            ->get();
+    }
+
     public function getDataById($id)
     {
         return Transaksi::query()
@@ -148,7 +198,6 @@ class TransaksiServices {
         $q,
         $orderBy,
         $orderDirection,
-        $perPage,
         $kategori_id = null,
         $bulan = null,
         $tahun = null,
@@ -157,7 +206,7 @@ class TransaksiServices {
         $user_id
     ) {
         $data = Perencanaan::query()
-            ->whereHas('transaksi')
+            // ->whereHas('transaksi')
             ->with(['kategori', 'transaksi.user']);
 
         if ($kategori_id) {

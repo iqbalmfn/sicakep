@@ -100,6 +100,7 @@ const PengeluaranCreate = ({
                                                 ? anggaranTerpakaiSum
                                                 : parseInt(anggaranTerpakai)
                                         )}
+                                        
                                     </span>
                                 </div>
                             </div>

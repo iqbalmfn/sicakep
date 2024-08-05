@@ -3,11 +3,30 @@ import Button from "@/Components/Atoms/Button";
 import Icon from "@/Components/Atoms/Icon";
 import AppContentLayout from "@/Layouts/AppContentLayout";
 import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
-import { formatRupiah, monthNumberToIndonesian } from "@/Utils/GlobalFunction";
+import {
+    formatDateWithDay,
+    formatRupiah,
+    monthNumberToIndonesian,
+} from "@/Utils/GlobalFunction";
 import { Head, Link } from "@inertiajs/react";
 import { Fragment } from "react";
 
 const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
+    let totalAnggaran = 0;
+    let totalDanaTerpakai = 0;
+    let totalDanaTersisa = 0;
+
+    datas.kategori_list.forEach((kategori) => {
+        kategori.list.forEach((data) => {
+            let totalTransaksi = 0;
+            data.transaksi.forEach((transaksi) => {
+                totalTransaksi += transaksi.nominal;
+            });
+            totalDanaTerpakai += totalTransaksi;
+            totalDanaTersisa += data.nominal - totalTransaksi;
+            totalAnggaran += data.nominal;
+        });
+    });
     return (
         <AppContentLayout>
             <Head title={title} />
@@ -15,7 +34,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
             <ContentWrapper>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div className="flex items-center gap-2">
-                        <Link href={route("perencanaan.index")}>
+                        <Link href={route("transaksi.pengeluaran.index")}>
                             <Button size="sm" variant="danger">
                                 <Icon icon="chevron-left" /> Kembali
                             </Button>
@@ -26,7 +45,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                 <div className="border-t my-5 pt-3">
                     <div className="text-center">
                         <h3 className="text-2xl font-bold text-gray-900">
-                            Perencanaan Anggaran
+                            Laporan Pengeluaran
                         </h3>
                         <h5 className="text-lg font-bold text-gray-900">
                             Bulan {monthNumberToIndonesian(datas.bulan)} Tahun{" "}
@@ -49,27 +68,29 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                     <th className="border border-gray-400 px-3 py-2 text-gray-600">
                                         Pengguna Dana
                                     </th>
-                                    {/* 
+                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                        Tanggal
+                                    </th>
                                     <th className="border border-gray-400 px-3 py-2 text-gray-600">
                                         Jenis
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
-                                        Tipe
-                                    </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
-                                        Status
-                                    </th> */}
                                     <th
                                         className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
                                         width="10%"
                                     >
-                                        Besarnya
+                                        Nominal
                                     </th>
                                     <th
                                         className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
                                         width="10%"
                                     >
-                                        Kalkulasi
+                                        Dana Terpakai
+                                    </th>
+                                    <th
+                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
+                                        width="10%"
+                                    >
+                                        Dana Tersisa
                                     </th>
                                 </tr>
                             </thead>
@@ -86,176 +107,166 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                   </td>
                                               </tr>
                                               {kategori.list.map(
-                                                  (data, index) => (
-                                                      <tr key={index} className="bg-green-100">
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600 text-center">
-                                                              {index + 1}
-                                                          </td>
-                                                          <td colSpan={2} className="border border-gray-400 px-3 py-1 text-gray-600">
-                                                              {data.judul}
-                                                          </td>
-                                                          {/* 
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
-                                                              {
-                                                                  data.kategori
-                                                                      .nama
-                                                              }
-                                                          </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
-                                                              {data.tipe}
-                                                          </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
-                                                              {data.status == 0
-                                                                  ? "reject"
-                                                                  : data.status ==
-                                                                    1
-                                                                  ? "accept"
-                                                                  : "waiting"}
-                                                          </td> */}
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
-                                                              {formatRupiah(
-                                                                  data.nominal
+                                                  (data, index) => {
+                                                      let totalTransaksi = 0;
+                                                      return (
+                                                          <Fragment key={index}>
+                                                              <tr className="bg-yellow-100">
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-start font-bold">
+                                                                      {index +
+                                                                          1}
+                                                                  </td>
+                                                                  <td
+                                                                      colSpan={
+                                                                          4
+                                                                      }
+                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
+                                                                  >
+                                                                      {
+                                                                          data.judul
+                                                                      }
+                                                                  </td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end font-bold">
+                                                                      {formatRupiah(
+                                                                          data.nominal
+                                                                      )}
+                                                                  </td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                              </tr>
+
+                                                              {data.transaksi.map(
+                                                                  (
+                                                                      transaksi,
+                                                                      itrax
+                                                                  ) => {
+                                                                      totalTransaksi +=
+                                                                          transaksi.nominal;
+                                                                      return (
+                                                                          <Fragment
+                                                                              key={
+                                                                                  itrax
+                                                                              }
+                                                                          >
+                                                                              <tr>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-start">
+                                                                                      {index +
+                                                                                          1}
+
+                                                                                      .
+                                                                                      {itrax +
+                                                                                          1}
+                                                                                  </td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                      {
+                                                                                          transaksi.judul
+                                                                                      }
+                                                                                  </td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                      {
+                                                                                          transaksi
+                                                                                              .user
+                                                                                              .name
+                                                                                      }
+                                                                                  </td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                      {formatDateWithDay(
+                                                                                          transaksi.tanggal
+                                                                                      )}
+                                                                                  </td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                      {
+                                                                                          transaksi.jenis
+                                                                                      }
+                                                                                  </td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                                      {formatRupiah(
+                                                                                          transaksi.nominal
+                                                                                      )}
+                                                                                  </td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                              </tr>
+                                                                          </Fragment>
+                                                                      );
+                                                                  }
                                                               )}
-                                                          </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
-                                                      </tr>
-                                                  )
+                                                              <tr className="font-semibold">
+                                                                  <td
+                                                                      colSpan={
+                                                                          5
+                                                                      }
+                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
+                                                                  >
+                                                                      Sub Total
+                                                                  </td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                      {formatRupiah(
+                                                                          totalTransaksi
+                                                                      )}
+                                                                  </td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                      {formatRupiah(
+                                                                          totalTransaksi
+                                                                      )}
+                                                                  </td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                              </tr>
+                                                              <tr className="font-semibold">
+                                                                  <td
+                                                                      colSpan={
+                                                                          5
+                                                                      }
+                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
+                                                                  >
+                                                                      Selisih
+                                                                  </td>
+                                                                  <td
+                                                                      colSpan={
+                                                                          1
+                                                                      }
+                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 text-end"
+                                                                  >
+                                                                      {formatRupiah(
+                                                                          data.nominal -
+                                                                              totalTransaksi
+                                                                      )}
+                                                                  </td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                      {formatRupiah(
+                                                                          data.nominal -
+                                                                              totalTransaksi
+                                                                      )}
+                                                                  </td>
+                                                              </tr>
+                                                          </Fragment>
+                                                      );
+                                                  }
                                               )}
-                                              {/* <tr>
-                                                  <td
-                                                      colSpan={2}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
-                                                  >
-                                                      Total Cash
-                                                  </td>
-                                                  <td
-                                                      colSpan={5}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"
-                                                  >
-                                                      {formatRupiah(
-                                                          kategori.sub_total_cash
-                                                      )}
-                                                  </td>
-                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
-                                              </tr>
-                                              <tr>
-                                                  <td
-                                                      colSpan={2}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
-                                                  >
-                                                      Total Transfer
-                                                  </td>
-                                                  <td
-                                                      colSpan={5}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"
-                                                  >
-                                                      {formatRupiah(
-                                                          kategori.sub_total_transfer
-                                                      )}
-                                                  </td>
-                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
-                                              </tr>
-                                              <tr>
-                                                  <td
-                                                      colSpan={2}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
-                                                  >
-                                                      Sub Total
-                                                  </td>
-                                                  <td
-                                                      colSpan={5}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"
-                                                  >
-                                                      {formatRupiah(
-                                                          kategori.sub_total
-                                                      )}
-                                                  </td>
-                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
-                                              </tr> */}
                                           </Fragment>
                                       ))
                                     : null}
                             </tbody>
-                            {/* <tfoot>
-                                <tr className="bg-red-200">
-                                    <td
-                                        colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
-                                    >
-                                        Limit Anggaran
-                                    </td>
-                                    <td
-                                        colSpan={6}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
-                                    >
-                                        {formatRupiah(limit_anggaran)}
-                                    </td>
-                                </tr>
-                                <tr className="bg-yellow-200">
-                                    <td
-                                        colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
-                                    >
-                                        Total Cash
-                                    </td>
+                            <tfoot>
+                                <tr className="bg-green-200 font-extrabold text-md">
                                     <td
                                         colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
+                                        className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
                                     >
-                                        {formatRupiah(datas.total_cash)}
+                                        Total Dana
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
-                                </tr>
-                                <tr className="bg-yellow-200">
-                                    <td
-                                        colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
-                                    >
-                                        Total Transfer
+                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                        {formatRupiah(totalAnggaran)}
                                     </td>
-                                    <td
-                                        colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
-                                    >
-                                        {formatRupiah(datas.total_transfer)}
+                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                        {formatRupiah(totalDanaTerpakai)}
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
-                                </tr>
-                                <tr className="bg-yellow-200">
-                                    <td
-                                        colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
-                                    >
-                                        Total Anggaran
-                                    </td>
-                                    <td
-                                        colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
-                                    >
-                                        {formatRupiah(datas.total)}
-                                    </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end">
-                                        {formatRupiah(datas.total)}
+                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                        {formatRupiah(totalDanaTersisa)}
                                     </td>
                                 </tr>
-
-                                <tr className="bg-green-200">
-                                    <td
-                                        colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
-                                    >
-                                        Selisih Anggaran
-                                    </td>
-                                    <td
-                                        colSpan={6}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
-                                    >
-                                        {formatRupiah(
-                                            limit_anggaran - datas.total
-                                        )}
-                                    </td>
-                                </tr>
-                            </tfoot> */}
+                            </tfoot>
                         </table>
                     </div>
                 </div>
