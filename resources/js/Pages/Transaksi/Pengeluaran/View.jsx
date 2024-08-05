@@ -20,11 +20,11 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
         kategori.list.forEach((data) => {
             let totalTransaksi = 0;
             data.transaksi.forEach((transaksi) => {
-                totalTransaksi += transaksi.nominal;
+                totalTransaksi += parseInt(transaksi.nominal);
             });
-            totalDanaTerpakai += totalTransaksi;
-            totalDanaTersisa += data.nominal - totalTransaksi;
-            totalAnggaran += data.nominal;
+            totalDanaTerpakai += parseInt(totalTransaksi);
+            totalDanaTersisa += parseInt(data.nominal) - parseInt(totalTransaksi);
+            totalAnggaran += parseInt(data.nominal);
         });
     });
     return (
@@ -141,7 +141,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                                       itrax
                                                                   ) => {
                                                                       totalTransaksi +=
-                                                                          transaksi.nominal;
+                                                                          parseInt(transaksi.nominal);
                                                                       return (
                                                                           <Fragment
                                                                               key={
@@ -228,15 +228,15 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                                       className="border border-gray-400 px-3 py-1 text-gray-600 text-end"
                                                                   >
                                                                       {formatRupiah(
-                                                                          data.nominal -
-                                                                              totalTransaksi
+                                                                          parseInt(data.nominal) -
+                                                                              parseInt(totalTransaksi)
                                                                       )}
                                                                   </td>
                                                                   <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
                                                                   <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
                                                                       {formatRupiah(
-                                                                          data.nominal -
-                                                                              totalTransaksi
+                                                                          parseInt(data.nominal) -
+                                                                              parseInt(totalTransaksi)
                                                                       )}
                                                                   </td>
                                                               </tr>
