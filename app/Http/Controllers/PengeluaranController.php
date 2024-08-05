@@ -103,6 +103,59 @@ class PengeluaranController extends Controller
         ]);
     }
 
+    public function view(Request $request) {
+        $title = "View Pengeluaran";
+        $breadcrumbs = [
+            ['name' => 'Transaksi', 'link' => '#'],
+            ['name' => 'Pengeluaran', 'link' => '/transaksi/pengeluaran'],
+            ['name' => $title],
+        ];
+
+        $datas = $this->transaksiServices->viewPengeluaranMode(
+            $request->q,
+            $request->orderBy,
+            $request->orderDirection,
+            $request->perPage,
+            $request->kategori_id,
+            $request->bulan,
+            $request->tahun,
+            $request->status,
+            $request->select2,
+            $request->user_id
+        );
+
+        $pemasukan_raw = $this->transaksiServices->getData(
+            null,
+            null,
+            null,
+            null,
+            null,
+            $request->bulan,
+            $request->tahun,
+            'pemasukan',
+            $request->select2
+        );
+
+        $limit_anggaran = 0;
+        foreach ($pemasukan_raw as $pemasukan) {
+            $limit_anggaran += $pemasukan->nominal;
+        }
+
+        return Inertia::render('Transaksi/Pengeluaran/View', [
+            "title" => $title,
+            "breadcrumbs" => $breadcrumbs,
+            "datas" => $datas,
+            "limit_anggaran" => $limit_anggaran,
+            'filtered' => $request ?? [
+                'perPage' => $request->perPage ?? 10,
+                'q' => $request->q ?? '',
+                'page' => $request->page ?? 1,
+                'orderBy' => $request->orderBy ?? 'id',
+                'orderDirection' => $request->orderDirection ?? 'desc'
+            ],
+        ]);
+    }
+
     public function store(Request $request)
     {
         $res = $this->transaksiServices->createData($request, "Pengeluaran");

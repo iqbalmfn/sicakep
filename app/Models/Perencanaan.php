@@ -34,6 +34,10 @@ class Perencanaan extends Model
         return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
     }
 
+    public function transaksi() {
+        return $this->hasMany(Transaksi::class, 'perencanaan_id', 'id');
+    }
+
     public function logs() {
         return $this->hasMany(LogPerencanaan::class, 'perencanaan_id', 'id');
     }

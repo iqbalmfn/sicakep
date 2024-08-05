@@ -31,7 +31,7 @@ class PerencanaanServices
         $pic_id
     ) {
         $data = Perencanaan::query()
-            ->with(['user', 'pic', 'kategori', 'logs.user']);
+            ->with(['user', 'pic', 'kategori', 'logs.user', 'transaksi']);
 
         if ($kategori_id) {
             $data->whereKategoriId($kategori_id);

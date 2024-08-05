@@ -2,10 +2,17 @@
 
 namespace App\Services;
 
+use App\Models\Perencanaan;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
 
 class TransaksiServices {
+    protected $perencanaanServices;
+
+    public function __construct(PerencanaanServices $perencanaanServices) {
+        $this->perencanaanServices = $perencanaanServices;
+    }
+
     public function getData(
         $q,
         $orderBy,
@@ -135,5 +142,116 @@ class TransaksiServices {
         } catch (\Throwable $th) {
             return responseError("Gagal, ada kesalahan pada sistem saat menghapus data " . $th->getMessage());
         }
+    }
+
+    public function viewPengeluaranMode(
+        $q,
+        $orderBy,
+        $orderDirection,
+        $perPage,
+        $kategori_id = null,
+        $bulan = null,
+        $tahun = null,
+        $status = null,
+        $select2 = null,
+        $user_id
+    ) {
+        $data = Perencanaan::query()
+            ->whereHas('transaksi')
+            ->with(['kategori', 'transaksi.user']);
+
+        if ($kategori_id) {
+            $data->whereKategoriId($kategori_id);
+        }
+
+        if ($user_id) {
+            $data->wherePicId($user_id);
+        }
+
+        if ($bulan) {
+            $data->whereBulan($bulan);
+        } else {
+            $data->whereBulan(date('m'));
+        }
+
+        if ($tahun) {
+            $data->whereTahun($tahun);
+        } else {
+            $data->whereTahun(date('Y'));
+        }
+
+        if (isset($status)) { // Periksa apakah $status diset
+            if ($status !== 'all') {
+                if ($status === 'waiting') {
+                    $data->where('status', null);
+                } else {
+                    $data->where('status', $status);
+                }
+            }
+        }
+
+        if ($q) {
+            $data->where(function ($query) use ($q) {
+                $query->where('judul', 'like', '%' . $q . '%');
+                $query->orWhere('nominal', 'like', '%' . $q . '%');
+                $query->orWhere('deskripsi', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($select2 == true) {
+            $data->select('id as value', 'nama as label');
+            return $data->get();
+        }
+
+        $raw = $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+            ->get();
+
+        $result = [
+            "bulan" => $raw ? $raw[0]["bulan"] : date('m'),
+            "tahun" => $raw ? $raw[0]["tahun"] : date('Y'),
+            "kategori_list" => [],
+            "total_cash" => 0,
+            "total_transfer" => 0,
+            "total" => 0
+        ];
+
+        $kategori_map = [];
+
+        foreach ($raw as $item) {
+            // baca data transaksi
+
+            $kategori_id = $item["kategori_id"];
+            $kategori_nama = $item['kategori']['nama'];  // Gantilah dengan nama kategori yang sebenarnya dari sumber data Anda
+
+            if (!isset($kategori_map[$kategori_id])) {
+                $kategori_map[$kategori_id] = [
+                    "kategori" => $kategori_nama,
+                    "list" => [],
+                    "sub_total_cash" => 0,
+                    "sub_total_transfer" => 0,
+                    "sub_total" => 0
+                ];
+            }
+
+            $kategori_map[$kategori_id]["list"][] = $item;
+
+            if ($item["tipe"] == "cash") {
+                $kategori_map[$kategori_id]["sub_total_cash"] += $item["nominal"];
+            } elseif ($item["tipe"] == "transfer") {
+                $kategori_map[$kategori_id]["sub_total_transfer"] += $item["nominal"];
+            }
+
+            $kategori_map[$kategori_id]["sub_total"] += $item["nominal"];
+        }
+
+        $result["kategori_list"] = array_values($kategori_map);
+
+        foreach ($result["kategori_list"] as $kategori) {
+            $result["total_cash"] += $kategori["sub_total_cash"];
+            $result["total_transfer"] += $kategori["sub_total_transfer"];
+            $result["total"] += $kategori["sub_total"];
+        }
+
+        return $result;
     }
 }

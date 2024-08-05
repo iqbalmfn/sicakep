@@ -47,8 +47,9 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                         Judul
                                     </th>
                                     <th className="border border-gray-400 px-3 py-2 text-gray-600">
-                                        Pemegang Anggaran
+                                        Pengguna Dana
                                     </th>
+                                    {/* 
                                     <th className="border border-gray-400 px-3 py-2 text-gray-600">
                                         Jenis
                                     </th>
@@ -57,7 +58,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                     </th>
                                     <th className="border border-gray-400 px-3 py-2 text-gray-600">
                                         Status
-                                    </th>
+                                    </th> */}
                                     <th
                                         className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
                                         width="10%"
@@ -86,16 +87,14 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                               </tr>
                                               {kategori.list.map(
                                                   (data, index) => (
-                                                      <tr key={index}>
+                                                      <tr key={index} className="bg-green-100">
                                                           <td className="border border-gray-400 px-3 py-1 text-gray-600 text-center">
                                                               {index + 1}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                          <td colSpan={2} className="border border-gray-400 px-3 py-1 text-gray-600">
                                                               {data.judul}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
-                                                              {data.pic.name}
-                                                          </td>
+                                                          {/* 
                                                           <td className="border border-gray-400 px-3 py-1 text-gray-600">
                                                               {
                                                                   data.kategori
@@ -112,7 +111,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                                     1
                                                                   ? "accept"
                                                                   : "waiting"}
-                                                          </td>
+                                                          </td> */}
                                                           <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
                                                               {formatRupiah(
                                                                   data.nominal
@@ -122,7 +121,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                       </tr>
                                                   )
                                               )}
-                                              <tr>
+                                              {/* <tr>
                                                   <td
                                                       colSpan={2}
                                                       className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
@@ -172,12 +171,12 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                       )}
                                                   </td>
                                                   <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
-                                              </tr>
+                                              </tr> */}
                                           </Fragment>
                                       ))
                                     : null}
                             </tbody>
-                            <tfoot>
+                            {/* <tfoot>
                                 <tr className="bg-red-200">
                                     <td
                                         colSpan={2}
@@ -256,7 +255,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                         )}
                                     </td>
                                 </tr>
-                            </tfoot>
+                            </tfoot> */}
                         </table>
                     </div>
                 </div>

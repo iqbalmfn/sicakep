@@ -28,6 +28,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('perencanaan/confirm/{perencanaan}', [PerencanaanController::class, 'confirm'])->name('perencanaan.confirm');
     Route::prefix('transaksi')->name('transaksi.')->group(function () {
         Route::resource('pemasukan', PemasukanController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::get('pengeluaran/view', [PengeluaranController::class, 'view'])->name('pengeluaran.view');
         Route::resource('pengeluaran', PengeluaranController::class)->only(['index', 'store', 'update', 'destroy']);
     });
 });
