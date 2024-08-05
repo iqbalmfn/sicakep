@@ -249,7 +249,7 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                     : null}
                             </tbody>
                             <tfoot>
-                                <tr className="bg-green-200 font-extrabold text-md">
+                                <tr className="bg-green-200 font-extrabold text-md ">
                                     <td
                                         colSpan={5}
                                         className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
