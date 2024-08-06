@@ -119,18 +119,18 @@ export function listYears(count = 10) {
 
 export function listMonths() {
     const months = [
-        { value: '01', label: 'Januari' },
-        { value: '02', label: 'Februari' },
-        { value: '03', label: 'Maret' },
-        { value: '04', label: 'April' },
-        { value: '05', label: 'Mei' },
-        { value: '06', label: 'Juni' },
-        { value: '07', label: 'Juli' },
-        { value: '08', label: 'Agustus' },
-        { value: '09', label: 'September' },
-        { value: '10', label: 'Oktober' },
-        { value: '11', label: 'November' },
-        { value: '12', label: 'Desember' }
+        { value: "01", label: "Januari" },
+        { value: "02", label: "Februari" },
+        { value: "03", label: "Maret" },
+        { value: "04", label: "April" },
+        { value: "05", label: "Mei" },
+        { value: "06", label: "Juni" },
+        { value: "07", label: "Juli" },
+        { value: "08", label: "Agustus" },
+        { value: "09", label: "September" },
+        { value: "10", label: "Oktober" },
+        { value: "11", label: "November" },
+        { value: "12", label: "Desember" },
     ];
 
     return months;
@@ -138,8 +138,18 @@ export function listMonths() {
 
 export function monthNumberToIndonesian(monthNumber) {
     const months = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
     ];
 
     // Mengonversi string bulan ke angka dan menyesuaikan indeks (0-11)
@@ -149,14 +159,24 @@ export function monthNumberToIndonesian(monthNumber) {
     if (index >= 0 && index < 12) {
         return months[index];
     } else {
-        return 'Bulan tidak valid';
+        return "Bulan tidak valid";
     }
 }
 
 export function getCurrentMonthYear() {
     const months = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember",
     ];
 
     const now = new Date();
@@ -164,6 +184,18 @@ export function getCurrentMonthYear() {
     const year = now.getFullYear(); // Mendapatkan tahun saat ini (4-digit)
 
     return `${months[month]} ${year}`;
+}
+
+export function getCurrentMonth() {
+    const now = new Date();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    return month;
+}
+
+export function getCurrentYear() {
+    const now = new Date();
+    const year = now.getFullYear();
+    return year;
 }
 
 export const formatDate = (tanggal) => {
@@ -221,9 +253,9 @@ export const formatDateTime = (tanggal) => {
 
 export function formatRupiah(angka, isCurrency = false) {
     // Ubah semua input ke string, lalu ke number
-    const number = Number(angka.toString().replace(/[^0-9.-]+/g,""));
+    const number = Number(angka.toString().replace(/[^0-9.-]+/g, ""));
     if (isNaN(number)) {
-        return ''; // Mengembalikan string kosong jika input bukan angka yang valid
+        return ""; // Mengembalikan string kosong jika input bukan angka yang valid
     }
     return number
         .toLocaleString("id-ID", { style: "currency", currency: "IDR" })
@@ -370,10 +402,10 @@ export const numberFormat = (number) => {
 export function calculateProposalDuration(
     tahunSkema,
     tahunPelaksanaanProposal,
-    tahunPelaksanaanKalender,
+    tahunPelaksanaanKalender
 ) {
     // Menghitung tahun ke berdasarkan tahun skema dan tahun saat ini
-    const tahunKe = (tahunPelaksanaanProposal - tahunPelaksanaanKalender) + 1;
+    const tahunKe = tahunPelaksanaanProposal - tahunPelaksanaanKalender + 1;
 
     // Membentuk label berdasarkan tahun ke dan tahun skema
     let label;
@@ -388,16 +420,16 @@ export function calculateProposalDuration(
 
 // export const yearsAt = (tahunUsulan, tahunPelaksanaan) => {
 //     const tahunKe = tahunPelaksanaan - formatDateYear(tahunUsulan) + 1;
-    
+
 //     return tahunKe;
 // };
 
 export const yearsAt = (tahunPelaksanaanProposal, tahunPelaksanaanKalender) => {
-    const tahunKe = (tahunPelaksanaanProposal - tahunPelaksanaanKalender) + 1;
-    
+    const tahunKe = tahunPelaksanaanProposal - tahunPelaksanaanKalender + 1;
+
     return tahunKe;
 };
 
 export function nl2br(str) {
-    return str.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    return str.replace(/(?:\r\n|\r|\n)/g, "<br>");
 }

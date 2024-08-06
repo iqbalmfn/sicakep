@@ -15,6 +15,8 @@ import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
 import {
     formatDateWithDay,
     formatRupiah,
+    getCurrentMonth,
+    getCurrentYear,
     handleDelete,
     listMonths,
     listYears,
@@ -217,11 +219,11 @@ const Index = ({
                                 prefix={<Icon icon="calendar-month" />}
                                 size="sm"
                                 name="bulan"
-                                value={params.bulan}
+                                value={params.bulan ? params.bulan : getCurrentMonth()}
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
-                                <option value="">Semua Bulan</option>
+                                <option value="all">Semua Bulan</option>
                                 {listMonths().map((month) => (
                                     <option
                                         key={month.value}
@@ -237,11 +239,11 @@ const Index = ({
                                 prefix={<Icon icon="calendar-check" />}
                                 size="sm"
                                 name="tahun"
-                                value={params.tahun}
+                                value={params.tahun ? params.tahun : getCurrentYear()}
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
-                                <option value="">Semua Tahun</option>
+                                <option value="all">Semua Tahun</option>
                                 {listYears().map((year) => (
                                     <option key={year} value={year}>
                                         {year}

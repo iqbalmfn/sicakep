@@ -6,10 +6,12 @@ use App\Models\Perencanaan;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
 
-class TransaksiServices {
+class TransaksiServices
+{
     protected $perencanaanServices;
 
-    public function __construct(PerencanaanServices $perencanaanServices) {
+    public function __construct(PerencanaanServices $perencanaanServices)
+    {
         $this->perencanaanServices = $perencanaanServices;
     }
 
@@ -31,14 +33,16 @@ class TransaksiServices {
             $data->whereKategoriId($kategori_id);
         }
 
-        if ($bulan) {
+        if ($bulan && $bulan != "all") {
             $data->whereMonth('tanggal', $bulan);
+        } elseif ($bulan == "all") {
         } else {
             $data->whereMonth('tanggal', date('m'));
         }
 
-        if ($tahun) {
+        if ($tahun && $tahun != "all") {
             $data->whereYear('tanggal', $tahun);
+        } elseif ($tahun == "all") {
         } else {
             $data->whereYear('tanggal', date('Y'));
         }
@@ -82,14 +86,16 @@ class TransaksiServices {
             $data->whereKategoriId($kategori_id);
         }
 
-        if ($bulan) {
+        if ($bulan && $bulan != "all") {
             $data->whereMonth('tanggal', $bulan);
+        } elseif ($bulan == "all") {
         } else {
             $data->whereMonth('tanggal', date('m'));
         }
 
-        if ($tahun) {
+        if ($tahun && $tahun != "all") {
             $data->whereYear('tanggal', $tahun);
+        } elseif ($tahun == "all") {
         } else {
             $data->whereYear('tanggal', date('Y'));
         }

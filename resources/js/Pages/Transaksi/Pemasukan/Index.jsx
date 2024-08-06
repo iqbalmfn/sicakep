@@ -15,6 +15,8 @@ import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
 import {
     formatDateWithDay,
     formatRupiah,
+    getCurrentMonth,
+    getCurrentYear,
     handleDelete,
     listMonths,
     listYears
@@ -48,8 +50,6 @@ const Index = ({ title, breadcrumbs, datas, categories, users, filtered, flash }
         handleShowDetailModal,
         handleCloseDetailModal,
     } = UsePemasukan(filtered, flash);
-
-    const { auth } = usePage().props;
 
     const dataRender = () => {
         return datas.data.length > 0 ? (
@@ -164,11 +164,11 @@ const Index = ({ title, breadcrumbs, datas, categories, users, filtered, flash }
                                 prefix={<Icon icon="calendar-month" />}
                                 size="sm"
                                 name="bulan"
-                                value={params.bulan}
+                                value={params.bulan ? params.bulan : getCurrentMonth()}
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
-                                <option value="">Semua Bulan</option>
+                                <option value="all">Semua Bulan</option>
                                 {listMonths().map((month) => (
                                     <option
                                         key={month.value}
@@ -184,11 +184,11 @@ const Index = ({ title, breadcrumbs, datas, categories, users, filtered, flash }
                                 prefix={<Icon icon="calendar-check" />}
                                 size="sm"
                                 name="tahun"
-                                value={params.tahun}
+                                value={params.tahun ? params.tahun : getCurrentYear()}
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
-                                <option value="">Semua Tahun</option>
+                                <option value="all">Semua Tahun</option>
                                 {listYears().map((year) => (
                                     <option key={year} value={year}>
                                         {year}

@@ -1,18 +1,18 @@
 <?php
 
 use App\Http\Controllers\Master\KategoriController;
-use App\Http\Controllers\PemasukanController;
-use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PerencanaanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Transaksi\PemasukanController;
+use App\Http\Controllers\Transaksi\PengeluaranController;
+use App\Http\Controllers\UtangPiutang\PiutangController;
+use App\Http\Controllers\UtangPiutang\UtangController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
-
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
@@ -30,6 +30,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('pemasukan', PemasukanController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('pengeluaran/view', [PengeluaranController::class, 'view'])->name('pengeluaran.view');
         Route::resource('pengeluaran', PengeluaranController::class)->only(['index', 'store', 'update', 'destroy']);
+    });
+    Route::prefix('utang-piutang')->name('utang-piutang.')->group(function () {
+        Route::resource('utang', UtangController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('piutang', PiutangController::class)->only(['index','store', 'update', 'destroy']);
     });
 });
 

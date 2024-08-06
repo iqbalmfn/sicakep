@@ -41,14 +41,17 @@ class PerencanaanServices
             $data->wherePicId($pic_id);
         }
 
-        if ($bulan) {
+
+        if ($bulan && $bulan != "all") {
             $data->whereBulan($bulan);
+        } elseif ($bulan == "all") {
         } else {
             $data->whereBulan(date('m'));
         }
 
-        if ($tahun) {
+        if ($tahun && $tahun != "all") {
             $data->whereTahun($tahun);
+        } elseif ($tahun == "all") {
         } else {
             $data->whereTahun(date('Y'));
         }
@@ -103,14 +106,16 @@ class PerencanaanServices
             $data->wherePicId($pic_id);
         }
 
-        if ($bulan) {
+        if ($bulan && $bulan != "all") {
             $data->whereBulan($bulan);
+        } elseif ($bulan == "all") {
         } else {
             $data->whereBulan(date('m'));
         }
 
-        if ($tahun) {
+        if ($tahun && $tahun != "all") {
             $data->whereTahun($tahun);
+        } elseif ($tahun == "all") {
         } else {
             $data->whereTahun(date('Y'));
         }
