@@ -11,7 +11,7 @@ import {
 import { Head, Link } from "@inertiajs/react";
 import { Fragment } from "react";
 
-const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
+const View = ({ title, breadcrumbs, datas }) => {
     let totalAnggaran = 0;
     let totalDanaTerpakai = 0;
     let totalDanaTersisa = 0;
