@@ -18,13 +18,14 @@ class UtangPiutangServices
         $bulan = null,
         $tahun = null,
         $tipe = null,
+        $status = null,
         $isPagination = true
     ) {
         $data = UtangPiutang::query()
             ->with(['user']);
 
         if ($user_id) {
-            $data->whereUseriId($user_id);
+            $data->whereUserId($user_id);
         }
 
         if ($bulan && $bulan != "all") {
@@ -43,6 +44,10 @@ class UtangPiutangServices
 
         if ($tipe) {
             $data->whereTipe($tipe);
+        }
+
+        if (isset($status)) {
+            $data->whereStatus($status);
         }
 
         if ($q) {

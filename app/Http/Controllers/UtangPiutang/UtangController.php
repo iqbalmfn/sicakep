@@ -12,7 +12,8 @@ class UtangController extends Controller
 {
     protected $utangPiutangServices;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->utangPiutangServices = app(UtangPiutangServices::class);
     }
 
@@ -33,15 +34,24 @@ class UtangController extends Controller
             $request->bulan,
             $request->tahun,
             "utang",
+            $request->status,
             true
         );
 
         $users = User::all();
 
+        $widget = $this->widget(
+            $request->user_id,
+            $request->bulan,
+            $request->tahun,
+            $request->status
+        );
+
         return Inertia::render('UtangPiutang/Utang/Index', [
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
             "datas" => $datas,
+            "widget" => $widget,
             "users" => $users,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
@@ -51,6 +61,74 @@ class UtangController extends Controller
                 'orderDirection' => $request->orderDirection ?? 'desc'
             ],
         ]);
+    }
+
+    public function widget(
+        $user_id,
+        $bulan,
+        $tahun,
+        $status
+    ) {
+
+        $total_utang = 0;
+        $total_dibayar = 0;
+
+        // start : total utang
+        $total_utang_raw = $this->utangPiutangServices->getData(
+            null,
+            null,
+            null,
+            null,
+            $user_id,
+            $bulan,
+            $tahun,
+            "utang",
+            $status,
+            false
+        );
+
+        foreach ($total_utang_raw as $utang) {
+            $total_utang += $utang->nominal;
+        }
+        // end : total utang
+
+        // start : total utang dibayar
+        $total_dibayar_raw = $this->utangPiutangServices->getData(
+            null,
+            null,
+            null,
+            null,
+            $user_id,
+            $bulan,
+            $tahun,
+            "utang",
+            1,
+            false
+        );
+
+        foreach ($total_dibayar_raw as $utang) {
+            $total_dibayar += $utang->nominal;
+        }
+        // end : total utang dibayar
+
+        $total_belum_dibayar = $total_utang - $total_dibayar;
+        $persentase = $total_utang > 0 ? ($total_dibayar / $total_utang) * 100 : 0;
+
+        // Format persentase sesuai kebutuhan
+        if (floor($persentase) == $persentase) {
+            $persentase = number_format($persentase, 0, ',', ''); // Tidak ada angka desimal
+        } elseif (floor($persentase * 10) == $persentase * 10) {
+            $persentase = number_format($persentase, 1, ',', ''); // Satu angka desimal
+        } else {
+            $persentase = number_format($persentase, 2, ',', ''); // Dua angka desimal
+        }
+
+        return [
+            "total_utang" => $total_utang,
+            "total_dibayar" => $total_dibayar,
+            "total_belum_dibayar" => $total_belum_dibayar,
+            "persentase" => $persentase
+        ];
     }
 
     public function store(Request $request)
@@ -110,7 +188,8 @@ class UtangController extends Controller
         return redirect()->back()->with($session['flash'], $session['flash_message']);
     }
 
-    public function bayar(string $id) {
+    public function bayar(string $id)
+    {
         $res = $this->utangPiutangServices->payProcess($id);
 
         if ($res['success']) {

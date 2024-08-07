@@ -23,7 +23,9 @@ const UtangDetail = ({ title, showModal, closeModal, data }) => {
                                 <tr>
                                     <th width="25%">Jatuh Tempo</th>
                                     <td width="3%">:</td>
-                                    <td>{formatDateWithDay(data?.jatuh_tempo)}</td>
+                                    <td>
+                                        {formatDateWithDay(data?.jatuh_tempo)}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th width="25%">Donatur</th>
@@ -85,10 +87,21 @@ const UtangDetail = ({ title, showModal, closeModal, data }) => {
                                                     : "success"
                                             }
                                         >
-                                            {data?.status == 0 ? "Belum Lunas" : "Lunas"}
+                                            {data?.status == 0
+                                                ? "Belum Lunas"
+                                                : "Lunas"}
                                         </Label>
                                     </td>
                                 </tr>
+                                {data?.status == 1 ? (
+                                    <tr>
+                                        <th width="20%">Tanggal Pelunasan</th>
+                                        <td width="3%">:</td>
+                                        <td>
+                                            {formatDateWithDay(data?.updated_at)}
+                                        </td>
+                                    </tr>
+                                ) : null}
                                 <tr>
                                     <th width="20%">Deskripsi</th>
                                     <td width="3%">:</td>
