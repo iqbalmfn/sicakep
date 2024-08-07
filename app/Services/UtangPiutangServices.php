@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Perencanaan;
+use App\Models\Transaksi;
 use App\Models\UtangPiutang;
 use Illuminate\Support\Facades\DB;
 
@@ -96,16 +97,21 @@ class UtangPiutangServices
 
             // jika tipe = utang, create ke perencanaan
             if ($type == "utang") {
-                Perencanaan::create([
+                $perencanaan = Perencanaan::create([
                     'user_id'       => $create['user_id'],
                     'pic_id'        => $create['user_id'],
                     'kategori_id'   => 9,
                     'judul'         => $create->judul,
                     'nominal'       => $create->nominal,
-                    'bulan'         => date('m', strtotime($create->jatuh_temo)),
+                    'bulan'         => date('m', strtotime($create->jatuh_tempo)),
                     'tahun'         => date('Y', strtotime($create->jatuh_tempo)),
                     'tipe'          => $create->jenis,
                     'deskripsi'     => $create->judul,
+                ]);
+
+                // update relasikan ke perencanaan
+                $create->update([
+                    'perencanaan_id' => $perencanaan->id,
                 ]);
             }
 
@@ -150,6 +156,38 @@ class UtangPiutangServices
             return responseSuccess("Berhasil, data telah dihapus", $data);
         } catch (\Throwable $th) {
             return responseError("Gagal, ada kesalahan pada sistem saat menghapus data " . $th->getMessage());
+        }
+    }
+
+    public function payProcess($id) {
+        try {
+            DB::beginTransaction();
+
+            $data = $this->getDataById($id);
+            $data->update([
+                'status' => 1
+            ]);
+
+            // menyimpan ke pengeluaran
+            Transaksi::create([
+                'user_id' => $data->user_id,
+                'kategori_id' => 9,
+                'perencanaan_id' => $data->perencanaan_id,
+                'judul' => 'Pembayaran utang '.$data->judul,
+                'tipe' => "pengeluaran",
+                'jenis' => $data->jenis == "cash" ? "cash" : "online",
+                'nominal' => $data->nominal,
+                'tanggal' => date('Y-m-d'),
+                'deskripsi' => "Pembayaran utang ". $data->judul,
+            ]);
+
+            DB::commit();
+
+            return responseSuccess("Berhasil, utang telah dibayar", $data);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return responseError("Gagal, ada kesalahan pada sistem saat mengirim data " . $th->getMessage());
         }
     }
 }

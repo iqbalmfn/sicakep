@@ -14,7 +14,7 @@ export const utangCreateData = (data, setErrors, clearErrors) => {
 };
 
 export const utangUpdateData = (data, setErrors, clearErrors) => {
-    router.post(route("utang-piutang.utang.update", {pemasukan: data.id}), {
+    router.post(route("utang-piutang.utang.update", {utang: data.id}), {
         ...data,
         _method: "PUT"
     }, {

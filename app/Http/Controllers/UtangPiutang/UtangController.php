@@ -109,4 +109,22 @@ class UtangController extends Controller
 
         return redirect()->back()->with($session['flash'], $session['flash_message']);
     }
+
+    public function bayar(string $id) {
+        $res = $this->utangPiutangServices->payProcess($id);
+
+        if ($res['success']) {
+            $session = [
+                'flash' => 'success',
+                'flash_message' => $res['message'],
+            ];
+        } else {
+            $session = [
+                'flash' => 'error',
+                'flash_message' => $res['message'],
+            ];
+        }
+
+        return redirect()->back()->with($session['flash'], $session['flash_message']);
+    }
 }

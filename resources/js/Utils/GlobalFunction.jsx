@@ -82,6 +82,46 @@ export const handleDeleteWithParams = async (
     }
 };
 
+export const handleBayar = async (
+    routeBayar,
+    dataId,
+    message,
+    preserveScroll = false
+) => {
+    try {
+        const result = await Swal.fire({
+            title: "Konfirmasi Bayar",
+            text: "Apakah Anda yakin akan telah membayar utang ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Bayar",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "var(--color-success)",
+            cancelButtonColor: "var(--color-info)",
+        });
+
+        if (result.isConfirmed) {
+            router.put(route(routeBayar, dataId), {}, {
+                onSuccess: () => {
+                    toast.success(message, {
+                        isLoading: false,
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: false,
+                        pauseOnHover: true,
+                        closeButton: false,
+                    });
+                },
+                preserveScroll: preserveScroll,
+            });
+        }
+    } catch (error) {
+        // Tangani kesalahan jika diperlukan
+        console.error(error);
+        Swal.fire("Error", "Terjadi kesalahan", "error");
+    }
+};
+
 export const getSerialNumber = (currentPage, perPage, index) => {
     return (currentPage - 1) * perPage + index + 1;
 };

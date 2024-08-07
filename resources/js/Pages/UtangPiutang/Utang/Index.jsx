@@ -16,14 +16,15 @@ import {
     formatDateWithDay,
     formatRupiah,
     getCurrentMonth,
-    getCurrentMonthYear,
     getCurrentYear,
+    handleBayar,
     handleDelete,
     listMonths,
     listYears
 } from "@/Utils/GlobalFunction";
 import { Head } from "@inertiajs/react";
 import UtangCreate from "./Modals/UtangCreate";
+import UtangDetail from "./Modals/UtangDetail";
 
 const Index = ({ title, breadcrumbs, datas, users, filtered, flash }) => {
     const {
@@ -89,12 +90,31 @@ const Index = ({ title, breadcrumbs, datas, users, filtered, flash }) => {
                             {data.jenis}
                         </Label>
                     </Table.Td>
+                    <Table.Td>
+                        <Label
+                            variant={data.status == 0 ? "danger" : "success"}
+                        >
+                            {data.status == 0 ? "Belum Lunas" : "Lunas"}
+                        </Label>
+                    </Table.Td>
                     <Table.Td className="text-end pe-3">
                         <ActionButton
                             variant="warning"
                             icon="search"
                             label="Detail"
                             onClick={() => handleShowDetailModal(data)}
+                        />
+                        <ActionButton
+                            variant="success"
+                            icon="check-lg"
+                            label="Lunas"
+                            onClick={() =>
+                                handleBayar(
+                                    "utang-piutang.utang.bayar",
+                                    data.id,
+                                    "Utang telah dibayar"
+                                )
+                            }
                         />
                         <ActionButton
                             variant="info"
@@ -108,7 +128,7 @@ const Index = ({ title, breadcrumbs, datas, users, filtered, flash }) => {
                             label="Hapus"
                             onClick={() =>
                                 handleDelete(
-                                    "transaksi.pemasukan.destroy",
+                                    "utang-piutang.utang.destroy",
                                     data.id,
                                     "Data berhasil dihapus"
                                 )
@@ -118,7 +138,7 @@ const Index = ({ title, breadcrumbs, datas, users, filtered, flash }) => {
                 </Table.TrBody>
             ))
         ) : (
-            <TableEmpty colSpan={7} />
+            <TableEmpty colSpan={8} />
         );
     };
 
@@ -266,6 +286,16 @@ const Index = ({ title, breadcrumbs, datas, users, filtered, flash }) => {
                                 >
                                     jenis
                                 </Table.Th>
+                                <Table.Th
+                                    width="7"
+                                    ordered
+                                    onHandleOrder={onHandleOrder}
+                                    column="status"
+                                    orderBy={filtered.orderBy}
+                                    orderDirection={filtered.orderDirection}
+                                >
+                                    status
+                                </Table.Th>
                                 <Table.Th align="end" width="10">
                                     <span className="me-3">opsi</span>
                                 </Table.Th>
@@ -299,12 +329,12 @@ const Index = ({ title, breadcrumbs, datas, users, filtered, flash }) => {
             />
 
             {/* modal Detail */}
-            {/* <PemasukanDetail
+            <UtangDetail
                 title={title}
                 showModal={showDetailModal}
                 closeModal={handleCloseDetailModal}
                 data={detailData}
-            /> */}
+            />
         </AppContentLayout>
     );
 };

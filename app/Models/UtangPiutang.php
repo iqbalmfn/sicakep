@@ -11,6 +11,7 @@ class UtangPiutang extends Model
 
     protected $fillable = [
         'user_id',
+        'perencanaan_id',
         'piutang_master_id',
         'judul',
         'tipe',
@@ -23,6 +24,10 @@ class UtangPiutang extends Model
 
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function perencanaan() {
+        return $this->belongsTo(Perencanaan::class, 'perencanaan_id', 'id');
     }
 
     public function piutang() {

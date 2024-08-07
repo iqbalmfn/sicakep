@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::prefix('utang-piutang')->name('utang-piutang.')->group(function () {
         Route::resource('utang', UtangController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::put('utang/bayar/{utang}', [UtangController::class, 'bayar'])->name('utang.bayar');
         Route::resource('piutang', PiutangController::class)->only(['index','store', 'update', 'destroy']);
     });
 });

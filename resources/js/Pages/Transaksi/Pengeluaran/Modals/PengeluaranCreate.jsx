@@ -36,8 +36,6 @@ const PengeluaranCreate = ({
     sumberAnggaran = subKategoris.find(
         (item) => item.id == data.perencanaan_id
     );
-    console.log(sumberAnggaran);
-    console.log(data.nominal);
 
     let anggaranTerpakai = 0;
     anggaranTerpakai = pengeluaranData
