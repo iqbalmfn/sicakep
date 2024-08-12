@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\LogPerencanaan;
 use App\Models\Perencanaan;
+use App\Models\Transaksi;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -343,6 +344,7 @@ class PerencanaanServices
         try {
             // hapus log
             LogPerencanaan::wherePerencanaanId($id)->delete();
+            Transaksi::wherePerencanaanId($id)->delete();
 
             // hapus data perencanaan
             $data = $this->getDataById($id);

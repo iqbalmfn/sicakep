@@ -184,7 +184,7 @@ class PengeluaranController extends Controller
             $request->kategori_id,
             $request->bulan,
             $request->tahun,
-            $request->status,
+            1,
             $request->select2,
             $request->user_id
         );
