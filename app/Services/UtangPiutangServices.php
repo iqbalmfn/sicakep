@@ -142,6 +142,18 @@ class UtangPiutangServices
             $data = $this->getDataById($id);
             $data->update($input);
 
+            // jika tipe = utang, update ke perencanaan
+            if ($data->tipe == "utang") {
+                $perencanaan = Perencanaan::whereId($data->perencanaan_id)->first();
+                $perencanaan->update([
+                    'judul'         => $data->judul,
+                    'nominal'       => $data->nominal,
+                    'bulan'         => date('m', strtotime($data->jatuh_tempo)),
+                    'tahun'         => date('Y', strtotime($data->jatuh_tempo)),
+                    'tipe'          => $data->jenis,
+                ]);
+            }
+
             DB::commit();
 
             return responseSuccess("Berhasil, data telah diupdate", $data);

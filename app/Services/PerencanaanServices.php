@@ -344,6 +344,8 @@ class PerencanaanServices
         try {
             // hapus log
             LogPerencanaan::wherePerencanaanId($id)->delete();
+
+            // hapus transaksi
             Transaksi::wherePerencanaanId($id)->delete();
 
             // hapus data perencanaan
