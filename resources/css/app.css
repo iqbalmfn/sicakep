@@ -58,6 +58,20 @@
         /* background-position: center; */
     }
 
+    .apexcharts-tooltip {
+        max-width: 300px; /* Atur lebar maksimum sesuai kebutuhan */
+        white-space: normal; /* Izinkan teks membungkus ke baris berikutnya */
+        overflow-wrap: break-word; /* Pastikan kata panjang bisa dipotong */
+    }
+
+    .custom-tooltip {
+        max-width: 300px; /* Adjust as needed */
+        white-space: normal; /* Wrap text */
+        overflow-wrap: break-word; /* Break long words */
+        font-size: 12px; /* Adjust font size if needed */
+        font-family: Arial, sans-serif; /* Adjust font family if needed */
+    }
+
     /* Gaya untuk track scrollbar */
     ::-webkit-scrollbar {
         width: 5px; /* Lebar scrollbar untuk elemen vertikal */

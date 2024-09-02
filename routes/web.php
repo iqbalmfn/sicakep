@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\KategoriController;
 use App\Http\Controllers\PerencanaanController;
 use App\Http\Controllers\ProfileController;
@@ -14,9 +15,7 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
     
     Route::prefix('master')->name('master.')->group(function () {
         Route::resource('kategori', KategoriController::class)->only(['index', 'store', 'update', 'destroy']);
