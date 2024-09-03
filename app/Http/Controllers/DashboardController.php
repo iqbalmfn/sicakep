@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Transaksi\PengeluaranController;
 use App\Models\Transaksi;
 use App\Models\UtangPiutang;
 use App\Services\ChartServices;
@@ -11,11 +12,13 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    protected $chartServices;
+    protected $chartServices, $pengeluaranController, $perencanaanController;
 
     public function __construct()
     {
         $this->chartServices = app(ChartServices::class);
+        $this->pengeluaranController = app(PengeluaranController::class);
+        $this->perencanaanController = app(PerencanaanController::class);
     }
 
     public function __invoke(Request $request)
@@ -30,6 +33,10 @@ class DashboardController extends Controller
             "totalSaldo" => $this->totalSaldo(),
             "totalPemasukan" => $this->totalTransaksi("pemasukan", $request->bulan, $request->tahun),
             "totalPengeluaran" => $this->totalTransaksi("pengeluaran", $request->bulan, $request->tahun),
+            "saldoBulanan" => $this->saldoBulanan($request->bulan, $request->tahun),
+            "danaTersedia" => $this->pengeluaranController->widget(null, $request->bulan, $request->tahun),
+            "anggaran" => $this->perencanaanController->widget(null, $request->bulan, $request->tahun),
+            "persentasePengeluaran" => $this->persentasePengeluaran($request->bulan, $request->tahun),
             "totalUtang" => $this->totalUtang($request->bulan, $request->tahun),
             "listUtang" => $this->listUtang($request->bulan, $request->tahun),
             "ChartPengeluaranHarian" => $chartPengeluaranHarian,
@@ -124,5 +131,70 @@ class DashboardController extends Controller
         $utang = $utang_raw->orderBy('jatuh_tempo')->get();
 
         return $utang;
+    }
+
+    public function saldoBulanan($bulan, $tahun)
+    {
+        $today = Carbon::now();
+
+        $pemasukan_raw = Transaksi::query()
+            ->whereTipe('pemasukan');
+        if ($bulan === 'all' && $tahun === 'all') {
+            // Tidak ada filter, ambil semua data
+        } elseif ($bulan === 'all') {
+            $tahun = $tahun ?? $today->year;
+            $pemasukan_raw->whereYear('tanggal', $tahun);
+        } else {
+            $bulan = $bulan ?? $today->month;
+            $tahun = $tahun ?? $today->year;
+            $pemasukan_raw->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+        }
+        $pemasukan = $pemasukan_raw->sum('nominal');
+
+        $pengeluaran_raw = Transaksi::query()
+            ->whereTipe('pengeluaran');
+        if ($bulan === 'all' && $tahun === 'all') {
+            // Tidak ada filter, ambil semua data
+        } elseif ($bulan === 'all') {
+            $tahun = $tahun ?? $today->year;
+            $pengeluaran_raw->whereYear('tanggal', $tahun);
+        } else {
+            $bulan = $bulan ?? $today->month;
+            $tahun = $tahun ?? $today->year;
+            $pengeluaran_raw->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+        }
+        $pengeluaran = $pengeluaran_raw->sum('nominal');
+
+        return $pemasukan - $pengeluaran;
+    }
+    private function formatPersentase($nilai) {
+        // Format angka menjadi string dengan dua angka di belakang koma
+        $formatted = number_format($nilai, 2, '.', '');
+    
+        // Periksa jumlah angka di belakang koma
+        $parts = explode('.', $formatted);
+        if (count($parts) === 1) {
+            // Tidak ada angka di belakang koma
+            return $formatted; // Bulat
+        } elseif (strlen($parts[1]) === 1) {
+            // 1 angka di belakang koma
+            return number_format($nilai, 1, '.', '');
+        } else {
+            // 2 angka atau lebih di belakang koma
+            return number_format($nilai, 2, '.', '');
+        }
+    }
+
+    public function persentasePengeluaran($bulan = null, $tahun = null) {
+        $pemasukan = $this->totalTransaksi("pemasukan", $bulan, $tahun);
+        $pengeluaran = $this->totalTransaksi("pengeluaran", $bulan, $tahun);
+
+        if ($pemasukan == 0 || $pengeluaran == 0) {
+            $persentase = 0;
+        } else {
+            $persentase = ($pengeluaran / $pemasukan) * 100;
+        }
+
+        return $this->formatPersentase($persentase);
     }
 }
