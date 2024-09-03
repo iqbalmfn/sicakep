@@ -4,8 +4,8 @@ export default function ApplicationLogo({ setting }) {
     return (
         <Link href="/dashboard">
             <img
-                src={`/data/setting/`}
-                className="w-40"
+                src={`/images/logo.png`}
+                className="w-[125px] rounded-lg"
                 alt="logo"
             />
         </Link>
