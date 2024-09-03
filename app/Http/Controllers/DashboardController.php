@@ -21,8 +21,10 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         // chart
-        $chartPengaluaranHarian = $this->chartServices->chartPengeluaranHarian($request->bulan, $request->tahun);
-        $chartPengaluaranBulanan = $this->chartServices->chartPengeluaranBulanan($request->tahun);
+        $chartPengeluaranHarian = $this->chartServices->chartPengeluaranHarian($request->bulan, $request->tahun);
+        $chartPengeluaranBulanan = $this->chartServices->chartPengeluaranBulanan($request->tahun);
+        $chartPengeluaranKategori = $this->chartServices->chartPengeluaranKategori($request->bulan, $request->tahun);
+        $chartPemasukanBulanan = $this->chartServices->chartPemasukanBulanan($request->tahun);
 
         $data = [
             "totalSaldo" => $this->totalSaldo(),
@@ -30,8 +32,10 @@ class DashboardController extends Controller
             "totalPengeluaran" => $this->totalTransaksi("pengeluaran", $request->bulan, $request->tahun),
             "totalUtang" => $this->totalUtang($request->bulan, $request->tahun),
             "listUtang" => $this->listUtang($request->bulan, $request->tahun),
-            "ChartPengeluaranHarian" => $chartPengaluaranHarian,
-            "ChartPengeluaranBulanan" => $chartPengaluaranBulanan,
+            "ChartPengeluaranHarian" => $chartPengeluaranHarian,
+            "ChartPengeluaranBulanan" => $chartPengeluaranBulanan,
+            "ChartPengeluaranKategori" => $chartPengeluaranKategori,
+            "ChartPemasukanBulanan" => $chartPemasukanBulanan,
         ];
 
         return Inertia::render('Dashboard', [
@@ -57,55 +61,67 @@ class DashboardController extends Controller
         return $saldo - $totalPengeluaran;
     }
 
-    public function totalTransaksi($tipe, $bulan, $tahun)
+    public function totalTransaksi($tipe, $bulan = null, $tahun = null)
     {
-        $transaksi_raw = Transaksi::query()
-            ->whereTipe($tipe);
+        $today = Carbon::now();
+        $transaksi_raw = Transaksi::query()->whereTipe($tipe);
 
-        if (isset($bulan) && !isset($tahun)) {
-            $transaksi_raw->whereMonth('tanggal', $bulan);
-            $transaksi_raw->whereYear('tanggal', date('Y'));
-        } elseif (isset($bulan) && isset($tahun)) {
-            $transaksi_raw->whereMonth('tanggal', $bulan);
+        if ($bulan === 'all' && $tahun === 'all') {
+            // Tidak ada filter, ambil semua data
+        } elseif ($bulan === 'all') {
+            $tahun = $tahun ?? $today->year;
             $transaksi_raw->whereYear('tanggal', $tahun);
-        } elseif (!isset($bulan) && isset($tahun)) {
-            $transaksi_raw->whereYear('tanggal', $tahun);
+        } else {
+            $bulan = $bulan ?? $today->month;
+            $tahun = $tahun ?? $today->year;
+            $transaksi_raw->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
         }
 
         return $transaksi_raw->sum('nominal');
     }
 
-    public function totalUtang($bulan, $tahun)
+
+    public function totalUtang($bulan = null, $tahun = null)
     {
+        $today = Carbon::now();
         $utang_raw = UtangPiutang::query()
             ->whereTipe("utang")
             ->whereStatus(0);
 
-        if (isset($bulan) && !isset($tahun)) {
-            $utang_raw->whereMonth('jatuh_tempo', $bulan);
-            $utang_raw->whereYear('jatuh_tempo', date('Y'));
-        } elseif (isset($bulan) && isset($tahun)) {
-            $utang_raw->whereMonth('jatuh_tempo', $bulan);
+
+        if ($bulan === 'all' && $tahun === 'all') {
+            // Tidak ada filter, ambil semua data
+        } elseif ($bulan === 'all') {
+            $tahun = $tahun ?? $today->year;
             $utang_raw->whereYear('jatuh_tempo', $tahun);
-        } elseif (!isset($bulan) && isset($tahun)) {
-            $utang_raw->whereYear('jatuh_tempo', $tahun);
+        } else {
+            $bulan = $bulan ?? $today->month;
+            $tahun = $tahun ?? $today->year;
+            $utang_raw->whereMonth('jatuh_tempo', $bulan)->whereYear('jatuh_tempo', $tahun);
         }
 
         return $utang_raw->sum('nominal');
     }
 
-    public function listUtang($bulan, $tahun)
+
+    public function listUtang($bulan = null, $tahun = null)
     {
         $today = Carbon::now();
-        $bulan = $bulan ?? $today->month;
-        $tahun = $tahun ?? $today->year;
+        $utang_raw = UtangPiutang::query()
+            ->whereTipe("utang");
 
-        $utang = UtangPiutang::query()
-            ->whereTipe("utang")
-            ->whereMonth('jatuh_tempo', $bulan)
-            ->whereYear('jatuh_tempo', $tahun)
-            ->orderByDesc('jatuh_tempo')
-            ->get();
+        if ($bulan === 'all' && $tahun === 'all') {
+            // Tidak ada filter, ambil semua data
+        } elseif ($bulan === 'all') {
+            $tahun = $tahun ?? $today->year;
+            $utang_raw->whereYear('jatuh_tempo', $tahun);
+        } else {
+            $bulan = $bulan ?? $today->month;
+            $tahun = $tahun ?? $today->year;
+            $utang_raw->whereMonth('jatuh_tempo', $bulan)->whereYear('jatuh_tempo', $tahun);
+        }
+
+        $utang = $utang_raw->orderBy('jatuh_tempo')->get();
 
         return $utang;
     }

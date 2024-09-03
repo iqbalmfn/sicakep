@@ -1,10 +1,10 @@
 import { formatRupiah } from "@/Utils/GlobalFunction";
 import ReactApexChart from "react-apexcharts";
 
-const ChartPengeluaranBulanan = ({ chartData }) => {
+const ChartPemasukanBulanan = ({ chartData }) => {
     const series = [
         {
-            name: "Pengeluaran",
+            name: "Pemasukan",
             data: chartData.data,
         },
     ];
@@ -29,7 +29,7 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
                 },
             },
         },
-        colors: ['#b91c1c'],
+        colors: ['#2c944b'],
         dataLabels: {
             enabled: false,
         },
@@ -81,4 +81,4 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
     );
 };
 
-export default ChartPengeluaranBulanan;
+export default ChartPemasukanBulanan;

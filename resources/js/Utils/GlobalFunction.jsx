@@ -101,19 +101,23 @@ export const handleBayar = async (
         });
 
         if (result.isConfirmed) {
-            router.put(route(routeBayar, dataId), {}, {
-                onSuccess: () => {
-                    toast.success(message, {
-                        isLoading: false,
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: false,
-                        pauseOnHover: true,
-                        closeButton: false,
-                    });
-                },
-                preserveScroll: preserveScroll,
-            });
+            router.put(
+                route(routeBayar, dataId),
+                {},
+                {
+                    onSuccess: () => {
+                        toast.success(message, {
+                            isLoading: false,
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: false,
+                            pauseOnHover: true,
+                            closeButton: false,
+                        });
+                    },
+                    preserveScroll: preserveScroll,
+                }
+            );
         }
     } catch (error) {
         // Tangani kesalahan jika diperlukan
@@ -420,25 +424,6 @@ export const numberFormat = (number) => {
     return formatter.format(number);
 };
 
-// export function calculateProposalDuration(
-//     tahunSkema,
-//     tahunUsulan,
-//     tahunPelaksanaan
-// ) {
-//     // Menghitung tahun ke berdasarkan tahun skema dan tahun saat ini
-//     const tahunKe = tahunPelaksanaan - formatDateYear(tahunUsulan) + 1;
-
-//     // Membentuk label berdasarkan tahun ke dan tahun skema
-//     let label;
-//     if (tahunKe > tahunSkema) {
-//         label = null;
-//     } else {
-//         label = `Tahun ke-${tahunKe} dari ${tahunSkema} Tahun`;
-//     }
-
-//     return label;
-// }
-
 export function calculateProposalDuration(
     tahunSkema,
     tahunPelaksanaanProposal,
@@ -458,12 +443,6 @@ export function calculateProposalDuration(
     return label;
 }
 
-// export const yearsAt = (tahunUsulan, tahunPelaksanaan) => {
-//     const tahunKe = tahunPelaksanaan - formatDateYear(tahunUsulan) + 1;
-
-//     return tahunKe;
-// };
-
 export const yearsAt = (tahunPelaksanaanProposal, tahunPelaksanaanKalender) => {
     const tahunKe = tahunPelaksanaanProposal - tahunPelaksanaanKalender + 1;
 
@@ -473,3 +452,27 @@ export const yearsAt = (tahunPelaksanaanProposal, tahunPelaksanaanKalender) => {
 export function nl2br(str) {
     return str.replace(/(?:\r\n|\r|\n)/g, "<br>");
 }
+
+export const getFilterLabel = (params) => {
+    const bulan = params.bulan;
+    const tahun = params.tahun;
+
+    if ((bulan && bulan != "all") && (tahun && tahun !== "all")) {
+        return `[${monthNumberToIndonesian(bulan)} ${tahun}]`;
+    } else if (!bulan && !tahun) {
+        return `[${monthNumberToIndonesian(
+            getCurrentMonth()
+        )} ${getCurrentYear()}]`;
+    } else if (bulan && bulan != "all" && !tahun) {
+        return `[${monthNumberToIndonesian(bulan)} ${getCurrentYear()}]`;
+    } else if (
+        (!bulan && tahun) ||
+        (bulan == "all" && !tahun) ||
+        (bulan == "all" && tahun !== "all")
+    ) {
+        return `[Tahun ${tahun ? tahun : getCurrentYear()}]`;
+    } else if (bulan === "all" && tahun === "all") {
+        return "[Semua Data]";
+    }
+    return null;
+};

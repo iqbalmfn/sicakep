@@ -36,7 +36,7 @@ const ChartPengeluaranHarian = ({ chartData }) => {
                 },
             },
         },
-        colors: ['#125fa3'],
+        colors: ['#c79324'],
         dataLabels: {
             enabled: false,
         },
