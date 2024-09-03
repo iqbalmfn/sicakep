@@ -57,6 +57,7 @@ const ChartPengeluaranHarian = ({ chartData }) => {
             title: {
                 text: "Nominal",
             },
+            min: 0
         },
         xaxis: {
             title: {

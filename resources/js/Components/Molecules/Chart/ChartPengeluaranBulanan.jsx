@@ -62,6 +62,7 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
             title: {
                 text: "Nominal",
             },
+            min: 0
         },
         tooltip: {
             y: {
