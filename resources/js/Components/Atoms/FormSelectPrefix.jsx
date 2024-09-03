@@ -19,7 +19,7 @@ const FormSelectPrefix = ({
         paddingY = "h-[55px]";
     }
     return (
-        <div className="relative border flex items-center rounded-lg w-full">
+        <div className="relative border flex items-center rounded-lg w-full bg-white">
             {prefix && (
                 <div
                     className={clsx(

@@ -11,8 +11,8 @@ const ChartPengeluaranHarian = ({ chartData }) => {
 
     const options = {
         chart: {
-            height: 350,
-            type: "line",
+            height: 325,
+            type: "area",
             zoom: {
                 enabled: false,
             },
@@ -34,7 +34,11 @@ const ChartPengeluaranHarian = ({ chartData }) => {
             enabled: false,
         },
         stroke: {
-            curve: "straight",
+            curve: "smooth",
+        },
+        fill: {
+            type: "solid",
+            opacity: 0.2, // Set opacity here
         },
         grid: {
             row: {
@@ -81,8 +85,8 @@ const ChartPengeluaranHarian = ({ chartData }) => {
         <ReactApexChart
             options={options}
             series={series}
-            type="line"
-            height={350}
+            type="area"
+            height={325}
         />
     );
 };

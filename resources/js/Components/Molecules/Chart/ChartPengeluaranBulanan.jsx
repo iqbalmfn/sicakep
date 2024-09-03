@@ -13,7 +13,7 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
 
     const options = {
         chart: {
-            height: 350,
+            height: 325,
             type: "bar",
             zoom: {
                 enabled: false,
@@ -77,7 +77,7 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
             options={options}
             series={series}
             type="bar"
-            height={350}
+            height={325}
         />
     );
 };
