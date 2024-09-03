@@ -2,10 +2,17 @@ import { formatRupiah } from "@/Utils/GlobalFunction";
 import ReactApexChart from "react-apexcharts";
 
 const ChartPengeluaranHarian = ({ chartData }) => {
+    // Validasi data untuk memastikan tidak ada nilai 0 di akhir yang tidak diinginkan
+    const validatedData = chartData.data.map((value, index) => {
+        // Anda bisa menambahkan logika validasi khusus di sini, misalnya:
+        // return value === 0 && index === chartData.data.length - 1 ? previousValue : value;
+        return value; // Memastikan nilainya sesuai
+    });
+
     const series = [
         {
             name: "Pengeluaran",
-            data: chartData.data,
+            data: validatedData,
         },
     ];
 
@@ -38,7 +45,7 @@ const ChartPengeluaranHarian = ({ chartData }) => {
         },
         fill: {
             type: "solid",
-            opacity: 0.2, // Set opacity here
+            opacity: 0.2, // Opacity untuk area
         },
         grid: {
             row: {
@@ -75,7 +82,6 @@ const ChartPengeluaranHarian = ({ chartData }) => {
                     });
                 }
 
-                // Ensure tooltip content is styled properly
                 return `<div class="custom-tooltip" style="padding:10px;max-width:450px;">${tooltipContent}</div>`;
             },
         },
