@@ -169,7 +169,10 @@ export default function Dashboard({ auth, data, filtered }) {
                                 <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                                     <div className="border-b py-4 px-5">
                                         <span className="text-lg font-bold">
-                                            Pengeluaran Bulanan
+                                            Pengeluaran Bulanan{" "}
+                                            {params.tahun
+                                                ? `Tahun ${params.tahun}`
+                                                : `Tahun ${getCurrentYear()}`}
                                         </span>
                                     </div>
                                     <ChartPengeluaranBulanan
