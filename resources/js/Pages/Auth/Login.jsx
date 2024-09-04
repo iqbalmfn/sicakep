@@ -15,16 +15,16 @@ export default function Login() {
             <Head title="Login" />
 
             <div className="flex flex-col justify-center gap-10 h-full md:py-10">
-                {/* <img
-                    src={`/data/setting/`}
-                    alt="logo"
-                    className="img-fluid lg:w-[60%] mx-auto"
-                /> */}
                 <div className="flex flex-col items-center">
-                    <h1 className="font-extrabold text-4xl text-center">
+                    {/* <h1 className="font-extrabold text-4xl text-center">
                         <span className="text-danger">SI</span>
                         <span className="text-primary">CAKAP</span>
-                    </h1>
+                    </h1> */}
+                    <img
+                        src={`/images/logo.png`}
+                        alt="logo"
+                        className="img-fluid lg:w-[60%] mx-auto"
+                    />
                     <h5>Sistem Informasi Catatan Keuangan Pasutri</h5>
                 </div>
                 <Divider
