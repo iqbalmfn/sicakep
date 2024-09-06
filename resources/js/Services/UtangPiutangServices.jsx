@@ -29,6 +29,35 @@ export const utangUpdateData = (data, setErrors, clearErrors) => {
     });
 };
 
+export const piutangMasterCreateData = (data, setErrors, clearErrors) => {
+    router.post(route("utang-piutang.piutang.store"), data, {
+        onError: (errors) => {
+            setErrors(errors);
+        },
+        onSuccess: () => {
+            clearErrors();
+        },
+        preserveScroll: false,
+        preserveState: true,
+    });
+};
+
+export const piutangMasterUpdateData = (data, setErrors, clearErrors) => {
+    router.post(route("utang-piutang.piutang.update", {piutang: data.id}), {
+        ...data,
+        _method: "PUT"
+    }, {
+        onError: (errors) => {
+            setErrors(errors);
+        },
+        onSuccess: () => {
+            clearErrors();
+        },
+        preserveScroll: false,
+        preserveState: true,
+    });
+};
+
 // export const pemasukanConfirmData = (data, setErrors, clearErrors) => {
 //     router.post(route("transaksi.pemasukan.confirm", {pemasukan: data.id}), {
 //         ...data,

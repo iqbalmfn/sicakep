@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Perencanaan;
+use App\Models\PiutangMaster;
 use App\Models\Transaksi;
 use App\Models\UtangPiutang;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class UtangPiutangServices
         $isPagination = true
     ) {
         $data = UtangPiutang::query()
-            ->with(['user']);
+            ->with(['user', 'piutang']);
 
         if ($user_id) {
             $data->whereUserId($user_id);
@@ -68,8 +69,45 @@ class UtangPiutangServices
         }
     }
 
+    public function getDataPiutangMaster(
+        $q,
+        $orderBy,
+        $orderDirection,
+        $perPage,
+        $user_id = null,
+        $isPagination = true
+    ) {
+        $data = PiutangMaster::query()
+            ->with(['user', 'piutang_detail']);
+
+        if ($user_id) {
+            $data->whereUserId($user_id);
+        }
+
+        if ($q) {
+            $data->where(function ($query) use ($q) {
+                $query->where('judul', 'like', '%' . $q . '%');
+                $query->orWhere('nominal', 'like', '%' . $q . '%');
+                $query->orWhere('deskripsi', 'like', '%' . $q . '%');
+            });
+        }
+
+        if ($isPagination == true) {
+            return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+                ->paginate($perPage ?? 10)
+                ->withQueryString();
+        } else {
+            return $data->orderBy($orderBy ?? 'created_at', $orderDirection ?? 'desc')
+                ->get();
+        }
+    }
+
     public function getDataById($id) {
         return UtangPiutang::find($id);
+    }
+
+    public function getDataPiutangById($id) {
+        return PiutangMaster::find($id);
     }
 
     public function rules()
@@ -82,9 +120,19 @@ class UtangPiutangServices
             "jatuh_tempo"   => "required|date",
         ];
 
+        $createPiutang = [
+            "user_id"       => "required|numeric",
+            "nama"          => "required",
+            "tanggal"       => "required|date",
+            "nominal"       => "required|numeric",
+            "jatuh_tempo"   => "nullable|date",
+        ];
+
         return [
             "create" => $create,
-            "update" => $create
+            "update" => $create,
+            "createPiutang" => $createPiutang,
+            "updatePiutang" => $createPiutang,            
         ];
     }
 
@@ -94,7 +142,7 @@ class UtangPiutangServices
 
         $input = $request->all();
         $input['tipe'] = $type;
-        $input['status'] = 0;
+        $input['status'] = $type == "utang" ? 0 : 1;
 
         try {
             DB::beginTransaction();
@@ -118,7 +166,42 @@ class UtangPiutangServices
                 $create->update([
                     'perencanaan_id' => $perencanaan->id,
                 ]);
+            } else if ($type == "piutang") {
+                // baca piutang master
+                $piutangMaster = PiutangMaster::find($input['piutang_master_id']);
+
+                // simpan ke table transaksi
+                Transaksi::create([
+                    'user_id'       => $input['user_id'],
+                    'kategori_id'   => 21,
+                    'judul'         => 'Pembayaran Piutang '.$piutangMaster->nama,
+                    'tipe'          => 'pemasukan',
+                    'jenis'         => $input['jenis'] == 'transfer' ? 'online' : 'cash',
+                    'nominal'       => $input['nominal'],
+                    'tanggal'       => $input['jatuh_tempo'],
+                    'deskripsi'     => $input['deskripsi'],
+                ]);
             }
+
+            DB::commit();
+
+            return responseSuccess("Berhasil, data telah disimpan", $create);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return responseError("Gagal, ada kesalahan pada sistem saat mengirim data " . $th->getMessage());
+        }
+    }
+
+    public function createDataPiutang($request)
+    {
+        $request->validate($this->rules()["createPiutang"]);
+
+        $input = $request->all();
+
+        try {
+            DB::beginTransaction();
+            $create = PiutangMaster::create($input);
 
             DB::commit();
 
@@ -153,6 +236,28 @@ class UtangPiutangServices
                     'tipe'          => $data->jenis,
                 ]);
             }
+
+            DB::commit();
+
+            return responseSuccess("Berhasil, data telah diupdate", $data);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return responseError("Gagal, ada kesalahan pada sistem saat mengirim data " . $th->getMessage());
+        }
+    }
+
+    public function updateDataPiutang($request, $id)
+    {
+        $request->validate($this->rules()["createPiutang"]);
+
+        $input = $request->all();
+
+        try {
+            DB::beginTransaction();
+
+            $data = $this->getDataPiutangById($id);
+            $data->update($input);
 
             DB::commit();
 

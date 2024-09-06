@@ -133,7 +133,7 @@ class UtangController extends Controller
 
     public function store(Request $request)
     {
-        $res = $this->utangPiutangServices->createData($request, "utang");
+        $res = $this->utangPiutangServices->createData($request, $request->tipe == "piutang" ? "piutang" :"utang");
 
         if ($res['success']) {
             $session = [

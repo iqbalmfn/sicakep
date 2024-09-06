@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->date('jatuh_tempo')->nullable();
             $table->string('nominal');
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
