@@ -98,6 +98,20 @@ class PiutangController extends Controller
 
     public function destroy(string $id)
     {
-        //
+        $res = $this->utangPiutangServices->deleteDataPiutang($id);
+
+        if ($res['success']) {
+            $session = [
+                'flash' => 'success',
+                'flash_message' => $res['message'],
+            ];
+        } else {
+            $session = [
+                'flash' => 'error',
+                'flash_message' => $res['message'],
+            ];
+        }
+
+        return redirect()->back()->with($session['flash'], $session['flash_message']);
     }
 }

@@ -102,11 +102,13 @@ class UtangPiutangServices
         }
     }
 
-    public function getDataById($id) {
+    public function getDataById($id)
+    {
         return UtangPiutang::find($id);
     }
 
-    public function getDataPiutangById($id) {
+    public function getDataPiutangById($id)
+    {
         return PiutangMaster::find($id);
     }
 
@@ -132,7 +134,7 @@ class UtangPiutangServices
             "create" => $create,
             "update" => $create,
             "createPiutang" => $createPiutang,
-            "updatePiutang" => $createPiutang,            
+            "updatePiutang" => $createPiutang,
         ];
     }
 
@@ -174,7 +176,7 @@ class UtangPiutangServices
                 Transaksi::create([
                     'user_id'       => $input['user_id'],
                     'kategori_id'   => 21,
-                    'judul'         => 'Pembayaran Piutang '.$piutangMaster->nama,
+                    'judul'         => 'Pembayaran Piutang ' . $piutangMaster->nama,
                     'tipe'          => 'pemasukan',
                     'jenis'         => $input['jenis'] == 'transfer' ? 'online' : 'cash',
                     'nominal'       => $input['nominal'],
@@ -281,7 +283,43 @@ class UtangPiutangServices
         }
     }
 
-    public function payProcess($id) {
+    public function deleteDataPiutang($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Dapatkan data yang akan dihapus
+            $data = $this->getDataPiutangById($id);
+
+            // Hapus utang piutang yang berkaitan dengan piutang_master_id
+            $utangPiutang = UtangPiutang::where('piutang_master_id', $data->id)->get();
+            foreach ($utangPiutang as $item) {
+                $item->delete();
+            }
+
+            // Hapus pemasukan yang berkaitan
+            $pemasukan = Transaksi::where('tipe', 'pemasukan')
+                ->whereKategoriId(21)
+                ->where('judul', 'like', '%' . $data->nama . '%')
+                ->get();
+            foreach ($pemasukan as $item) {
+                $item->delete();
+            }
+
+            // Setelah menghapus semua data terkait, hapus piutang_master
+            $data->delete();
+
+            DB::commit();
+            return responseSuccess("Berhasil, data telah dihapus", $data);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return responseError("Gagal, ada kesalahan pada sistem saat menghapus data " . $th->getMessage());
+        }
+    }
+
+
+    public function payProcess($id)
+    {
         try {
             DB::beginTransaction();
 
@@ -295,12 +333,12 @@ class UtangPiutangServices
                 'user_id' => $data->user_id,
                 'kategori_id' => 9,
                 'perencanaan_id' => $data->perencanaan_id,
-                'judul' => 'Pembayaran utang '.$data->judul,
+                'judul' => 'Pembayaran utang ' . $data->judul,
                 'tipe' => "pengeluaran",
                 'jenis' => $data->jenis == "cash" ? "cash" : "online",
                 'nominal' => $data->nominal,
                 'tanggal' => date('Y-m-d'),
-                'deskripsi' => "Pembayaran utang ". $data->judul,
+                'deskripsi' => "Pembayaran utang " . $data->judul,
             ]);
 
             DB::commit();

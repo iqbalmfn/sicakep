@@ -99,7 +99,16 @@ const MenuDesktopItem = ({
         return (
             <Link
                 href={href}
-                className="text-white hover:bg-black/10 py-[5px] px-[10px] rounded"
+                className={clsx(
+                    roles.length === 0 ||
+                        roles.some((element) => authRoles.includes(element))
+                        ? null
+                        : "hidden",
+                    activeUrl.slice(1).includes(makeSlug(label.toLowerCase()))
+                        ? "bg-black/10 font-semibold"
+                        : null,
+                    "text-white hover:bg-black/10 py-[5px] px-[10px] rounded"
+                )}
             >
                 <div className="flex items-center gap-2">
                     <Icon icon={icon} />

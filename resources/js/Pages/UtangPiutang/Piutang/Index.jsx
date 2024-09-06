@@ -66,7 +66,7 @@ const Index = ({
         handleShowTransaksiModal,
         handleCloseTransaksiModal,
         handleChangeTransaksi,
-        submitPiutang
+        submitPiutang,
     } = UsePiutang(filtered, flash);
 
     const status = [
@@ -82,68 +82,86 @@ const Index = ({
 
     const dataRender = () => {
         return datas.data.length > 0 ? (
-            datas.data.map((data, i) => (
-                <Table.TrBody key={data.id}>
-                    <Table.Td>{i + 1}</Table.Td>
-                    <Table.Td>
-                        <div className="flex items-center gap-2">
-                            <NameWithAvatar
-                                avatar={
-                                    data.user.foto
-                                        ? `/images/${data.user.foto}`
-                                        : data.user.foto
+            datas.data.map((data, i) => {
+                const totalSudahDibayar = Array.isArray(data.piutang_detail)
+                    ? data.piutang_detail.reduce(
+                          (total, detail) => total + detail.nominal,
+                          0
+                      )
+                    : 0;
+                return (
+                    <Table.TrBody key={data.id}>
+                        <Table.Td>{i + 1}</Table.Td>
+                        <Table.Td>
+                            <div className="flex items-center gap-2">
+                                <NameWithAvatar
+                                    avatar={
+                                        data.user.foto
+                                            ? `/images/${data.user.foto}`
+                                            : data.user.foto
+                                    }
+                                    name={data.user.name}
+                                />
+                            </div>
+                        </Table.Td>
+                        <Table.Td>{data.nama}</Table.Td>
+                        <Table.Td>{formatRupiah(data.nominal)}</Table.Td>
+                        <Table.Td>{formatDateWithDay(data.tanggal)}</Table.Td>
+                        <Table.Td>
+                            {data.jatuh_tempo ? (
+                                formatDateWithDay(data.jatuh_tempo)
+                            ) : (
+                                <Label variant="info">Tidak Ditentukan</Label>
+                            )}
+                        </Table.Td>
+                        <Table.Td>
+                            <Label
+                                variant={
+                                    data.nominal <= totalSudahDibayar
+                                        ? "success"
+                                        : "danger"
                                 }
-                                name={data.user.name}
+                            >
+                                {data.nominal <= totalSudahDibayar
+                                    ? "Lunas"
+                                    : "Belum Lunas"}
+                            </Label>
+                        </Table.Td>
+                        <Table.Td className="text-end pe-3">
+                            <ActionButton
+                                variant="warning"
+                                icon="search"
+                                label="Detail"
+                                onClick={() => handleShowDetailModal(data)}
                             />
-                        </div>
-                    </Table.Td>
-                    <Table.Td>{data.nama}</Table.Td>
-                    <Table.Td>{formatRupiah(data.nominal)}</Table.Td>
-                    <Table.Td>{formatDateWithDay(data.tanggal)}</Table.Td>
-                    <Table.Td>
-                        {data.jatuh_tempo ? (
-                            formatDateWithDay(data.jatuh_tempo)
-                        ) : (
-                            <Label variant="info">Tidak Ditentukan</Label>
-                        )}
-                    </Table.Td>
-                    <Table.Td>
-                        <Label variant={"danger"}>Belum Lunas</Label>
-                    </Table.Td>
-                    <Table.Td className="text-end pe-3">
-                        <ActionButton
-                            variant="warning"
-                            icon="search"
-                            label="Detail"
-                            onClick={() => handleShowDetailModal(data)}
-                        />
-                        <ActionButton
-                            variant="success"
-                            icon="currency-dollar"
-                            label="Bayar"
-                            onClick={() => handleShowTransaksiModal(data)}
-                        />
-                        <ActionButton
-                            variant="info"
-                            icon="pencil"
-                            label="Edit"
-                            onClick={() => handleEditModal(data)}
-                        />
-                        {/* <ActionButton
-                            variant="danger"
-                            icon="trash"
-                            label="Hapus"
-                            onClick={() =>
-                                handleDelete(
-                                    "utang-piutang.utang.destroy",
-                                    data.id,
-                                    "Data berhasil dihapus"
-                                )
-                            }
-                        /> */}
-                    </Table.Td>
-                </Table.TrBody>
-            ))
+                            <ActionButton
+                                variant="success"
+                                icon="currency-dollar"
+                                label="Bayar"
+                                onClick={() => handleShowTransaksiModal(data)}
+                            />
+                            <ActionButton
+                                variant="info"
+                                icon="pencil"
+                                label="Edit"
+                                onClick={() => handleEditModal(data)}
+                            />
+                            <ActionButton
+                                variant="danger"
+                                icon="trash"
+                                label="Hapus"
+                                onClick={() =>
+                                    handleDelete(
+                                        "utang-piutang.piutang.destroy",
+                                        data.id,
+                                        "Data berhasil dihapus"
+                                    )
+                                }
+                            />
+                        </Table.Td>
+                    </Table.TrBody>
+                );
+            })
         ) : (
             <TableEmpty colSpan={8} />
         );

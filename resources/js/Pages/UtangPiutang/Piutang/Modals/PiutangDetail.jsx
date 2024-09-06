@@ -5,6 +5,12 @@ import { formatDateWithDay, formatRupiah } from "@/Utils/GlobalFunction";
 import clsx from "clsx";
 
 const PiutangDetail = ({ title, showModal, closeModal, data }) => {
+    const totalSudahDibayar = Array.isArray(data.piutang_detail)
+        ? data.piutang_detail.reduce(
+              (total, detail) => total + detail.nominal,
+              0
+          )
+        : 0;
     return (
         <Modal
             maxWidth="3xl"
@@ -45,11 +51,25 @@ const PiutangDetail = ({ title, showModal, closeModal, data }) => {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th width="40%">Sudah Dibayar</th>
+                                    <td width="3%">:</td>
+                                    <td>{formatRupiah(totalSudahDibayar)}</td>
+                                </tr>
+                                <tr>
                                     <th width="20%">Status</th>
                                     <td width="3%">:</td>
                                     <td>
-                                        <Label variant="danger">
-                                            Belum Lunas
+                                        <Label
+                                            variant={
+                                                data?.nominal <=
+                                                totalSudahDibayar
+                                                    ? "success"
+                                                    : "danger"
+                                            }
+                                        >
+                                            {data?.nominal <= totalSudahDibayar
+                                                ? "Lunas"
+                                                : "Belum Lunas"}
                                         </Label>
                                     </td>
                                 </tr>
@@ -119,9 +139,7 @@ const PiutangDetail = ({ title, showModal, closeModal, data }) => {
                                     <div className="flex flex-col gap-1 p-2 text-xs">
                                         <div className="flex gap-3">
                                             <Icon icon="info-circle" />
-                                            <span>
-                                                {detail.judul}
-                                            </span>
+                                            <span>{detail.judul}</span>
                                         </div>
                                         <div className="flex gap-3">
                                             <Icon icon="calendar" />
