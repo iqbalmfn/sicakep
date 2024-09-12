@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Aset\RekeningController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\BankController;
 use App\Http\Controllers\Master\KategoriController;
@@ -19,6 +20,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('master')->name('master.')->group(function () {
         Route::resource('kategori', KategoriController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('bank', BankController::class)->only(['index', 'store', 'update', 'destroy']);
+    });
+
+    Route::prefix('aset')->name('aset.')->group(function () {
+        Route::resource('rekening', RekeningController::class)->only(['index', 'store', 'update', 'destroy']);
     });
 
     Route::get('perencanaan/print-pdf', [PerencanaanController::class, 'printPdf'])->name('perencanaan.print-pdf');

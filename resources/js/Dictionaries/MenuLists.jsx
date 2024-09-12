@@ -29,6 +29,28 @@ export const menus = [
         roles: [1],
     },
     {
+        href: null,
+        label: "Aset",
+        icon: "coin",
+        subMenus: [
+            {
+                href: "/aset/rekening",
+                label: "Rekening",
+                icon: "wallet2",
+                subMenus: [],
+                roles:[1,2]
+            },
+            {
+                href: "/aset/pemindahan-aset",
+                label: "Pemindahan Aset",
+                icon: "arrow-left-right",
+                subMenus: [],
+                roles:[1,2]
+            },
+        ],
+        roles: [1],
+    },
+    {
         href: "/perencanaan",
         label: "Perencanaan",
         icon: "journal-check",

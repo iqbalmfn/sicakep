@@ -24,7 +24,7 @@ const TopMenuDesktop = ({auth}) => {
 
     return (
         <div className="bg-primary">
-            <div className="container mx-auto lg:w-[1500px] h-[55px] flex items-center gap-2">
+            <div className="container mx-auto lg:w-[1500px] h-[55px] flex items-center gap-2 overflow-x-auto whitespace-nowrap px-5 lg:px-0">
                 {menus.map((menu, i) => (
                     <MenuDesktopItem
                         key={i}

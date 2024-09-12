@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Fragment } from "react";
 import Icon from "./Icon";
 import { makeSlug } from "@/Utils/GlobalFunction";
+import { isMobile } from "react-device-detect";
 
 const MenuDesktopItem = ({
     index,
@@ -11,14 +12,15 @@ const MenuDesktopItem = ({
     href,
     label,
     icon,
-    roles,
     subMenus,
+    roles,
     showSubMenu,
     indexSubMenu,
     activeUrl,
     ...props
 }) => {
     const authRoles = auth.roles.map((item) => item.id);
+
     const withSubMenu = () => {
         return (
             <div
@@ -31,7 +33,7 @@ const MenuDesktopItem = ({
                     activeUrl.slice(1).includes(makeSlug(label.toLowerCase()))
                         ? "bg-black/10 font-semibold"
                         : null,
-                    "flex items-center gap-3 text-white cursor-pointer hover:bg-black/10 py-[5px] px-[10px] transition-all duration-150 rounded !font-medium"
+                    "flex items-center gap-3 text-white cursor-pointer hover:bg-black/10 py-[5px] px-[10px] transition-all duration-150 rounded"
                 )}
             >
                 <div className="flex items-center gap-2">
@@ -63,7 +65,12 @@ const MenuDesktopItem = ({
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                 >
-                    <div className="absolute bg-white top-[123px] z-20 min-w-[175px] shadow-lg rounded h-auto border-danger overflow-hidden">
+                    <div
+                        className={clsx(
+                            isMobile ? "left-0 w-full" : null,
+                            "absolute bg-white top-[123px] z-20 lg:min-w-[175px] shadow-lg rounded h-auto border-danger overflow-hidden"
+                        )}
+                    >
                         <div className="flex flex-col">
                             {subMenus.map((subMenu, i) => (
                                 <Link

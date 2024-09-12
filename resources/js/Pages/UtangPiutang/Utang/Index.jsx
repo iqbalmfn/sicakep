@@ -115,6 +115,7 @@ const Index = ({ title, breadcrumbs, datas, widget, users, filtered, flash }) =>
                                     "Utang telah dibayar"
                                 )
                             }
+                            disabled={data.status == 1}
                         />
                         <ActionButton
                             variant="info"

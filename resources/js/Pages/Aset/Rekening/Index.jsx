@@ -6,14 +6,23 @@ import TableEmpty from "@/Components/Atoms/TableEmpty";
 import ActionButton from "@/Components/Molecules/ActionButton";
 import DataTable from "@/Components/Organisms/DataTable";
 import Table from "@/Components/Organisms/Table";
-import UseMasterBank from "@/Hooks/Master/UserMasterBank";
 import AppContentLayout from "@/Layouts/AppContentLayout";
 import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
-import { handleDelete } from "@/Utils/GlobalFunction";
 import { Head } from "@inertiajs/react";
-import BankCreate from "./Modals/BankCreate";
+import React from "react";
+import { formatRupiah, handleDelete } from "@/Utils/GlobalFunction";
+import UseRekening from "@/Hooks/UseRekening";
+import RekeningCreate from "./Modals/RekeningCreate";
 
-const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
+const Index = ({
+    title,
+    breadcrumbs,
+    datas,
+    banks,
+    users,
+    filtered,
+    flash,
+}) => {
     const {
         data,
         processing,
@@ -32,36 +41,39 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
         handleShowModal,
         handleEditModal,
         handleCloseModal,
-    } = UseMasterBank(filtered, flash);
+    } = UseRekening(filtered, flash);
 
     const dataRender = () => {
         return datas.data.length > 0 ? (
             datas.data.map((data, i) => (
                 <Table.TrBody key={data.id}>
                     <Table.Td>{i + 1}</Table.Td>
+                    <Table.Td>{data.nama_rekening}</Table.Td>
+                    <Table.Td>{data.no_rekening}</Table.Td>
                     <Table.Td>
                         <div className="flex items-center gap-3">
                             <img
-                                src={`/storage/bank/${data.logo}`}
+                                src={`/storage/bank/${data.bank.logo}`}
                                 alt="logo"
                                 className="w-[50px]"
                             />
-                            <span>{data.nama}</span>
+                            <span>{data.bank.nama}</span>
                         </div>
                     </Table.Td>
                     <Table.Td>
                         <Label
                             variant={
-                                data.jenis == "bank"
+                                data.bank.jenis == "bank"
                                     ? "info"
-                                    : data.jenis == "e-wallet"
+                                    : data.bank.jenis == "e-wallet"
                                     ? "success"
                                     : "primary"
                             }
                         >
-                            {data.jenis}
+                            {data.bank.jenis}
                         </Label>
                     </Table.Td>
+                    <Table.Td>{formatRupiah(data.saldo)}</Table.Td>
                     <Table.Td className="text-end pe-3">
                         <ActionButton
                             variant="info"
@@ -75,7 +87,7 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                             label="Hapus"
                             onClick={() =>
                                 handleDelete(
-                                    "master.bank.destroy",
+                                    "master.kategori.destroy",
                                     data.id,
                                     "Data berhasil dihapus"
                                 )
@@ -85,7 +97,7 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                 </Table.TrBody>
             ))
         ) : (
-            <TableEmpty colSpan={5} />
+            <TableEmpty colSpan={7} />
         );
     };
 
@@ -114,16 +126,21 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                                 >
                                     no
                                 </Table.Th>
-                                <Table.Th width="69">Nama</Table.Th>
+                                <Table.Th width="20">Nama Rekening</Table.Th>
+                                <Table.Th width="10">Nomor Rekening</Table.Th>
+                                <Table.Th width="10">
+                                    Nama Bank/E-Wallet
+                                </Table.Th>
+                                <Table.Th width="5">jenis</Table.Th>
                                 <Table.Th
                                     width="10"
                                     ordered
                                     onHandleOrder={onHandleOrder}
-                                    column="jenis"
+                                    column="saldo"
                                     orderBy={filtered.orderBy}
                                     orderDirection={filtered.orderDirection}
                                 >
-                                    jenis
+                                    saldo
                                 </Table.Th>
                                 <Table.Th align="end" width="7">
                                     <span className="me-3">opsi</span>
@@ -143,12 +160,14 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
             </ContentWrapper>
 
             {/* modal CRUD create/update */}
-            <BankCreate
+            <RekeningCreate
                 title={title}
                 showModal={showModal}
                 closeModal={handleCloseModal}
                 mode={mode}
                 data={data}
+                users={users}
+                banks={banks}
                 handleChange={handleChange}
                 errors={errors}
                 submit={submit}
