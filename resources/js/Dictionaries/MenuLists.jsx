@@ -18,6 +18,13 @@ export const menus = [
                 subMenus: [],
                 roles:[1]
             },
+            {
+                href: "/master/bank",
+                label: "Bank",
+                icon: "bank2",
+                subMenus: [],
+                roles:[1]
+            },
         ],
         roles: [1],
     },
