@@ -13,6 +13,7 @@ import React from "react";
 import { formatRupiah, handleDelete } from "@/Utils/GlobalFunction";
 import UseRekening from "@/Hooks/UseRekening";
 import RekeningCreate from "./Modals/RekeningCreate";
+import NameWithAvatar from "@/Components/Atoms/NameWithAvatar";
 
 const Index = ({
     title,
@@ -48,6 +49,18 @@ const Index = ({
             datas.data.map((data, i) => (
                 <Table.TrBody key={data.id}>
                     <Table.Td>{i + 1}</Table.Td>
+                    <Table.Td>
+                        <div className="flex items-center gap-2">
+                            <NameWithAvatar
+                                avatar={
+                                    data.user.foto
+                                        ? `/images/${data.user.foto}`
+                                        : data.user.foto
+                                }
+                                name={data.user.name}
+                            />
+                        </div>
+                    </Table.Td>
                     <Table.Td>{data.nama_rekening}</Table.Td>
                     <Table.Td>{data.no_rekening}</Table.Td>
                     <Table.Td>
@@ -57,7 +70,6 @@ const Index = ({
                                 alt="logo"
                                 className="w-[50px]"
                             />
-                            <span>{data.bank.nama}</span>
                         </div>
                     </Table.Td>
                     <Table.Td>
@@ -73,7 +85,7 @@ const Index = ({
                             {data.bank.jenis}
                         </Label>
                     </Table.Td>
-                    <Table.Td>{formatRupiah(data.saldo)}</Table.Td>
+                    <Table.Td className="font-bold">{formatRupiah(data.saldo)}</Table.Td>
                     <Table.Td className="text-end pe-3">
                         <ActionButton
                             variant="info"
@@ -117,7 +129,7 @@ const Index = ({
                         <Table.Thead>
                             <Table.TrHead>
                                 <Table.Th
-                                    width="5"
+                                    width="3"
                                     ordered
                                     onHandleOrder={onHandleOrder}
                                     column="id"
@@ -126,7 +138,8 @@ const Index = ({
                                 >
                                     no
                                 </Table.Th>
-                                <Table.Th width="20">Nama Rekening</Table.Th>
+                                <Table.Th width="15">Pemilik Rekening</Table.Th>
+                                <Table.Th width="15">Nama Rekening</Table.Th>
                                 <Table.Th width="10">Nomor Rekening</Table.Th>
                                 <Table.Th width="10">
                                     Nama Bank/E-Wallet

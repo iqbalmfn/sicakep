@@ -13,11 +13,13 @@ class Transaksi extends Model
         'user_id',
         'kategori_id',
         'perencanaan_id',
+        'rekening_id',
         'judul',
         'tipe',
         'jenis',
         'nominal',
         'tanggal',
+        'is_sesuai',
         'deskripsi',
         'bukti_transaksi'
     ];
