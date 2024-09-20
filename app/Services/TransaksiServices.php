@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Perencanaan;
+use App\Models\Rekening;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
 
@@ -124,7 +125,7 @@ class TransaksiServices
     public function getDataById($id)
     {
         return Transaksi::query()
-            ->with(['user', 'kategori'])
+            ->with(['user', 'kategori', 'rekening'])
             ->find($id);
     }
 
@@ -133,6 +134,7 @@ class TransaksiServices
         $create = [
             "user_id" => "required|numeric",
             "kategori_id" => "required|numeric",
+            "rekening_id" => "required|numeric",
             "judul" => "required",
             "nominal" => "required|numeric",
             "tanggal" => "required|date",
@@ -156,6 +158,28 @@ class TransaksiServices
         try {
             $create = Transaksi::create($input);
 
+            // baca data rekening
+            $rekening = Rekening::find($input['rekening_id']);
+
+            if (!$rekening) {
+                DB::rollBack();
+                return responseError("Gagal, rekening tidak ditemukan");
+            }
+
+            if ($type === "pemasukan") {
+                // update saldo rekening
+                $rekening->update([
+                    'saldo' => $rekening->saldo + $input['nominal']
+                ]);
+            }
+
+            if ($type === "pengeluaran") {
+                // update saldo rekening
+                $rekening->update([
+                    'saldo' => $rekening->saldo - $input['nominal']
+                ]);
+            }
+
             DB::commit();
 
             return responseSuccess("Berhasil, data telah disimpan", $create);
@@ -176,6 +200,33 @@ class TransaksiServices
         try {
             $data = $this->getDataById($id);
 
+            if ($data->tipe === "pemasukan") {
+                if ($data->rekening_id != $request->rekening_id) {
+                    // baca data rekening baru
+                    $rekeningBaru = Rekening::find($input['rekening_id']);
+
+                    if (!$rekeningBaru) {
+                        DB::rollBack();
+                        return responseError("Gagal, rekening tidak ditemukan");
+                    }
+
+                    // update saldo dari rekening lama
+                    $data->rekening->update([
+                        'saldo' => $data->rekening->saldo - $data->nominal
+                    ]);
+
+                    // update saldo ke rekening baru
+                    $rekeningBaru->update([
+                        'saldo' => $rekeningBaru->saldo + $input['nominal']
+                    ]);
+                } else {
+                    // update saldo ke rekening yang sama
+                    $data->rekening->update([
+                       'saldo' => $data->rekening->saldo - $data->nominal + $input['nominal']
+                    ]);
+                }
+            }
+
             $update = $data->update($input);
 
             DB::commit();
@@ -192,6 +243,22 @@ class TransaksiServices
     {
         try {
             $data = $this->getDataById($id);
+
+            // baca data rekening 
+            $rekening = Rekening::find($data->rekening_id);
+
+            if (!$rekening) {
+                DB::rollBack();
+                return responseError("Gagal, rekening tidak ditemukan");
+            }
+
+            if ($data->tipe === "pemasukan") {
+                // update saldo rekening
+                $rekening->update([
+                   'saldo' => $rekening->saldo - $data->nominal
+                ]);
+            }
+
             $delete = $data->delete();
 
             return responseSuccess("Berhasil, data telah dihapus", $delete);

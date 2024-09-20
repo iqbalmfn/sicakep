@@ -25,7 +25,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import PemasukanCreate from "./Modals/PemasukanCreate";
 import PemasukanDetail from "./Modals/PemasukanDetail";
 
-const Index = ({ title, breadcrumbs, datas, categories, users, filtered, flash }) => {
+const Index = ({ title, breadcrumbs, datas, categories, users, rekenings, filtered, flash }) => {
     const {
         data,
         processing,
@@ -281,6 +281,7 @@ const Index = ({ title, breadcrumbs, datas, categories, users, filtered, flash }
                 data={data}
                 categories={categories}
                 users={users}
+                rekenings={rekenings}
                 handleChange={handleChange}
                 errors={errors}
                 submit={submit}

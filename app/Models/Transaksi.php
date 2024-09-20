@@ -35,4 +35,8 @@ class Transaksi extends Model
     public function perencanaan() {
         return $this->belongsTo(Perencanaan::class, 'perencanaan_id', 'id');
     }
+
+    public function rekening() {
+        return $this->belongsTo(Rekening::class,'rekening_id', 'id');
+    }
 }

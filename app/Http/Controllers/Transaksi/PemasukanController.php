@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rekening;
 use App\Models\User;
 use App\Services\KategoriServices;
 use App\Services\TransaksiServices;
@@ -49,6 +50,7 @@ class PemasukanController extends Controller
         );
 
         $users = User::all();
+        $rekenings = Rekening::all();
 
         return Inertia::render('Transaksi/Pemasukan/Index', [
             "title" => $title,
@@ -56,6 +58,7 @@ class PemasukanController extends Controller
             "datas" => $datas,
             "categories" => $categories,
             "users" => $users,
+            "rekenings" => $rekenings,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',

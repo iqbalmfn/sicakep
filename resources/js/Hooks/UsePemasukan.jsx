@@ -10,6 +10,7 @@ const UsePemasukan = (filtered, flash) => {
     const { data, setData, reset } = useForm({
         kategori_id: "",
         user_id: "",
+        rekening_id: "",
         judul: "",
         nominal: "",
         tanggal: "",
@@ -55,6 +56,7 @@ const UsePemasukan = (filtered, flash) => {
                 id: initialData.id,
                 user_id: initialData.user_id,
                 kategori_id: initialData.kategori_id,
+                rekening_id: initialData.rekening_id,
                 judul: initialData.judul,
                 nominal: initialData.nominal,
                 tanggal: initialData.tanggal,

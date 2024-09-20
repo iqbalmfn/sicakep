@@ -9,7 +9,7 @@ class RekeningServices
     public function getData($q, $orderBy, $orderDirection, $perPage, $user_id = null, $bank_id = null, $select2 = null)
     {
         $data = Rekening::query()
-            ->with(['bank', 'user']);
+            ->with(['bank', 'user', 'transaksi_aset_initial', 'transaksi_aset_destination', 'transaksi']);
 
         if ($user_id) {
             $data->whereUserId($user_id);

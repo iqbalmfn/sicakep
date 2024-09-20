@@ -85,7 +85,9 @@ const Index = ({
                             {data.bank.jenis}
                         </Label>
                     </Table.Td>
-                    <Table.Td className="font-bold">{formatRupiah(data.saldo)}</Table.Td>
+                    <Table.Td className="font-bold">
+                        {formatRupiah(data.saldo)}
+                    </Table.Td>
                     <Table.Td className="text-end pe-3">
                         <ActionButton
                             variant="info"
@@ -103,6 +105,11 @@ const Index = ({
                                     data.id,
                                     "Data berhasil dihapus"
                                 )
+                            }
+                            disabled={
+                                data.transaksi_aset_initial.length > 0 ||
+                                data.transaksi_aset_destination.length > 0 ||
+                                data.transaksi.length == 0
                             }
                         />
                     </Table.Td>

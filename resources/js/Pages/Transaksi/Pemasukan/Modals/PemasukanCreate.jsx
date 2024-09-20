@@ -17,12 +17,15 @@ const PemasukanCreate = ({
     data,
     categories,
     users,
+    rekenings,
     handleChange,
     errors,
     processing,
 }) => {
     const types = ["online", "cash"];
 
+    const rekeningFilters = rekenings.filter((rekening) => rekening.user_id == data.user_id);
+    
     return (
         <Modal
             maxWidth="md"
@@ -79,9 +82,7 @@ const PemasukanCreate = ({
                                     isError={errors?.user_id}
                                     required
                                 >
-                                    <option value="">
-                                        Pilih Donatur
-                                    </option>
+                                    <option value="">Pilih Donatur</option>
                                     {users.map((user) => (
                                         <option key={user.id} value={user.id}>
                                             {user.name}
@@ -89,6 +90,38 @@ const PemasukanCreate = ({
                                     ))}
                                 </FormSelect>
                                 <FormError message={errors?.user_id} />
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel
+                                    name="Rekening Tujuan"
+                                    htmlFor="rekening_id"
+                                    required
+                                />
+                                <FormSelect
+                                    size="sm"
+                                    id="rekening_id"
+                                    name="rekening_id"
+                                    onChange={handleChange}
+                                    value={data.rekening_id}
+                                    isError={errors?.rekening_id}
+                                    required
+                                >
+                                    <option value="">
+                                        Pilih Rekening Tujuan
+                                    </option>
+                                    {rekeningFilters.map((rekening) => (
+                                        <option
+                                            key={rekening.id}
+                                            value={rekening.id}
+                                        >
+                                            {rekening.nama_rekening}{" "}
+                                            {rekening.no_rekening
+                                                ? `(${rekening.no_rekening})`
+                                                : null}
+                                        </option>
+                                    ))}
+                                </FormSelect>
+                                <FormError message={errors?.rekening_id} />
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel
