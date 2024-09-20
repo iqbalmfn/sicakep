@@ -20,7 +20,7 @@ class TransaksiAsetServices
         $tahun = null
     ) {
         $data = TransaksiAset::query()
-            ->with(['bank', 'user']);
+            ->with(['initial_rekening.bank', 'destination_rekening.bank']);
 
         if ($user_id) {
             $data->whereUserId($user_id);
@@ -62,7 +62,6 @@ class TransaksiAsetServices
     public function rules()
     {
         $create = [
-            "user_id" => "required|numeric",
             "initial_rekening_id" => "required|numeric",
             "destination_rekening_id" => "required|numeric",
             "nominal" => "required|numeric",
@@ -81,6 +80,11 @@ class TransaksiAsetServices
         $request->validate($this->rules()["create"]);
 
         $input = $request->all();
+        $input['user_id'] = $request->user()->id;
+
+        if (!$request->biaya_administrasi) {
+            $input['biaya_administrasi'] = 0;
+        }
 
         try {
             DB::beginTransaction();
@@ -93,10 +97,12 @@ class TransaksiAsetServices
 
                 // Cek apakah saldo initialRekening cukup untuk nominal baru
                 if ($totalPotonganBaru > $initialRekening->saldo) {
+                    DB::rollBack();
                     return responseError("Gagal, saldo tidak cukup untuk melakukan transaksi");
                 }
 
                 if ($totalPotonganBaru > $initialRekening->saldo) {
+                    DB::rollBack();
                     return responseError("Gagal, saldo tidak cukup");
                 }
 
@@ -105,6 +111,7 @@ class TransaksiAsetServices
                     'saldo' => $initialRekening->saldo - $totalPotonganBaru
                 ]);
             } else {
+                DB::rollBack();
                 return responseError("Gagal, initial rekening tidak ditemukan");
             }
 
@@ -115,6 +122,7 @@ class TransaksiAsetServices
                     'saldo' => $destinationRekening->saldo + $request->nominal
                 ]);
             } else {
+                DB::rollBack();
                 return responseError("Gagal, destination rekening tidak ditemukan");
             }
 
@@ -127,13 +135,14 @@ class TransaksiAsetServices
                     ->whereKategoriId(13)
                     ->first();
 
-                if ($perencanaan) {
+                if (!$perencanaan) {
+                    DB::rollBack();
                     return responseError("Gagal, Administrasi tidak dianggarkan");
                 }
 
                 // input ke transaksi pengeluaran
                 Transaksi::create([
-                    'user_id' => $request->user_id,
+                    'user_id' => $input['user_id'],
                     'kategori_id' => 13,
                     'perencanaan_id' => $perencanaan->id,
                     'judul' => 'Biaya Administrasi Transfer Pemindahan Dana',
@@ -158,7 +167,13 @@ class TransaksiAsetServices
     public function updateData($request, $id)
     {
         $request->validate($this->rules()["update"]); // Validasi sesuai dengan aturan update
+
         $input = $request->all();
+        $input['user_id'] = $request->user()->id;
+
+        if (!$request->biaya_administrasi) {
+            $input['biaya_administrasi'] = 0;
+        }
 
         try {
             DB::beginTransaction();
@@ -166,6 +181,7 @@ class TransaksiAsetServices
             // Cari transaksi yang akan di-update
             $transaksiAset = TransaksiAset::find($id);
             if (!$transaksiAset) {
+                DB::rollBack();
                 return responseError("Gagal, transaksi aset tidak ditemukan");
             }
 
@@ -174,17 +190,19 @@ class TransaksiAsetServices
             $destinationRekening = Rekening::find($request->destination_rekening_id);
 
             if (!$initialRekening) {
+                DB::rollBack();
                 return responseError("Gagal, initial rekening tidak ditemukan");
             }
 
             if (!$destinationRekening) {
+                DB::rollBack();
                 return responseError("Gagal, destination rekening tidak ditemukan");
             }
 
             // Rollback saldo ke sebelum transaksi
             // Tambahkan kembali nominal sebelumnya ke initialRekening dan kurangi dari destinationRekening
             $initialRekening->update([
-                'saldo' => $initialRekening->saldo + $transaksiAset->nominal
+                'saldo' => $initialRekening->saldo + $transaksiAset->nominal + $transaksiAset->biaya_administrasi
             ]);
 
             $destinationRekening->update([
@@ -196,6 +214,7 @@ class TransaksiAsetServices
 
             // Cek apakah saldo initialRekening cukup untuk nominal baru
             if ($totalPotonganBaru > $initialRekening->saldo) {
+                DB::rollBack();
                 return responseError("Gagal, saldo tidak cukup untuk melakukan transaksi");
             }
 
@@ -216,9 +235,10 @@ class TransaksiAsetServices
             if ($request->biaya_administrasi) {
                 // Cari transaksi biaya administrasi terkait jika ada
                 $transaksiBiaya = Transaksi::where('kategori_id', 13)
-                    ->where('deskripsi', 'LIKE', '%Biaya Administrasi Transfer Pemindahan Dana%')
-                    ->where('user_id', $request->user_id)
+                    ->where('deskripsi', 'LIKE', '%Biaya administrasi transfer ke rekening '.$destinationRekening->nama_rekening.'%')
+                    ->where('user_id', $input['user_id'])
                     ->where('tanggal', $request->tanggal)
+                    ->orderByDesc('id')
                     ->first();
 
                 // Cek perencanaan administrasi
@@ -242,7 +262,7 @@ class TransaksiAsetServices
                 } else {
                     // Jika belum ada, buat transaksi biaya administrasi baru
                     Transaksi::create([
-                        'user_id' => $request->user_id,
+                        'user_id' => $input['user_id'],
                         'kategori_id' => 13,
                         'perencanaan_id' => $perencanaan->id,
                         'judul' => 'Biaya Administrasi Transfer Pemindahan Dana',
@@ -291,7 +311,7 @@ class TransaksiAsetServices
             // Rollback saldo sebelum transaksi
             // Kembalikan nominal dari destinationRekening dan tambahkan ke initialRekening
             $initialRekening->update([
-                'saldo' => $initialRekening->saldo + $transaksiAset->nominal
+                'saldo' => $initialRekening->saldo + $transaksiAset->nominal + $transaksiAset->biaya_administrasi
             ]);
 
             $destinationRekening->update([
@@ -302,9 +322,10 @@ class TransaksiAsetServices
             if ($transaksiAset->biaya_administrasi) {
                 // Cari transaksi biaya administrasi terkait
                 $transaksiBiaya = Transaksi::where('kategori_id', 13)
-                    ->where('deskripsi', 'LIKE', '%Biaya Administrasi Transfer Pemindahan Dana%')
+                    ->where('deskripsi', 'LIKE', '%Biaya administrasi transfer ke rekening '.$destinationRekening->nama_rekening.'%')
                     ->where('user_id', $transaksiAset->user_id)
                     ->where('tanggal', $transaksiAset->tanggal)
+                    ->orderByDesc('id')
                     ->first();
 
                 if ($transaksiBiaya) {

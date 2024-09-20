@@ -1,19 +1,28 @@
 import Breadcrumbs from "@/Components/Atoms/Breadcrumbs";
 import CreateButton from "@/Components/Atoms/CreateButton";
 import FilterSearch from "@/Components/Atoms/FilterSearch";
-import Label from "@/Components/Atoms/Label";
+import FormSelectPrefix from "@/Components/Atoms/FormSelectPrefix";
+import Icon from "@/Components/Atoms/Icon";
 import TableEmpty from "@/Components/Atoms/TableEmpty";
 import ActionButton from "@/Components/Molecules/ActionButton";
 import DataTable from "@/Components/Organisms/DataTable";
 import Table from "@/Components/Organisms/Table";
-import UseMasterBank from "@/Hooks/Master/UserMasterBank";
+import UsePemindahanAset from "@/Hooks/UsePemindahanAset";
 import AppContentLayout from "@/Layouts/AppContentLayout";
 import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
-import { handleDelete } from "@/Utils/GlobalFunction";
+import {
+    formatDateWithDay,
+    formatRupiah,
+    getCurrentMonth,
+    getCurrentYear,
+    handleDelete,
+    listMonths,
+    listYears,
+} from "@/Utils/GlobalFunction";
 import { Head } from "@inertiajs/react";
-import BankCreate from "./Modals/BankCreate";
+import PemindahanAsetCreate from "./Modals/PemindahanAsetCreate";
 
-const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
+const Index = ({ title, breadcrumbs, datas, rekenings, filtered, flash }) => {
     const {
         data,
         processing,
@@ -21,8 +30,8 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
         submit,
         update,
         handleChange,
-        handleCheckboxChange,
         // page controller
+        params,
         setParams,
         setFetching,
         mode,
@@ -32,7 +41,8 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
         handleShowModal,
         handleEditModal,
         handleCloseModal,
-    } = UseMasterBank(filtered, flash);
+    } = UsePemindahanAset(filtered, flash);
+    console.log(datas.data);
 
     const dataRender = () => {
         return datas.data.length > 0 ? (
@@ -42,26 +52,26 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                     <Table.Td>
                         <div className="flex items-center gap-3">
                             <img
-                                src={`/storage/bank/${data.logo}`}
+                                src={`/storage/bank/${data.initial_rekening.bank.logo}`}
                                 alt="logo"
                                 className="w-[50px]"
                             />
-                            <span>{data.nama}</span>
+                            <span>{data.initial_rekening.nama_rekening}</span>
                         </div>
                     </Table.Td>
                     <Table.Td>
-                        <Label
-                            variant={
-                                data.jenis == "bank"
-                                    ? "info"
-                                    : data.jenis == "e-wallet"
-                                    ? "success"
-                                    : "warning"
-                            }
-                        >
-                            {data.jenis}
-                        </Label>
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={`/storage/bank/${data.destination_rekening.bank.logo}`}
+                                alt="logo"
+                                className="w-[50px]"
+                            />
+                            <span>{data.destination_rekening.nama_rekening}</span>
+                        </div>
                     </Table.Td>
+                    <Table.Td>{formatRupiah(data.nominal)}</Table.Td>
+                    <Table.Td>{formatRupiah(data.biaya_administrasi)}</Table.Td>
+                    <Table.Td>{formatDateWithDay(data.tanggal)}</Table.Td>
                     <Table.Td className="text-end pe-3">
                         <ActionButton
                             variant="info"
@@ -75,7 +85,7 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                             label="Hapus"
                             onClick={() =>
                                 handleDelete(
-                                    "master.bank.destroy",
+                                    "aset.pemindahan-aset.destroy",
                                     data.id,
                                     "Data berhasil dihapus"
                                 )
@@ -85,7 +95,7 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                 </Table.TrBody>
             ))
         ) : (
-            <TableEmpty colSpan={5} />
+            <TableEmpty colSpan={7} />
         );
     };
 
@@ -98,14 +108,61 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                     <div className="flex gap-2">
                         <CreateButton onClick={handleShowModal} />
                     </div>
-                    <FilterSearch onHandleFilter={onHandleFilter} />
+                    <div className="flex justify-end gap-2">
+                        <div>
+                            <FormSelectPrefix
+                                prefix={<Icon icon="calendar-month" />}
+                                size="sm"
+                                name="bulan"
+                                value={
+                                    params.bulan
+                                        ? params.bulan
+                                        : getCurrentMonth()
+                                }
+                                onChange={onHandleFilter}
+                                className="w-[150px]"
+                            >
+                                <option value="all">Semua Bulan</option>
+                                {listMonths().map((month) => (
+                                    <option
+                                        key={month.value}
+                                        value={month.value}
+                                    >
+                                        {month.label}
+                                    </option>
+                                ))}
+                            </FormSelectPrefix>
+                        </div>
+                        <div>
+                            <FormSelectPrefix
+                                prefix={<Icon icon="calendar-check" />}
+                                size="sm"
+                                name="tahun"
+                                value={
+                                    params.tahun
+                                        ? params.tahun
+                                        : getCurrentYear()
+                                }
+                                onChange={onHandleFilter}
+                                className="w-[150px]"
+                            >
+                                <option value="all">Semua Tahun</option>
+                                {listYears().map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))}
+                            </FormSelectPrefix>
+                        </div>
+                        <FilterSearch onHandleFilter={onHandleFilter} />
+                    </div>
                 </div>
                 <DataTable>
                     <Table>
                         <Table.Thead>
                             <Table.TrHead>
                                 <Table.Th
-                                    width="5"
+                                    width="3"
                                     ordered
                                     onHandleOrder={onHandleOrder}
                                     column="id"
@@ -114,17 +171,11 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
                                 >
                                     no
                                 </Table.Th>
-                                <Table.Th width="69">Nama</Table.Th>
-                                <Table.Th
-                                    width="10"
-                                    ordered
-                                    onHandleOrder={onHandleOrder}
-                                    column="jenis"
-                                    orderBy={filtered.orderBy}
-                                    orderDirection={filtered.orderDirection}
-                                >
-                                    jenis
-                                </Table.Th>
+                                <Table.Th width="15">Rekening Asal</Table.Th>
+                                <Table.Th width="15">Rekening Tujuan</Table.Th>
+                                <Table.Th width="10">Nominal</Table.Th>
+                                <Table.Th width="10">Biaya Transaksi</Table.Th>
+                                <Table.Th width="10">tanggal</Table.Th>
                                 <Table.Th align="end" width="7">
                                     <span className="me-3">opsi</span>
                                 </Table.Th>
@@ -143,12 +194,13 @@ const Index = ({ title, breadcrumbs, datas, filtered, flash }) => {
             </ContentWrapper>
 
             {/* modal CRUD create/update */}
-            <BankCreate
+            <PemindahanAsetCreate
                 title={title}
                 showModal={showModal}
                 closeModal={handleCloseModal}
                 mode={mode}
                 data={data}
+                rekenings={rekenings}
                 handleChange={handleChange}
                 errors={errors}
                 submit={submit}

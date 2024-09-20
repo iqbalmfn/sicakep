@@ -20,10 +20,7 @@ const BankCreate = ({
     processing,
 }) => {
     const types = ["bank", "e-wallet", "cash"];
-
-    console.log(data);
     
-
     return (
         <Modal
             maxWidth="md"

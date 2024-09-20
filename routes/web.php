@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Aset\PemindahanAsetController;
 use App\Http\Controllers\Aset\RekeningController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\BankController;
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('aset')->name('aset.')->group(function () {
         Route::resource('rekening', RekeningController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('pemindahan-aset', PemindahanAsetController::class)->only(['index', 'store', 'update', 'destroy']);
     });
 
     Route::get('perencanaan/print-pdf', [PerencanaanController::class, 'printPdf'])->name('perencanaan.print-pdf');

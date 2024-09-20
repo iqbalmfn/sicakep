@@ -3,10 +3,8 @@ import FormGroup from "@/Components/Atoms/FormGroup";
 import FormInput from "@/Components/Atoms/FormInput";
 import FormLabel from "@/Components/Atoms/FormLabel";
 import FormSelect from "@/Components/Atoms/FormSelect";
-import FormTextarea from "@/Components/Atoms/FormTextarea";
 import Modal from "@/Components/Atoms/Modal";
 import RegularSubmitModal from "@/Components/Molecules/RegularSubmitModal";
-import { getCurrentMonthYear } from "@/Utils/GlobalFunction";
 
 const RekeningCreate = ({
     title,
@@ -111,7 +109,6 @@ const RekeningCreate = ({
                                 <FormLabel
                                     name="Nomor Rekening"
                                     htmlFor="no_rekening"
-                                    required
                                 />
                                 <FormInput
                                     size="sm"
@@ -121,7 +118,6 @@ const RekeningCreate = ({
                                     defaultValue={data.no_rekening}
                                     placeholder="Masukkan Nomor Rekening"
                                     isError={errors?.no_rekening}
-                                    required
                                 />
                                 <FormError message={errors?.no_rekening} />
                             </FormGroup>
@@ -145,23 +141,6 @@ const RekeningCreate = ({
                                 />
                                 <FormError message={errors?.saldo} />
                             </FormGroup>
-                            <FormGroup>
-                                <FormLabel
-                                    name="Deskripsi"
-                                    htmlFor="deskripsi"
-                                />
-                                <FormTextarea
-                                    size="sm"
-                                    id="deskripsi"
-                                    name="deskripsi"
-                                    onChange={handleChange}
-                                    defaultValue={data.deskripsi}
-                                    placeholder="Tulis Deskripsi..."
-                                    isError={errors?.deskripsi}
-                                    rows="3"
-                                />
-                                <FormError message={errors?.deskripsi} />
-                            </FormGroup>
                         </div>
                     </div>
                 </Modal.Body>
@@ -174,7 +153,6 @@ const RekeningCreate = ({
                             !data.user_id ||
                             !data.bank_id ||
                             !data.nama_rekening ||
-                            !data.no_rekening ||
                             !data.saldo
                         }
                     />

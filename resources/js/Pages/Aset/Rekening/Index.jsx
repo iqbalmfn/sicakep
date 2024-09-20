@@ -79,7 +79,7 @@ const Index = ({
                                     ? "info"
                                     : data.bank.jenis == "e-wallet"
                                     ? "success"
-                                    : "primary"
+                                    : "warning"
                             }
                         >
                             {data.bank.jenis}
