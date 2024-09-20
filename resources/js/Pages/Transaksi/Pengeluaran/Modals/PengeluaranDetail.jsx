@@ -36,6 +36,11 @@ const PengeluaranDetail = ({ title, showModal, closeModal, data }) => {
                                     <td>{data?.kategori?.nama}</td>
                                 </tr>
                                 <tr>
+                                    <th width="25%">Sub Kategori</th>
+                                    <td width="3%">:</td>
+                                    <td>{data?.perencanaan?.judul}</td>
+                                </tr>
+                                <tr>
                                     <th width="25%">Judul</th>
                                     <td width="3%">:</td>
                                     <td>{data?.judul}</td>
@@ -77,6 +82,46 @@ const PengeluaranDetail = ({ title, showModal, closeModal, data }) => {
                                         >
                                             {data?.jenis}
                                         </Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="20%">Sesuai Anggaran</th>
+                                    <td width="3%">:</td>
+                                    <td>
+                                        <Label
+                                            variant={
+                                                data.is_sesuai == 1
+                                                    ? "success"
+                                                    : "danger"
+                                            }
+                                        >
+                                            {data?.is_sesuai
+                                                ? "sesuai"
+                                                : "tidak sesuai"}
+                                        </Label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th width="20%">Sumber</th>
+                                    <td width="3%">:</td>
+                                    <td>
+                                        {data.rekening ? (
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={`/storage/bank/${data.rekening?.bank?.logo}`}
+                                                    alt="logo"
+                                                    className="w-[50px]"
+                                                />
+                                                <span>
+                                                    {
+                                                        data.rekening
+                                                            ?.nama_rekening
+                                                    }
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            "-"
+                                        )}
                                     </td>
                                 </tr>
                                 <tr>

@@ -32,6 +32,7 @@ const Index = ({
     dataAll,
     categories,
     users,
+    rekenings,
     perencanaans,
     widget,
     filtered,
@@ -44,6 +45,7 @@ const Index = ({
         submit,
         update,
         handleChange,
+        handleCheckboxChange,
         // page controller
         params,
         setParams,
@@ -347,8 +349,10 @@ const Index = ({
                 pengeluaranData={dataAll}
                 categories={categories}
                 users={users}
+                rekenings={rekenings}
                 perencanaans={perencanaans}
                 handleChange={handleChange}
+                handleCheckboxChange={handleCheckboxChange}
                 errors={errors}
                 submit={submit}
                 update={update}

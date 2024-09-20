@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Transaksi\PengeluaranController;
+use App\Models\Rekening;
 use App\Models\Transaksi;
 use App\Models\UtangPiutang;
 use App\Services\ChartServices;
@@ -30,7 +31,7 @@ class DashboardController extends Controller
         $chartPemasukanBulanan = $this->chartServices->chartPemasukanBulanan($request->tahun);
 
         $data = [
-            "totalSaldo" => $this->totalSaldo(),
+            "totalSaldo" => $this->totalSaldoFromRekening(),
             "totalPemasukan" => $this->totalTransaksi("pemasukan", $request->bulan, $request->tahun),
             "totalPengeluaran" => $this->totalTransaksi("pengeluaran", $request->bulan, $request->tahun),
             "saldoBulanan" => $this->saldoBulanan($request->bulan, $request->tahun),
@@ -66,6 +67,14 @@ class DashboardController extends Controller
             ->sum('nominal');
 
         return $saldo - $totalPengeluaran;
+    }
+
+    public function totalSaldoFromRekening()
+    {
+        $saldo = Rekening::query()
+            ->sum('saldo');
+
+        return $saldo;
     }
 
     public function totalTransaksi($tipe, $bulan = null, $tahun = null)

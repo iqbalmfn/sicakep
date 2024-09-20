@@ -11,11 +11,13 @@ const UsePengeluaran = (filtered, flash) => {
         user_id: "",
         kategori_id: "",
         perencanaan_id: "",
+        rekening_id: "",
         judul: "",
         nominal: "",
         tanggal: "",
         jenis: "online",
         deskripsi: "",
+        is_sesuai: 1
     });
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(null);
@@ -57,12 +59,15 @@ const UsePengeluaran = (filtered, flash) => {
                 user_id: initialData.user_id,
                 kategori_id: initialData.kategori_id,
                 perencanaan_id: initialData.perencanaan_id,
+                rekening_id: initialData.rekening_id,
                 judul: initialData.judul,
                 nominal: initialData.nominal,
                 nominal_strict: initialData.nominal,
                 tanggal: initialData.tanggal,
                 jenis: initialData.jenis,
                 deskripsi: initialData.deskripsi,
+                is_sesuai: initialData.is_sesuai,
+                rekening: initialData.rekening
             });
         }
     }, [initialData]);

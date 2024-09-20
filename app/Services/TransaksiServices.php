@@ -28,7 +28,7 @@ class TransaksiServices
         $select2 = null
     ) {
         $data = Transaksi::query()
-            ->with(['user', 'kategori', 'perencanaan']);
+            ->with(['user', 'kategori', 'perencanaan', 'rekening.bank']);
 
         if ($kategori_id) {
             $data->whereKategoriId($kategori_id);
@@ -138,7 +138,8 @@ class TransaksiServices
             "judul" => "required",
             "nominal" => "required|numeric",
             "tanggal" => "required|date",
-            "jenis" => "required"
+            "jenis" => "required",
+            "is_sesuai" => "required|boolean",
         ];
 
         return [
@@ -174,6 +175,12 @@ class TransaksiServices
             }
 
             if ($type === "pengeluaran") {
+                // cek apakah saldo cukup
+                if ($rekening->saldo < $input['nominal']) {
+                    DB::rollBack();
+                    return responseError("Gagal, saldo di rekening tidak cukup");
+                }
+
                 // update saldo rekening
                 $rekening->update([
                     'saldo' => $rekening->saldo - $input['nominal']
@@ -222,7 +229,38 @@ class TransaksiServices
                 } else {
                     // update saldo ke rekening yang sama
                     $data->rekening->update([
-                       'saldo' => $data->rekening->saldo - $data->nominal + $input['nominal']
+                        'saldo' => $data->rekening->saldo - $data->nominal + $input['nominal']
+                    ]);
+                }
+            } elseif ($data->tipe === "pengeluaran") {
+                if ($data->rekening_id != $request->rekening_id) {
+                    // baca data rekening baru
+                    $rekeningBaru = Rekening::find($input['rekening_id']);
+
+                    if (!$rekeningBaru) {
+                        DB::rollBack();
+                        return responseError("Gagal, rekening tidak ditemukan");
+                    }
+
+                    // cek apakah saldo cukup
+                    if ($rekeningBaru->saldo < $input['nominal']) {
+                        DB::rollBack();
+                        return responseError("Gagal, saldo di rekening tidak cukup");
+                    }
+
+                    // update saldo dari rekening lama
+                    $data->rekening->update([
+                        'saldo' => $data->rekening->saldo + $data->nominal
+                    ]);
+
+                    // update saldo ke rekening baru
+                    $rekeningBaru->update([
+                        'saldo' => $rekeningBaru->saldo - $input['nominal']
+                    ]);
+                } else {
+                    // update saldo ke rekening yang sama
+                    $data->rekening->update([
+                        'saldo' => $data->rekening->saldo + $data->nominal - $input['nominal']
                     ]);
                 }
             }
@@ -238,6 +276,7 @@ class TransaksiServices
             return responseError("Gagal, ada kesalahan pada sistem saat mengirim data " . $th->getMessage());
         }
     }
+
 
     public function deleteData($id)
     {
@@ -255,7 +294,14 @@ class TransaksiServices
             if ($data->tipe === "pemasukan") {
                 // update saldo rekening
                 $rekening->update([
-                   'saldo' => $rekening->saldo - $data->nominal
+                    'saldo' => $rekening->saldo - $data->nominal
+                ]);
+            }
+
+            if ($data->tipe === "pengeluaran") {
+                // update saldo rekening
+                $rekening->update([
+                    'saldo' => $rekening->saldo + $data->nominal
                 ]);
             }
 

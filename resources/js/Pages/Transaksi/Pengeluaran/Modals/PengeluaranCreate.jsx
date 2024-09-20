@@ -4,6 +4,7 @@ import FormInput from "@/Components/Atoms/FormInput";
 import FormLabel from "@/Components/Atoms/FormLabel";
 import FormSelect from "@/Components/Atoms/FormSelect";
 import FormTextarea from "@/Components/Atoms/FormTextarea";
+import FormToggle from "@/Components/Atoms/FormToggle";
 import Modal from "@/Components/Atoms/Modal";
 import RegularSubmitModal from "@/Components/Molecules/RegularSubmitModal";
 import { formatRupiah } from "@/Utils/GlobalFunction";
@@ -19,9 +20,11 @@ const PengeluaranCreate = ({
     data,
     categories,
     users,
+    rekenings,
     perencanaans,
     pengeluaranData,
     handleChange,
+    handleCheckboxChange,
     errors,
     processing,
 }) => {
@@ -98,7 +101,6 @@ const PengeluaranCreate = ({
                                                 ? anggaranTerpakaiSum
                                                 : parseInt(anggaranTerpakai)
                                         )}
-                                        
                                     </span>
                                 </div>
                             </div>
@@ -190,6 +192,39 @@ const PengeluaranCreate = ({
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel
+                                    name="Rekening Yang Digunakanan"
+                                    htmlFor="rekening_id"
+                                    required
+                                />
+                                <FormSelect
+                                    size="sm"
+                                    id="rekening_id"
+                                    name="rekening_id"
+                                    onChange={handleChange}
+                                    value={data.rekening_id}
+                                    isError={errors?.rekening_id}
+                                    required
+                                    disabled={!data.perencanaan_id}
+                                >
+                                    <option value="">
+                                        Pilih Rekening Yang Digunakanan
+                                    </option>
+                                    {rekenings.map((rekening) => (
+                                        <option
+                                            key={rekening.id}
+                                            value={rekening.id}
+                                        >
+                                            {rekening.nama_rekening}{" "}
+                                            {rekening.no_rekening
+                                                ? `(${rekening.no_rekening})`
+                                                : null}
+                                        </option>
+                                    ))}
+                                </FormSelect>
+                                <FormError message={errors?.rekening_id} />
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel
                                     name="Judul"
                                     htmlFor="judul"
                                     required
@@ -275,6 +310,23 @@ const PengeluaranCreate = ({
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel
+                                    name="Sesuai Anggaran"
+                                    htmlFor="is_sesuai"
+                                    required
+                                />
+                                <div className="flex items-center gap-3 mt-1 mb-2">
+                                    <span>Tidak Sesuai</span>
+                                    <FormToggle
+                                        variant="success"
+                                        name="is_sesuai"
+                                        onChange={handleCheckboxChange}
+                                        checked={data.is_sesuai == "1"}
+                                    />
+                                    <span>Sesuai</span>
+                                </div>
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel
                                     name="Deskripsi"
                                     htmlFor="deskripsi"
                                 />
@@ -291,6 +343,7 @@ const PengeluaranCreate = ({
                                 />
                                 <FormError message={errors?.deskripsi} />
                             </FormGroup>
+                            
                         </div>
                     </div>
                 </Modal.Body>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Perencanaan;
+use App\Models\Rekening;
 use App\Models\User;
 use App\Services\KategoriServices;
 use App\Services\PerencanaanServices;
@@ -84,6 +85,8 @@ class PengeluaranController extends Controller
 
         $users = User::all();
 
+        $rekenings = Rekening::all();
+
         $widget = $this->widget($request->kategori_id, $request->bulan, $request->tahun);
 
         return Inertia::render('Transaksi/Pengeluaran/Index', [
@@ -93,6 +96,7 @@ class PengeluaranController extends Controller
             "dataAll" => $dataAll,
             "categories" => $categories,
             "users" => $users,
+            "rekenings" => $rekenings,
             "perencanaans" => $perencanaans,
             "widget" => $widget,
             'filtered' => $request ?? [
@@ -224,7 +228,7 @@ class PengeluaranController extends Controller
 
     public function store(Request $request)
     {
-        $res = $this->transaksiServices->createData($request, "Pengeluaran");
+        $res = $this->transaksiServices->createData($request, "pengeluaran");
 
         if ($res['success']) {
             $session = [
