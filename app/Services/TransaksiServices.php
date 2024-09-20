@@ -139,7 +139,7 @@ class TransaksiServices
             "nominal" => "required|numeric",
             "tanggal" => "required|date",
             "jenis" => "required",
-            "is_sesuai" => "required|boolean",
+            "is_sesuai" => "nullable|boolean",
         ];
 
         return [

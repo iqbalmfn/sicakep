@@ -80,6 +80,29 @@ const PemasukanDetail = ({ title, showModal, closeModal, data }) => {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th width="20%">Rekening</th>
+                                    <td width="3%">:</td>
+                                    <td>
+                                        {data.rekening ? (
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={`/storage/bank/${data.rekening?.bank?.logo}`}
+                                                    alt="logo"
+                                                    className="w-[50px]"
+                                                />
+                                                <span>
+                                                    {
+                                                        data.rekening
+                                                            ?.nama_rekening
+                                                    }
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th width="20%">Deskripsi</th>
                                     <td width="3%">:</td>
                                     <td>{data?.deskripsi}</td>
