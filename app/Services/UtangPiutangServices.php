@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Perencanaan;
 use App\Models\PiutangMaster;
+use App\Models\Rekening;
 use App\Models\Transaksi;
 use App\Models\UtangPiutang;
 use Illuminate\Support\Facades\DB;
@@ -318,7 +319,7 @@ class UtangPiutangServices
     }
 
 
-    public function payProcess($id)
+    public function payProcess($request, $id)
     {
         try {
             DB::beginTransaction();
@@ -330,15 +331,28 @@ class UtangPiutangServices
 
             // menyimpan ke pengeluaran
             Transaksi::create([
-                'user_id' => $data->user_id,
+                'user_id' => $request->user_id,
                 'kategori_id' => 9,
                 'perencanaan_id' => $data->perencanaan_id,
+                'rekening_id' => $request->rekening_id,
                 'judul' => 'Pembayaran utang ' . $data->judul,
                 'tipe' => "pengeluaran",
                 'jenis' => $data->jenis == "cash" ? "cash" : "online",
                 'nominal' => $data->nominal,
                 'tanggal' => date('Y-m-d'),
                 'deskripsi' => "Pembayaran utang " . $data->judul,
+            ]);
+
+            // update saldo rekening
+            $rekening = Rekening::find($request->rekening_id);
+
+            if ($rekening->saldo < $data->nominal) {
+                DB::rollBack();
+                return responseError("Gagal, saldo di rekening tidak cukup");
+            }
+
+            $rekening->update([
+                'saldo' => $rekening->saldo - $data->nominal
             ]);
 
             DB::commit();

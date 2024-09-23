@@ -25,8 +25,9 @@ import {
 import { Head } from "@inertiajs/react";
 import UtangCreate from "./Modals/UtangCreate";
 import UtangDetail from "./Modals/UtangDetail";
+import UtangBayar from "./Modals/UtangBayar";
 
-const Index = ({ title, breadcrumbs, datas, widget, users, filtered, flash }) => {
+const Index = ({ title, breadcrumbs, datas, widget, users, rekenings, filtered, flash }) => {
     const {
         data,
         processing,
@@ -50,6 +51,11 @@ const Index = ({ title, breadcrumbs, datas, widget, users, filtered, flash }) =>
         showDetailModal,
         handleShowDetailModal,
         handleCloseDetailModal,
+        bayarData,
+        showBayarModal,
+        handleShowBayarModal,
+        handleCloseBayarModal,
+        submitBayar
     } = UseUtang(filtered, flash);
 
     const status = [
@@ -107,14 +113,8 @@ const Index = ({ title, breadcrumbs, datas, widget, users, filtered, flash }) =>
                         <ActionButton
                             variant="success"
                             icon="check-lg"
-                            label="Lunas"
-                            onClick={() =>
-                                handleBayar(
-                                    "utang-piutang.utang.bayar",
-                                    data.id,
-                                    "Utang telah dibayar"
-                                )
-                            }
+                            label="Bayar"
+                            onClick={() => handleShowBayarModal(data)}
                             disabled={data.status == 1}
                         />
                         <ActionButton
@@ -369,6 +369,21 @@ const Index = ({ title, breadcrumbs, datas, widget, users, filtered, flash }) =>
                 handleChange={handleChange}
                 errors={errors}
                 submit={submit}
+                update={update}
+                processing={processing}
+            />
+
+            {/* modal bayar utang */}
+            <UtangBayar
+                showModal={showBayarModal}
+                closeModal={handleCloseBayarModal}
+                mode={mode}
+                data={data}
+                users={users}
+                rekenings={rekenings}
+                handleChange={handleChange}
+                errors={errors}
+                submit={submitBayar}
                 update={update}
                 processing={processing}
             />

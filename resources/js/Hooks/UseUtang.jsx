@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { CrudToast } from "./GlobalHooks";
 import UsePageController from "./UsePageController";
-import { utangCreateData, utangUpdateData } from "@/Services/UtangPiutangServices";
+import { utangBayar, utangCreateData, utangUpdateData } from "@/Services/UtangPiutangServices";
 
 const UseUtang = (filtered, flash) => {
     // form
@@ -99,18 +99,37 @@ const UseUtang = (filtered, flash) => {
         setShowDetailModal(true);
         setDetailData(data);
     };
-    const handleCloseDetailModal = (data) => {
+    const handleCloseDetailModal = () => {
         setShowDetailModal(false);
         setInitialData({});
         reset();
     };
+
+    const [bayarData, setBayarData] = useState({});
+    const [showBayarModal, setShowBayarModal] = useState(false);
+    const handleShowBayarModal = (data) => {
+        setShowBayarModal(true);
+        setData(data);
+    };
+    const handleCloseBayarModal = () => {
+        setShowBayarModal(false);
+        setInitialData({});
+        reset();
+    };
+
+    const submitBayar = (e) => {
+        e.preventDefault();
+        setProcessing(toast.loading("Sedang menyimpan data..."));
+        utangBayar(data, setErrors, clearErrors);
+    };
+
     // menampilkan toast notification
     CrudToast(
         flash,
         errors,
         processing,
         setProcessing,
-        handleCloseModal
+        showBayarModal ? handleCloseBayarModal : handleCloseModal
     );
 
     return {
@@ -137,6 +156,11 @@ const UseUtang = (filtered, flash) => {
         showDetailModal,
         handleShowDetailModal,
         handleCloseDetailModal,
+        bayarData,
+        showBayarModal,
+        handleShowBayarModal,
+        handleCloseBayarModal,
+        submitBayar
     };
 };
 

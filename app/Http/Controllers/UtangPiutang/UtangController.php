@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UtangPiutang;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rekening;
 use App\Models\User;
 use App\Services\UtangPiutangServices;
 use Illuminate\Http\Request;
@@ -47,12 +48,15 @@ class UtangController extends Controller
             $request->status
         );
 
+        $rekenings = Rekening::all();
+
         return Inertia::render('UtangPiutang/Utang/Index', [
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
             "datas" => $datas,
             "widget" => $widget,
             "users" => $users,
+            "rekenings" => $rekenings,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',
@@ -188,9 +192,9 @@ class UtangController extends Controller
         return redirect()->back()->with($session['flash'], $session['flash_message']);
     }
 
-    public function bayar(string $id)
+    public function bayar(Request $request, string $id)
     {
-        $res = $this->utangPiutangServices->payProcess($id);
+        $res = $this->utangPiutangServices->payProcess($request, $id);
 
         if ($res['success']) {
             $session = [

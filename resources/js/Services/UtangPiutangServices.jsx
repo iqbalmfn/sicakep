@@ -29,6 +29,22 @@ export const utangUpdateData = (data, setErrors, clearErrors) => {
     });
 };
 
+export const utangBayar = (data, setErrors, clearErrors) => {
+    router.post(route("utang-piutang.utang.bayar", {utang: data.id}), {
+        ...data,
+        _method: "PUT"
+    }, {
+        onError: (errors) => {
+            setErrors(errors);
+        },
+        onSuccess: () => {
+            clearErrors();
+        },
+        preserveScroll: false,
+        preserveState: true,
+    });
+};
+
 export const piutangMasterCreateData = (data, setErrors, clearErrors) => {
     router.post(route("utang-piutang.piutang.store"), data, {
         onError: (errors) => {
