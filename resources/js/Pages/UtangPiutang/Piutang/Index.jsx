@@ -64,17 +64,6 @@ const Index = ({
         submitPiutang,
     } = UsePiutang(filtered, flash);
 
-    const status = [
-        {
-            value: 0,
-            label: "Belum Lunas",
-        },
-        {
-            value: 1,
-            label: "Lunas",
-        },
-    ];
-
     const dataRender = () => {
         return datas.data.length > 0 ? (
             datas.data.map((data, i) => {
@@ -178,23 +167,6 @@ const Index = ({
                         {peminjams.map((peminjam) => (
                             <option key={peminjam.id} value={peminjam.nama}>
                                 {peminjam.nama}
-                            </option>
-                        ))}
-                    </FormSelectPrefix>
-                </div>
-                <div>
-                    <FormSelectPrefix
-                        prefix={<Icon icon="check-circle" />}
-                        size="sm"
-                        name="status"
-                        value={params.status}
-                        onChange={onHandleFilter}
-                        className="w-[150px]"
-                    >
-                        <option value="">Semua Status</option>
-                        {status.map((stat) => (
-                            <option key={stat.value} value={stat.value}>
-                                {stat.label}
                             </option>
                         ))}
                     </FormSelectPrefix>

@@ -4,8 +4,12 @@ import ChartPengeluaranHarian from "@/Components/Molecules/Chart/ChartPengeluara
 import ChartPengeluaranKategori from "@/Components/Molecules/Chart/ChartPengeluaranKategori";
 import UseDashboard from "@/Hooks/UseDashboard";
 import AppContentLayout from "@/Layouts/AppContentLayout";
-import { getCurrentYear, getFilterLabel } from "@/Utils/GlobalFunction";
+import {
+    getCurrentYear,
+    getFilterLabel
+} from "@/Utils/GlobalFunction";
 import { Head } from "@inertiajs/react";
+import DashboardAset from "./DashboardPartial/DashboardAset";
 import Filter from "./DashboardPartial/Filter";
 import ListKategoriPengeluaran from "./DashboardPartial/ListKategoriPengeluaran";
 import ListUtang from "./DashboardPartial/ListUtang";
@@ -28,7 +32,10 @@ export default function Dashboard({ auth, data, filtered }) {
             <div className="py-5">
                 <div className="grid grid-cols-10 gap-5 mb-5">
                     <div className="col-span-10 lg:col-span-8">
-                        <Widget data={data} params={params} />
+                        <div className="grid grid-cols-2 gap-5 mb-5">
+                            <Widget data={data} params={params} />
+                            <DashboardAset data={data} />
+                        </div>
                         {/* Chart */}
                         <div className="grid grid-cols-8 gap-5 mb-5">
                             <div className="col-span-8 lg:col-span-5">

@@ -7,19 +7,21 @@ use App\Models\Rekening;
 use App\Models\Transaksi;
 use App\Models\UtangPiutang;
 use App\Services\ChartServices;
+use App\Services\UtangPiutangServices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    protected $chartServices, $pengeluaranController, $perencanaanController;
+    protected $chartServices, $pengeluaranController, $perencanaanController, $utangPiutangServices;
 
     public function __construct()
     {
         $this->chartServices = app(ChartServices::class);
         $this->pengeluaranController = app(PengeluaranController::class);
         $this->perencanaanController = app(PerencanaanController::class);
+        $this->utangPiutangServices = app(UtangPiutangServices::class);
     }
 
     public function __invoke(Request $request)
@@ -31,6 +33,8 @@ class DashboardController extends Controller
         $chartPemasukanBulanan = $this->chartServices->chartPemasukanBulanan($request->tahun);
 
         $data = [
+            "piutang" => $this->piutang(),
+            "aset" => $this->aset(),
             "totalSaldo" => $this->totalSaldoFromRekening(),
             "totalPemasukan" => $this->totalTransaksi("pemasukan", $request->bulan, $request->tahun),
             "totalPengeluaran" => $this->totalTransaksi("pengeluaran", $request->bulan, $request->tahun),
@@ -56,6 +60,58 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function piutang()
+    {
+        $total_piutang = 0;
+        $total_dibayar = 0;
+
+        // start : total utang
+        $total_piutang_raw = $this->utangPiutangServices->getDataPiutangMaster(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false
+        );
+
+        foreach ($total_piutang_raw as $utang) {
+            $total_piutang += $utang->nominal;
+        }
+        // end : total utang
+
+        // start : total utang dibayar
+        $total_dibayar_raw = $this->utangPiutangServices->getData(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "piutang",
+            1,
+            false
+        );
+
+        foreach ($total_dibayar_raw as $utang) {
+            $total_dibayar += $utang->nominal;
+        }
+        // end : total utang dibayar
+        return $total_piutang - $total_dibayar;
+    }
+
+    public function aset()
+    {
+        $aset = Rekening::query()
+            ->with(['bank'])
+            ->orderByDesc('saldo')
+            ->get();
+
+        return $aset;
+    }
+
     public function totalSaldo()
     {
         $saldo = Transaksi::query()
@@ -74,7 +130,9 @@ class DashboardController extends Controller
         $saldo = Rekening::query()
             ->sum('saldo');
 
-        return $saldo;
+        $piutang = $this->piutang();
+
+        return $saldo + $piutang;
     }
 
     public function totalTransaksi($tipe, $bulan = null, $tahun = null)
@@ -176,10 +234,11 @@ class DashboardController extends Controller
 
         return $pemasukan - $pengeluaran;
     }
-    private function formatPersentase($nilai) {
+    private function formatPersentase($nilai)
+    {
         // Format angka menjadi string dengan dua angka di belakang koma
         $formatted = number_format($nilai, 2, '.', '');
-    
+
         // Periksa jumlah angka di belakang koma
         $parts = explode('.', $formatted);
         if (count($parts) === 1) {
@@ -194,7 +253,8 @@ class DashboardController extends Controller
         }
     }
 
-    public function persentasePengeluaran($bulan = null, $tahun = null) {
+    public function persentasePengeluaran($bulan = null, $tahun = null)
+    {
         $pemasukan = $this->totalTransaksi("pemasukan", $bulan, $tahun);
         $pengeluaran = $this->totalTransaksi("pengeluaran", $bulan, $tahun);
 

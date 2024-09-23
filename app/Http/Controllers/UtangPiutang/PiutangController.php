@@ -34,6 +34,7 @@ class PiutangController extends Controller
             $request->orderDirection,
             $request->perPage,
             $request->user_id,
+            $request->nama,
             true
         );
 
@@ -46,10 +47,7 @@ class PiutangController extends Controller
         $rekenings = Rekening::all();
 
         $widget = $this->widget(
-            $request->user_id,
-            $request->bulan,
-            $request->tahun,
-            $request->status
+            $request->nama
         );
 
         return Inertia::render('UtangPiutang/Piutang/Index', [
@@ -70,7 +68,8 @@ class PiutangController extends Controller
         ]);
     }
 
-    public function widget() {
+    public function widget($nama)
+    {
         $total_piutang = 0;
         $total_dibayar = 0;
 
@@ -81,6 +80,7 @@ class PiutangController extends Controller
             null,
             null,
             null,
+            $nama,
             false
         );
 

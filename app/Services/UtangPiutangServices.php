@@ -76,6 +76,7 @@ class UtangPiutangServices
         $orderDirection,
         $perPage,
         $user_id = null,
+        $nama = null,
         $isPagination = true
     ) {
         $data = PiutangMaster::query()
@@ -83,6 +84,10 @@ class UtangPiutangServices
 
         if ($user_id) {
             $data->whereUserId($user_id);
+        }
+
+        if ($nama) {
+            $data->where('nama', 'like', '%' . $nama. '%');
         }
 
         if ($q) {

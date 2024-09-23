@@ -3,16 +3,16 @@ import { formatRupiah, getFilterLabel } from "@/Utils/GlobalFunction";
 
 const Widget = ({ data, params }) => {
     return (
-        <div className="grid grid-cols-4 gap-5 mb-5">
-            <div className="col-span-4 lg:col-span-1">
+        <div className="grid grid-cols-2 gap-5 mb-5">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-info border border-2 border-info">
-                    <span className="text-[13px] font-bold">Total Saldo</span>
+                    <span className="text-[13px] font-bold">Total Aset</span>
                     <span className="text-3xl font-bold">
                         {formatRupiah(data.totalSaldo)}
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-success border border-2 border-success">
                     <span className="text-[13px] font-bold">
                         Total Pemasukan{" "}
@@ -25,7 +25,7 @@ const Widget = ({ data, params }) => {
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
                     <span className="text-[13px] font-bold">
                         Total Pengeluaran{" "}
@@ -38,7 +38,7 @@ const Widget = ({ data, params }) => {
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-warning border border-2 border-warning">
                     <span className="text-[13px] font-bold">
                         Total Utang{" "}
@@ -51,7 +51,7 @@ const Widget = ({ data, params }) => {
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-info border border-2 border-info">
                     <span className="text-[13px] font-bold">
                         Saldo Bulanan{" "}
@@ -64,7 +64,7 @@ const Widget = ({ data, params }) => {
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-success border border-2 border-success">
                     <span className="text-[13px] font-bold">
                         Dana Tersedia{" "}
@@ -77,7 +77,7 @@ const Widget = ({ data, params }) => {
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
                     <span className="text-[13px] font-bold">
                         Total Anggaran{" "}
@@ -90,7 +90,7 @@ const Widget = ({ data, params }) => {
                     </span>
                 </ContentWrapper>
             </div>
-            <div className="col-span-4 lg:col-span-1">
+            <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col gap-2 pb-6 text-warning border border-2 border-warning">
                     <span className="text-[13px] font-bold">
                         Persentase Pengeluaran{" "}
