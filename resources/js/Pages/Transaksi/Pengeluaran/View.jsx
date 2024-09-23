@@ -23,7 +23,8 @@ const View = ({ title, breadcrumbs, datas }) => {
                 totalTransaksi += parseInt(transaksi.nominal);
             });
             totalDanaTerpakai += parseInt(totalTransaksi);
-            totalDanaTersisa += parseInt(data.nominal) - parseInt(totalTransaksi);
+            totalDanaTersisa +=
+                parseInt(data.nominal) - parseInt(totalTransaksi);
             totalAnggaran += parseInt(data.nominal);
         });
     });
@@ -141,14 +142,22 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                       itrax
                                                                   ) => {
                                                                       totalTransaksi +=
-                                                                          parseInt(transaksi.nominal);
+                                                                          parseInt(
+                                                                              transaksi.nominal
+                                                                          );
                                                                       return (
                                                                           <Fragment
                                                                               key={
                                                                                   itrax
                                                                               }
                                                                           >
-                                                                              <tr>
+                                                                              <tr
+                                                                                  className={
+                                                                                      !transaksi.is_sesuai
+                                                                                          ? "bg-red-100"
+                                                                                          : null
+                                                                                  }
+                                                                              >
                                                                                   <td className="border border-gray-400 px-3 py-1 text-gray-600 text-start">
                                                                                       {index +
                                                                                           1}
@@ -228,15 +237,23 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                       className="border border-gray-400 px-3 py-1 text-gray-600 text-end"
                                                                   >
                                                                       {formatRupiah(
-                                                                          parseInt(data.nominal) -
-                                                                              parseInt(totalTransaksi)
+                                                                          parseInt(
+                                                                              data.nominal
+                                                                          ) -
+                                                                              parseInt(
+                                                                                  totalTransaksi
+                                                                              )
                                                                       )}
                                                                   </td>
                                                                   <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
                                                                   <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
                                                                       {formatRupiah(
-                                                                          parseInt(data.nominal) -
-                                                                              parseInt(totalTransaksi)
+                                                                          parseInt(
+                                                                              data.nominal
+                                                                          ) -
+                                                                              parseInt(
+                                                                                  totalTransaksi
+                                                                              )
                                                                       )}
                                                                   </td>
                                                               </tr>
