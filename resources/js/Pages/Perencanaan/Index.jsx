@@ -88,7 +88,7 @@ const Index = ({
     ];
 
     const isCanGenerate = () => {
-        return !datas.data.some((data) => data.status === 1);
+        return datas.data.some((data) => data.status != 1);
     };
 
     const dataRender = () => {
