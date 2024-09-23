@@ -9,21 +9,15 @@ import TableEmpty from "@/Components/Atoms/TableEmpty";
 import ActionButton from "@/Components/Molecules/ActionButton";
 import DataTable from "@/Components/Organisms/DataTable";
 import Table from "@/Components/Organisms/Table";
-import UseUtang from "@/Hooks/UseUtang";
+import UsePiutang from "@/Hooks/UsePiutang";
 import AppContentLayout from "@/Layouts/AppContentLayout";
 import ContentWrapper from "@/Layouts/Partials/ContentWrapper";
 import {
     formatDateWithDay,
     formatRupiah,
-    getCurrentMonth,
-    getCurrentYear,
-    handleBayar,
-    handleDelete,
-    listMonths,
-    listYears,
+    handleDelete
 } from "@/Utils/GlobalFunction";
 import { Head } from "@inertiajs/react";
-import UsePiutang from "@/Hooks/UsePiutang";
 import PiutangCreate from "./Modals/PiutangCreate";
 import PiutangDetail from "./Modals/PiutangDetail";
 import PiutangTransaksi from "./Modals/PiutangTransaksi";
@@ -35,6 +29,7 @@ const Index = ({
     widget,
     peminjams,
     users,
+    rekenings,
     filtered,
     flash,
 }) => {
@@ -349,6 +344,7 @@ const Index = ({
                 closeModal={handleCloseTransaksiModal}
                 mode={mode}
                 data={data}
+                rekenings={rekenings}
                 dataTransaksi={transaksi}
                 handleChange={handleChangeTransaksi}
                 errors={errors}

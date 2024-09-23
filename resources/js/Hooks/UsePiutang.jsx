@@ -119,6 +119,7 @@ const UsePiutang = (filtered, flash) => {
             jenis: "transfer",
             nominal: "",
             jatuh_tempo: "",
+            rekening_id: "",
             deskripsi: "",
         })
     };
@@ -140,7 +141,6 @@ const UsePiutang = (filtered, flash) => {
         setProcessing(toast.loading("Sedang menyimpan data..."));
         utangCreateData(data, setErrors, clearErrors);
     };
-    
 
     // menampilkan toast notification
     CrudToast(
@@ -148,7 +148,7 @@ const UsePiutang = (filtered, flash) => {
         errors,
         processing,
         setProcessing,
-        transaksi ? handleCloseTransaksiModal : handleCloseModal
+        showTransaksiModal ? handleCloseTransaksiModal : handleCloseModal
     );
 
     return {

@@ -14,6 +14,7 @@ const PiutangTransaksi = ({
     closeModal,
     mode,
     data,
+    rekenings,
     dataTransaksi,
     handleChange,
     errors,
@@ -144,6 +145,38 @@ const PiutangTransaksi = ({
                             </FormGroup>
                             <FormGroup>
                                 <FormLabel
+                                    name="Rekening Tujuan"
+                                    htmlFor="rekening_id"
+                                    required
+                                />
+                                <FormSelect
+                                    size="sm"
+                                    id="rekening_id"
+                                    name="rekening_id"
+                                    onChange={handleChange}
+                                    value={data.rekening_id}
+                                    isError={errors?.rekening_id}
+                                    required
+                                >
+                                    <option value="">
+                                        Pilih Rekening Tujuan
+                                    </option>
+                                    {rekenings.map((rekening) => (
+                                        <option
+                                            key={rekening.id}
+                                            value={rekening.id}
+                                        >
+                                            {rekening.nama_rekening}{" "}
+                                            {rekening.no_rekening
+                                                ? `(${rekening.no_rekening})`
+                                                : null}
+                                        </option>
+                                    ))}
+                                </FormSelect>
+                                <FormError message={errors?.rekening_id} />
+                            </FormGroup>
+                            <FormGroup>
+                                <FormLabel
                                     name="Deskripsi"
                                     htmlFor="deskripsi"
                                 />
@@ -172,7 +205,8 @@ const PiutangTransaksi = ({
                             !data.judul ||
                             !data.nominal ||
                             !data.jenis ||
-                            !data.jatuh_tempo
+                            !data.jatuh_tempo ||
+                            !data.rekening_id
                         }
                     />
                 </Modal.Footer>

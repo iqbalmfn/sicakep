@@ -42,7 +42,6 @@ const Index = ({ title, breadcrumbs, datas, rekenings, filtered, flash }) => {
         handleEditModal,
         handleCloseModal,
     } = UsePemindahanAset(filtered, flash);
-    console.log(datas.data);
 
     const dataRender = () => {
         return datas.data.length > 0 ? (

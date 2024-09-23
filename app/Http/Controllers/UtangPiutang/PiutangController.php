@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UtangPiutang;
 
 use App\Http\Controllers\Controller;
 use App\Models\PiutangMaster;
+use App\Models\Rekening;
 use App\Models\User;
 use App\Models\UtangPiutang;
 use App\Services\UtangPiutangServices;
@@ -42,12 +43,15 @@ class PiutangController extends Controller
 
         $users = User::all();
 
+        $rekenings = Rekening::all();
+
         return Inertia::render('UtangPiutang/Piutang/Index', [
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
             "datas" => $datas,
             "users" => $users,
             "peminjams" => $peminjams,
+            "rekenings" => $rekenings,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',

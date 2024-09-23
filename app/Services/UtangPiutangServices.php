@@ -177,12 +177,19 @@ class UtangPiutangServices
                 Transaksi::create([
                     'user_id'       => $input['user_id'],
                     'kategori_id'   => 21,
+                    'rekening_id'   => $input['rekening_id'],
                     'judul'         => 'Pembayaran Piutang ' . $piutangMaster->nama,
                     'tipe'          => 'pemasukan',
                     'jenis'         => $input['jenis'] == 'transfer' ? 'online' : 'cash',
                     'nominal'       => $input['nominal'],
                     'tanggal'       => $input['jatuh_tempo'],
                     'deskripsi'     => $input['deskripsi'],
+                ]);
+
+                // update saldo rekening
+                $rekening = Rekening::find($input['rekening_id']);
+                $rekening->update([
+                   'saldo' => $rekening->saldo + $input['nominal'],
                 ]);
             }
 
