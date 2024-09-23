@@ -33,7 +33,7 @@ const Footer = () => {
                 >
                     {props.app.name}
                 </a>
-                , All rights Reserved &copy; 2024 - v(1.0.0)
+                , All rights Reserved &copy; 2024 - v(2.2.0)
             </div>
         </footer>
     );
