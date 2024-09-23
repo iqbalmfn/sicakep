@@ -209,14 +209,14 @@ const Index = ({
             <Head title={title} />
             <Breadcrumbs title={title} breadcrumbs={breadcrumbs} />
 
-            {/* <div className="grid grid-cols-4 gap-5 mb-5">
+            <div className="grid grid-cols-4 gap-5 mb-5">
                 <div className="col-span-4 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
                         <span className="text-xl font-semibold">
-                            Total Utang
+                            Total Piutang
                         </span>
                         <span className="text-4xl font-bold">
-                            {formatRupiah(widget.total_utang)}
+                            {formatRupiah(widget.total_piutang)}
                         </span>
                     </ContentWrapper>
                 </div>
@@ -250,7 +250,7 @@ const Index = ({
                         </span>
                     </ContentWrapper>
                 </div>
-            </div> */}
+            </div>
 
             <ContentWrapper>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">

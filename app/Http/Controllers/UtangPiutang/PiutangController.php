@@ -45,6 +45,13 @@ class PiutangController extends Controller
 
         $rekenings = Rekening::all();
 
+        $widget = $this->widget(
+            $request->user_id,
+            $request->bulan,
+            $request->tahun,
+            $request->status
+        );
+
         return Inertia::render('UtangPiutang/Piutang/Index', [
             "title" => $title,
             "breadcrumbs" => $breadcrumbs,
@@ -52,6 +59,7 @@ class PiutangController extends Controller
             "users" => $users,
             "peminjams" => $peminjams,
             "rekenings" => $rekenings,
+            "widget" => $widget,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,
                 'q' => $request->q ?? '',
@@ -60,6 +68,64 @@ class PiutangController extends Controller
                 'orderDirection' => $request->orderDirection ?? 'desc'
             ],
         ]);
+    }
+
+    public function widget() {
+        $total_piutang = 0;
+        $total_dibayar = 0;
+
+        // start : total utang
+        $total_piutang_raw = $this->utangPiutangServices->getDataPiutangMaster(
+            null,
+            null,
+            null,
+            null,
+            null,
+            false
+        );
+
+        foreach ($total_piutang_raw as $utang) {
+            $total_piutang += $utang->nominal;
+        }
+        // end : total utang
+
+        // start : total utang dibayar
+        $total_dibayar_raw = $this->utangPiutangServices->getData(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "piutang",
+            1,
+            false
+        );
+
+        foreach ($total_dibayar_raw as $utang) {
+            $total_dibayar += $utang->nominal;
+        }
+        // end : total utang dibayar
+
+        $total_belum_dibayar = $total_piutang - $total_dibayar;
+        $persentase = $total_piutang > 0 ? ($total_dibayar / $total_piutang) * 100 : 0;
+
+        // Format persentase sesuai kebutuhan
+        if (floor($persentase) == $persentase) {
+            $persentase = number_format($persentase, 0, ',', ''); // Tidak ada angka desimal
+        } elseif (floor($persentase * 10) == $persentase * 10) {
+            $persentase = number_format($persentase, 1, ',', ''); // Satu angka desimal
+        } else {
+            $persentase = number_format($persentase, 2, ',', ''); // Dua angka desimal
+        }
+
+        return [
+            "total_piutang" => $total_piutang,
+            "total_dibayar" => $total_dibayar,
+            "total_belum_dibayar" => $total_belum_dibayar,
+            "persentase" => $persentase
+        ];
     }
 
     public function store(Request $request)
