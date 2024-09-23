@@ -1,6 +1,7 @@
 import {
     perencanaanConfirmData,
     perencanaanCreateData,
+    perencanaanGenerateData,
     perencanaanUpdateData,
 } from "@/Services/PerencanaanServices";
 import { useForm } from "@inertiajs/react";
@@ -124,6 +125,27 @@ const UsePerencanaan = (filtered, flash) => {
         reset();
     };
 
+    const [showGenerateModal, setShowGenerateModal] = useState(false);
+    const handleShowGenerateModal = () => {
+        setShowGenerateModal(true);
+        setData({
+            ...data,
+            bulan: filtered.bulan,
+            tahun: filtered.tahun,
+        });
+    };
+    const handleCloseGenerateModal = () => {
+        setShowGenerateModal(false);
+        reset();
+    };
+
+    // generate
+    const generate = (e) => {
+        e.preventDefault();
+        setProcessing(toast.loading("Sedang generate data..."));
+        perencanaanGenerateData(data, setErrors, clearErrors);
+    };
+
     // confirm
     const confirm = (e) => {
         e.preventDefault();
@@ -137,7 +159,11 @@ const UsePerencanaan = (filtered, flash) => {
         errors,
         processing,
         setProcessing,
-        showConfirmModal ? handleCloseConfirmModal : handleCloseModal
+        showConfirmModal
+            ? handleCloseConfirmModal
+            : showGenerateModal
+            ? handleCloseGenerateModal
+            : handleCloseModal
     );
 
     return {
@@ -168,6 +194,10 @@ const UsePerencanaan = (filtered, flash) => {
         handleShowConfirmModal,
         handleCloseConfirmModal,
         confirm,
+        showGenerateModal,
+        handleShowGenerateModal,
+        handleCloseGenerateModal,
+        generate,
     };
 };
 

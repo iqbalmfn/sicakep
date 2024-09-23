@@ -179,6 +179,7 @@ const Index = ({
                     <div className="flex items-center gap-2">
                         <CreateButton onClick={handleShowModal} />
                         <Link
+                            id="report"
                             href={route("transaksi.pengeluaran.view", params)}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -186,14 +187,6 @@ const Index = ({
                         >
                             <i className="bi bi-file-text"></i>
                         </Link>
-                        {/* <a
-                            href={route('perencanaan.print-pdf', params)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg bg-transparent text-danger border border-danger group hover:bg-danger hover:text-white w-[37px] h-[37px] flex justify-center items-center"
-                        >
-                            <i className="bi bi-file-pdf"></i>
-                        </a> */}
                     </div>
                     <div className="flex justify-end gap-2">
                         <div>

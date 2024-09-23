@@ -25,6 +25,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import PerencanaanCreate from "./Modals/PerencanaanCreate";
 import PerencanaanDetail from "./Modals/PerencanaanDetail";
 import PerencanaanConfirm from "./Modals/PerencanaanConfirm";
+import PerencanaanGenerate from "./Modals/PerencanaanGenerate";
 
 const Index = ({
     title,
@@ -63,6 +64,10 @@ const Index = ({
         handleShowConfirmModal,
         handleCloseConfirmModal,
         confirm,
+        showGenerateModal,
+        handleShowGenerateModal,
+        handleCloseGenerateModal,
+        generate,
     } = UsePerencanaan(filtered, flash);
 
     const { auth } = usePage().props;
@@ -81,6 +86,10 @@ const Index = ({
             label: "Reject",
         },
     ];
+
+    const isCanGenerate = () => {
+        return !datas.data.some((data) => data.status === 1);
+    };
 
     const dataRender = () => {
         return datas.data.length > 0 ? (
@@ -223,23 +232,28 @@ const Index = ({
             <ContentWrapper>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div className="flex items-center gap-2">
-                        <CreateButton onClick={handleShowModal} disabled={widget.limit_anggaran == 0} />
-                        <Link
-                            href={route("perencanaan.view", params)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg bg-transparent text-primary border border-primary group hover:bg-primary hover:text-white w-[37px] h-[37px] flex justify-center items-center"
-                        >
-                            <i className="bi bi-file-text"></i>
-                        </Link>
-                        {/* <a
-                            href={route('perencanaan.print-pdf', params)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg bg-transparent text-danger border border-danger group hover:bg-danger hover:text-white w-[37px] h-[37px] flex justify-center items-center"
-                        >
-                            <i className="bi bi-file-pdf"></i>
-                        </a> */}
+                        <CreateButton
+                            onClick={handleShowModal}
+                            disabled={widget.limit_anggaran == 0}
+                        />
+                        {isCanGenerate() ? (
+                            <button
+                                className="rounded-lg bg-transparent text-primary border border-primary group hover:bg-primary hover:text-white w-[37px] h-[37px] flex justify-center items-center"
+                                onClick={handleShowGenerateModal}
+                                disabled={widget.limit_anggaran == 0}
+                            >
+                                <Icon icon="arrow-clockwise" />
+                            </button>
+                        ) : (
+                            <Link
+                                href={route("perencanaan.view", params)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-lg bg-transparent text-primary border border-primary group hover:bg-primary hover:text-white w-[37px] h-[37px] flex justify-center items-center"
+                            >
+                                <i className="bi bi-file-text"></i>
+                            </Link>
+                        )}
                     </div>
                     <div className="flex justify-end gap-2">
                         <div>
@@ -251,12 +265,11 @@ const Index = ({
                                 onChange={onHandleFilter}
                                 className="w-[218px]"
                             >
-                                <option value="">Semua Pemegang Anggaran</option>
+                                <option value="">
+                                    Semua Pemegang Anggaran
+                                </option>
                                 {users.map((user) => (
-                                    <option
-                                        key={user.id}
-                                        value={user.id}
-                                    >
+                                    <option key={user.id} value={user.id}>
                                         {user.name}
                                     </option>
                                 ))}
@@ -304,7 +317,11 @@ const Index = ({
                                 prefix={<Icon icon="calendar-month" />}
                                 size="sm"
                                 name="bulan"
-                                value={params.bulan ? params.bulan : getCurrentMonth()}
+                                value={
+                                    params.bulan
+                                        ? params.bulan
+                                        : getCurrentMonth()
+                                }
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
@@ -324,7 +341,11 @@ const Index = ({
                                 prefix={<Icon icon="calendar-check" />}
                                 size="sm"
                                 name="tahun"
-                                value={params.tahun ? params.tahun : getCurrentYear()}
+                                value={
+                                    params.tahun
+                                        ? params.tahun
+                                        : getCurrentYear()
+                                }
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
@@ -467,6 +488,18 @@ const Index = ({
                 handleChange={handleChange}
                 errors={errors}
                 submit={confirm}
+                processing={processing}
+            />
+
+            <PerencanaanGenerate
+                title={title}
+                showModal={showGenerateModal}
+                closeModal={handleCloseGenerateModal}
+                data={data}
+                formData={data}
+                handleChange={handleChange}
+                errors={errors}
+                submit={generate}
                 processing={processing}
             />
         </AppContentLayout>

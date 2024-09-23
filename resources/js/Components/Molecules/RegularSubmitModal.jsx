@@ -4,6 +4,7 @@ import Icon from "../Atoms/Icon";
 const RegularSubmitModal = ({
     label,
     closeModal,
+    icon = "save",
     disabled = false
 }) => {
     return (
@@ -19,7 +20,7 @@ const RegularSubmitModal = ({
                 disabled={disabled}
                 className="flex items-center"
             >
-                <Icon icon="save" me={2} />
+                <Icon icon={icon} me={2} />
                 {label}
             </Button>
         </div>

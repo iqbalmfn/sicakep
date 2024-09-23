@@ -288,4 +288,22 @@ class PerencanaanController extends Controller
     {
         return $this->perencanaanServices->generatePdf($request);
     }
+
+    public function generate(Request $request) {
+        $res = $this->perencanaanServices->generateData($request);
+
+        if ($res['success']) {
+            $session = [
+                'flash' => 'success',
+                'flash_message' => $res['message'],
+            ];
+        } else {
+            $session = [
+                'flash' => 'error',
+                'flash_message' => $res['message'],
+            ];
+        }
+
+        return redirect()->back()->with($session['flash'], $session['flash_message']);
+    }
 }

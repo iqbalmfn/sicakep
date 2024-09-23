@@ -435,4 +435,56 @@ class PerencanaanServices
             'Perencanaan',
         );
     }
+
+    public function generateData($request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $perencanaans = Perencanaan::query()
+                ->where('kategori_id', '!=', 9)
+                ->whereBulan($request->ref_bulan)
+                ->whereTahun($request->ref_tahun)
+                ->whereStatus(1)
+                ->get();
+
+            if ($perencanaans->count() === 0) {
+                DB::rollBack();
+                return responseError("Gagal, perencanaan anggaran belum dibuat");
+            }
+
+            // generate data perencanaan
+            foreach ($perencanaans as $perencanaan) {
+                // simpan ke table perencanaan
+                $create = Perencanaan::create([
+                    'user_id'       => $request->user()->id,
+                    'pic_id'        => $perencanaan->pic_id,
+                    'kategori_id'   => $perencanaan->kategori_id,
+                    'judul'         => $perencanaan->judul,
+                    'nominal'       => $perencanaan->nominal,
+                    'bulan'         => $request->bulan,
+                    'tahun'         => $request->tahun ? $request->tahun : date('Y'),
+                    'tipe'          => $perencanaan->tipe,
+                    'deskripsi'     => $perencanaan->deskripsi,
+                    'status'        => null
+                ]);
+
+                // simpan ke log_perencanaan
+                LogPerencanaan::create([
+                    'perencanaan_id'    => $create->id,
+                    'user_id'           => $request->user()->id,
+                    'status'            => 2,
+                    'pesan'             => 'Mengajukan anggaran untuk ' . $create->judul
+                ]);
+            }
+
+            DB::commit();
+
+            return responseSuccess("Berhasil, perencanaan anggaran telah di generate", $perencanaans);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return responseError("Gagal, ada kesalahan pada sistem saat mengirim data " . $th->getMessage());
+        }
+    }
 }

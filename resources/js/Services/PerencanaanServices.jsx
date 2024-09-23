@@ -44,3 +44,16 @@ export const perencanaanConfirmData = (data, setErrors, clearErrors) => {
         preserveState: true,
     });
 };
+
+export const perencanaanGenerateData = (data, setErrors, clearErrors) => {
+    router.post(route("perencanaan.generate"), data, {
+        onError: (errors) => {
+            setErrors(errors);
+        },
+        onSuccess: () => {
+            clearErrors();
+        },
+        preserveScroll: false,
+        preserveState: true,
+    });
+};

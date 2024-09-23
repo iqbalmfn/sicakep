@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('perencanaan/print-pdf', [PerencanaanController::class, 'printPdf'])->name('perencanaan.print-pdf');
     Route::get('perencanaan/view', [PerencanaanController::class, 'view'])->name('perencanaan.view');
+    Route::post('perencanaan/generate', [PerencanaanController::class, 'generate'])->name('perencanaan.generate');
     Route::resource('perencanaan', PerencanaanController::class)->names('perencanaan');
     Route::put('perencanaan/confirm/{perencanaan}', [PerencanaanController::class, 'confirm'])->name('perencanaan.confirm');
     Route::prefix('transaksi')->name('transaksi.')->group(function () {
