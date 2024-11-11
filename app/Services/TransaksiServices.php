@@ -6,6 +6,7 @@ use App\Models\Perencanaan;
 use App\Models\Rekening;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransaksiServices
 {
@@ -155,8 +156,9 @@ class TransaksiServices
         $input = $request->all();
         $input['tipe'] = $type;
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
+
             $create = Transaksi::create($input);
 
             // baca data rekening
@@ -172,6 +174,8 @@ class TransaksiServices
                 $rekening->update([
                     'saldo' => $rekening->saldo + $input['nominal']
                 ]);
+
+                Log::info("Pengmasukan : " . $input['judul'] . " = " . formatRupiah($input['nominal']) . " | Sisa Saldo (".$rekening->nama_rekening.") = " . formatRupiah($rekening->saldo));
             }
 
             if ($type === "pengeluaran") {
@@ -185,6 +189,8 @@ class TransaksiServices
                 $rekening->update([
                     'saldo' => $rekening->saldo - $input['nominal']
                 ]);
+
+                Log::info("Pengeluaran : " . $input['judul'] . " = " . formatRupiah($input['nominal']) . " | Sisa Saldo (".$rekening->nama_rekening.") = " . formatRupiah($rekening->saldo));
             }
 
             DB::commit();
