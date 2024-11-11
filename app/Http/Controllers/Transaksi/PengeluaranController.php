@@ -39,6 +39,7 @@ class PengeluaranController extends Controller
             $request->bulan,
             $request->tahun,
             'pengeluaran',
+            $request->rekening_id,
             null
         );
 
@@ -50,6 +51,7 @@ class PengeluaranController extends Controller
             $request->bulan,
             $request->tahun,
             'pengeluaran',
+            $request->rekening_id,
             null
         );
 

@@ -191,6 +191,26 @@ const Index = ({
                     <div className="flex justify-end gap-2">
                         <div>
                             <FormSelectPrefix
+                                prefix={<Icon icon="wallet2" />}
+                                size="sm"
+                                name="rekening_id"
+                                value={params.rekening_id}
+                                onChange={onHandleFilter}
+                                className="w-[205px]"
+                            >
+                                <option value="">Semua Rekening</option>
+                                {rekenings.map((rekening) => (
+                                    <option
+                                        key={rekening.id}
+                                        value={rekening.id}
+                                    >
+                                        {rekening.nama_rekening}
+                                    </option>
+                                ))}
+                            </FormSelectPrefix>
+                        </div>
+                        <div>
+                            <FormSelectPrefix
                                 prefix={<Icon icon="tag" />}
                                 size="sm"
                                 name="kategori_id"

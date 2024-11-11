@@ -26,6 +26,7 @@ class TransaksiServices
         $bulan = null,
         $tahun = null,
         $tipe = null,
+        $rekening_id = null,
         $select2 = null
     ) {
         $data = Transaksi::query()
@@ -51,6 +52,10 @@ class TransaksiServices
 
         if ($tipe) {
             $data->whereTipe($tipe);
+        }
+
+        if ($rekening_id) {
+            $data->whereRekeningId($rekening_id);
         }
 
         if ($q) {
@@ -79,6 +84,7 @@ class TransaksiServices
         $bulan = null,
         $tahun = null,
         $tipe = null,
+        $rekening_id = null,
         $select2 = null
     ) {
         $data = Transaksi::query()
@@ -104,6 +110,10 @@ class TransaksiServices
 
         if ($tipe) {
             $data->whereTipe($tipe);
+        }
+
+        if ($rekening_id) {
+            $data->whereRekeningId($rekening_id);
         }
 
         if ($q) {

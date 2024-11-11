@@ -19,13 +19,22 @@ import {
     getCurrentYear,
     handleDelete,
     listMonths,
-    listYears
+    listYears,
 } from "@/Utils/GlobalFunction";
 import { Head, Link, usePage } from "@inertiajs/react";
 import PemasukanCreate from "./Modals/PemasukanCreate";
 import PemasukanDetail from "./Modals/PemasukanDetail";
 
-const Index = ({ title, breadcrumbs, datas, categories, users, rekenings, filtered, flash }) => {
+const Index = ({
+    title,
+    breadcrumbs,
+    datas,
+    categories,
+    users,
+    rekenings,
+    filtered,
+    flash,
+}) => {
     const {
         data,
         processing,
@@ -121,7 +130,7 @@ const Index = ({ title, breadcrumbs, datas, categories, users, rekenings, filter
                     <div className="flex items-center gap-2">
                         <CreateButton onClick={handleShowModal} />
                         <Link
-                            href={route('perencanaan.view', params)}
+                            href={route("perencanaan.view", params)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="rounded-lg bg-transparent text-primary border border-primary group hover:bg-primary hover:text-white w-[37px] h-[37px] flex justify-center items-center"
@@ -136,9 +145,28 @@ const Index = ({ title, breadcrumbs, datas, categories, users, rekenings, filter
                         >
                             <i className="bi bi-file-pdf"></i>
                         </a> */}
-                        
                     </div>
                     <div className="flex justify-end gap-2">
+                        <div>
+                            <FormSelectPrefix
+                                prefix={<Icon icon="wallet2" />}
+                                size="sm"
+                                name="rekening_id"
+                                value={params.rekening_id}
+                                onChange={onHandleFilter}
+                                className="w-[205px]"
+                            >
+                                <option value="">Semua Rekening</option>
+                                {rekenings.map((rekening) => (
+                                    <option
+                                        key={rekening.id}
+                                        value={rekening.id}
+                                    >
+                                        {rekening.nama_rekening}
+                                    </option>
+                                ))}
+                            </FormSelectPrefix>
+                        </div>
                         <div>
                             <FormSelectPrefix
                                 prefix={<Icon icon="tag" />}
@@ -164,7 +192,11 @@ const Index = ({ title, breadcrumbs, datas, categories, users, rekenings, filter
                                 prefix={<Icon icon="calendar-month" />}
                                 size="sm"
                                 name="bulan"
-                                value={params.bulan ? params.bulan : getCurrentMonth()}
+                                value={
+                                    params.bulan
+                                        ? params.bulan
+                                        : getCurrentMonth()
+                                }
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >
@@ -184,7 +216,11 @@ const Index = ({ title, breadcrumbs, datas, categories, users, rekenings, filter
                                 prefix={<Icon icon="calendar-check" />}
                                 size="sm"
                                 name="tahun"
-                                value={params.tahun ? params.tahun : getCurrentYear()}
+                                value={
+                                    params.tahun
+                                        ? params.tahun
+                                        : getCurrentYear()
+                                }
                                 onChange={onHandleFilter}
                                 className="w-[150px]"
                             >

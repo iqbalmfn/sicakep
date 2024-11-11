@@ -36,6 +36,7 @@ class PemasukanController extends Controller
             $request->bulan,
             $request->tahun,
             'pemasukan',
+            $request->rekening_id,
             null
         );
 
