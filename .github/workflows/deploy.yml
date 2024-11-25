@@ -62,7 +62,7 @@ jobs:
             ./routes/**     # Routes Laravel
             ./storage/**    # Storage Laravel
             ./vendor/**     # Vendor Folder (Composer Dependencies)
-            .env            # Environment File
+            .env.example    # Environment File
           target: "/var/www/sicakep/"
           recursive: true
           debug: true
