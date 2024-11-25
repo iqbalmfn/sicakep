@@ -57,11 +57,11 @@ jobs:
             ./bootstrap/**  # Folder bootstrap Laravel
             ./config/**     # Folder config Laravel
             ./database/**   # Folder database Laravel
-            ./public/build/** # Build Frontend Files
+           
             ./resources/**  # Resources Folder
             ./routes/**     # Routes Laravel
             ./storage/**    # Storage Laravel
-            ./vendor/**     # Vendor Folder (Composer Dependencies)
+            
             .env.example    # Environment File
           target: "/var/www/sicakep/"
           recursive: true
