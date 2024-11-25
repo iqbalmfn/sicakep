@@ -1,0 +1,85 @@
+name: Deploy Laravel Inertia to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Source Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3' # Sesuaikan dengan versi PHP proyek Anda
+          extensions: mbstring, exif, pcntl, bcmath, gd
+          coverage: none
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+
+      # Install PHP Dependencies
+      - name: Install PHP Dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      # Install Node.js Dependencies
+      - name: Install Node Dependencies
+        run: npm install
+
+      # Build Frontend Assets
+      - name: Build Frontend
+        run: npm run build
+
+      # Check Build Folder
+      - name: Verify Build Output
+        run: ls -la public/build
+
+      # Copy Project Files to VPS
+      - name: Copy Files to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          source: |
+            ./app/**        # Folder app Laravel
+            ./bootstrap/**  # Folder bootstrap Laravel
+            ./config/**     # Folder config Laravel
+            ./database/**   # Folder database Laravel
+            ./public/build/** # Build Frontend Files
+            ./resources/**  # Resources Folder
+            ./routes/**     # Routes Laravel
+            ./storage/**    # Storage Laravel
+            ./vendor/**     # Vendor Folder (Composer Dependencies)
+            .env            # Environment File
+          target: "/var/www/sicakep/"
+          recursive: true
+          debug: true
+
+      # SSH into VPS and Setup Application
+      - name: Setup Application on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
+            cd /var/www/sicakep
+            composer install --no-dev --optimize-autoloader
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan storage:link
