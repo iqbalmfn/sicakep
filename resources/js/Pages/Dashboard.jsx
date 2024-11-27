@@ -32,7 +32,7 @@ export default function Dashboard({ auth, data, filtered }) {
             <div className="py-5">
                 <div className="grid grid-cols-10 gap-5 mb-5">
                     <div className="col-span-10 lg:col-span-8">
-                        <div className="grid grid-cols-2 gap-5 mb-5">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
                             <Widget data={data} params={params} />
                             <DashboardAset data={data} />
                         </div>

@@ -5,7 +5,7 @@ const ContentWrapper = ({ children, className }) => {
         <div
             className={clsx(
                 className,
-                "bg-white rounded-lg h-auto py-4 px-5"
+                "bg-white rounded-lg h-[125px] lg:h-auto py-4 px-5 "
             )}
         >
             {children}

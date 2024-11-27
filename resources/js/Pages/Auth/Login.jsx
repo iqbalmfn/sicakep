@@ -25,7 +25,7 @@ export default function Login() {
                         alt="logo"
                         className="img-fluid lg:w-[60%] mx-auto"
                     />
-                    <h5>Sistem Informasi Catatan Keuangan Pasutri..</h5>
+                    <h5>Sistem Informasi Catatan Keuangan Pasutri</h5>
                 </div>
                 <Divider
                     style={{ marginTop: "-10px", marginBottom: "-10px" }}
