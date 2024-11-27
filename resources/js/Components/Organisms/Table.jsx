@@ -64,7 +64,7 @@ function Th({
                 nowrap && `whitespace-nowrap`,
                 `align-${valign}`,
                 `text-${align}`,
-                "uppercase ps-3"
+                "uppercase ps-3 text-nowrap text-xs sm:text-sm"
             )}
             width={width + "%"}
             {...props}
@@ -99,7 +99,7 @@ function Td({
                 className,
                 valign,
                 nowrap && `whitespace-nowrap`,
-                `text-${align} ps-3 py-2 border-b`
+                `text-${align} ps-3 py-2 border-b text-xs sm:text-sm`
             )}
             width={`${width}%`}
             {...props}

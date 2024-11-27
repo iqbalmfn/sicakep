@@ -147,7 +147,7 @@ const Index = ({
                         </a> */}
                     </div>
                     <div className="flex justify-end gap-2">
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="wallet2" />}
                                 size="sm"
@@ -167,7 +167,7 @@ const Index = ({
                                 ))}
                             </FormSelectPrefix>
                         </div>
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="tag" />}
                                 size="sm"
@@ -211,7 +211,7 @@ const Index = ({
                                 ))}
                             </FormSelectPrefix>
                         </div>
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="calendar-check" />}
                                 size="sm"

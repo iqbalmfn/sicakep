@@ -187,42 +187,42 @@ const Index = ({
             <Breadcrumbs title={title} breadcrumbs={breadcrumbs} />
 
             <div className="grid grid-cols-4 gap-5 mb-5">
-                <div className="col-span-4 lg:col-span-1">
+                <div className="col-span-2 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
-                        <span className="text-xl font-semibold">
+                        <span className="text-md lg:text-xl font-semibold">
                             Limit Anggaran
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-4xl font-bold">
                             {formatRupiah(widget.limit_anggaran)}
                         </span>
                     </ContentWrapper>
                 </div>
-                <div className="col-span-4 lg:col-span-1">
+                <div className="col-span-2 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-info border border-2 border-info">
-                        <span className="text-xl font-semibold">
+                        <span className="text-md lg:text-xl font-semibold">
                             Anggaran Diajukan
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-4xl font-bold">
                             {formatRupiah(widget.total_anggaran)}
                         </span>
                     </ContentWrapper>
                 </div>
-                <div className="col-span-4 lg:col-span-1">
+                <div className="col-span-2 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-success border border-2 border-success">
-                        <span className="text-xl font-semibold">
+                        <span className="text-md lg:text-xl font-semibold">
                             Anggaran Disetujui
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-4xl font-bold">
                             {formatRupiah(widget.total_anggaran_acc)}
                         </span>
                     </ContentWrapper>
                 </div>
-                <div className="col-span-4 lg:col-span-1">
+                <div className="col-span-2 lg:col-span-1">
                     <ContentWrapper className="flex flex-col gap-2 pb-6 text-warning border border-2 border-warning">
-                        <span className="text-xl font-semibold">
+                        <span className="text-md lg:text-xl font-semibold">
                             Selisih Anggaran
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-4xl font-bold">
                             {formatRupiah(widget.selisih_anggaran)}
                         </span>
                     </ContentWrapper>
@@ -256,7 +256,7 @@ const Index = ({
                         )}
                     </div>
                     <div className="flex justify-end gap-2">
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="person-check" />}
                                 size="sm"
@@ -275,7 +275,7 @@ const Index = ({
                                 ))}
                             </FormSelectPrefix>
                         </div>
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="tag" />}
                                 size="sm"
@@ -295,7 +295,7 @@ const Index = ({
                                 ))}
                             </FormSelectPrefix>
                         </div>
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="info-circle" />}
                                 size="sm"
@@ -336,7 +336,7 @@ const Index = ({
                                 ))}
                             </FormSelectPrefix>
                         </div>
-                        <div>
+                        <div className="hidden sm:block">
                             <FormSelectPrefix
                                 prefix={<Icon icon="calendar-check" />}
                                 size="sm"

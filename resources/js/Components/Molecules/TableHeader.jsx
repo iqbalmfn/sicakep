@@ -42,7 +42,7 @@ const TableHeader = ({
             onClick={ordered ? handleOrder : null}
         >
             {children}
-            <div className="relative">
+            <div className="hidden sm:block relative">
                 <Icon
                     icon={column === orderBy && direction === "desc" ? "caret-up" : "caret-up-fill"}
                     className={clsx(!ordered && "hidden", "text-xs absolute -bottom-1 right-0")}
