@@ -323,7 +323,7 @@ class DashboardController extends Controller
 
             // Hitung persentase realisasi
             $item['realisasi'] = $total_anggaran > 0
-                ? round(($total_pengeluaran / $total_anggaran) * 100, 2)
+                ? ($total_pengeluaran / $total_anggaran) * 100
                 : 0;
 
             return $item;

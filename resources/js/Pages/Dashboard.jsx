@@ -283,9 +283,7 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                             data.realisasi ==
                                                                             0
                                                                                 ? 0
-                                                                                : data.realisasi.toFixed(
-                                                                                      2
-                                                                                  )
+                                                                                : data.realisasi
                                                                         }%] h-[20px] rounded`,
                                                                         {
                                                                             "bg-success":
@@ -308,9 +306,7 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                             data.realisasi ==
                                                                             0
                                                                                 ? 0
-                                                                                : data.realisasi.toFixed(
-                                                                                      2
-                                                                                  )
+                                                                                : data.realisasi
                                                                         }%] h-[20px] rounded`,
                                                                         {
                                                                             "text-success":
@@ -321,7 +317,7 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                                     70 &&
                                                                                 data.realisasi <=
                                                                                     100,
-                                                                            "text-danger":
+                                                                            "text-danger font-bold":
                                                                                 data.realisasi >
                                                                                 100,
                                                                         }
