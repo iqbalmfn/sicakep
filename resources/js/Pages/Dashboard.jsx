@@ -279,12 +279,7 @@ export default function Dashboard({ auth, data, filtered }) {
                                                             <Table.Td>
                                                                 <div
                                                                     className={clsx(
-                                                                        `w-[${
-                                                                            data.realisasi ==
-                                                                            0
-                                                                                ? 0
-                                                                                : data.realisasi
-                                                                        }%] h-[20px] rounded`,
+                                                                        "h-[20px] rounded transition-all duration-300", // Tambahkan animasi dan gaya default
                                                                         {
                                                                             "bg-success":
                                                                                 data.realisasi <
@@ -299,29 +294,33 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                                 100,
                                                                         }
                                                                     )}
+                                                                    style={{
+                                                                        width: `${
+                                                                            data.realisasi ||
+                                                                            0
+                                                                        }%`, // Lebar dinamis dengan fallback ke 0 jika `data.realisasi` kosong
+                                                                    }}
                                                                 ></div>
                                                             </Table.Td>
-                                                            <Table.Td align="center" className={clsx(
-                                                                        `w-[${
-                                                                            data.realisasi ==
-                                                                            0
-                                                                                ? 0
-                                                                                : data.realisasi
-                                                                        }%] h-[20px] rounded`,
-                                                                        {
-                                                                            "text-success":
-                                                                                data.realisasi <
-                                                                                70,
-                                                                            "text-yellow":
-                                                                                data.realisasi >=
-                                                                                    70 &&
-                                                                                data.realisasi <=
-                                                                                    100,
-                                                                            "text-danger font-bold":
-                                                                                data.realisasi >
+                                                            <Table.Td
+                                                                align="center"
+                                                                className={clsx(
+                                                                    ``,
+                                                                    {
+                                                                        "text-success":
+                                                                            data.realisasi <
+                                                                            70,
+                                                                        "text-yellow":
+                                                                            data.realisasi >=
+                                                                                70 &&
+                                                                            data.realisasi <=
                                                                                 100,
-                                                                        }
-                                                                    )}>
+                                                                        "text-danger font-bold":
+                                                                            data.realisasi >
+                                                                            100,
+                                                                    }
+                                                                )}
+                                                            >
                                                                 {numberFormat(
                                                                     data.realisasi
                                                                 )}{" "}
