@@ -7,7 +7,7 @@ const ChartPengeluaranKategori = ({ chartData }) => {
     const options = {
         chart: {
             type: "donut",
-            height: 300,
+            height: 330,
         },
         labels: chartData.categories,
         legend: {
@@ -42,7 +42,7 @@ const ChartPengeluaranKategori = ({ chartData }) => {
             options={options}
             series={series}
             type="donut"
-            height={300}
+            height={330}
         />
     );
 };

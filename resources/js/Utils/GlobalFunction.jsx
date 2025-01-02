@@ -424,6 +424,10 @@ export const numberFormat = (number) => {
     return formatter.format(number);
 };
 
+export function removeMinusSymbol(value) {
+    return Math.abs(value);
+}
+
 export function calculateProposalDuration(
     tahunSkema,
     tahunPelaksanaanProposal,

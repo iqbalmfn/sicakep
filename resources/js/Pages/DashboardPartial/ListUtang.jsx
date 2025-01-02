@@ -4,7 +4,7 @@ import React from "react";
 
 const ListUtang = ({ data }) => {
     return (
-        <div className="flex flex-col gap-2 py-4 px-3 max-h-[890px] overflow-y-auto">
+        <div className="flex flex-col gap-2 py-4 px-3 max-h-[405px] overflow-y-auto">
             {data.length > 0 ? (
                 data.map((utang) => (
                     <div

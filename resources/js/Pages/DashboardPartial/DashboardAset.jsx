@@ -37,8 +37,8 @@ const DashboardAset = ({ data }) => {
     };
 
     return (
-        <div className="col-span-1">
-            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg h-[489px]">
+        <div className="col-span-5 lg:col-span-2">
+            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg h-[465px]">
                 <div className="border-b py-4 px-5">
                     <span className="text-lg font-bold">Aset</span>
                 </div>
@@ -64,7 +64,7 @@ const DashboardAset = ({ data }) => {
                         </p>
                     )}
                 </Slider>
-                <div className="flex justify-center gap-2 mt-4">
+                <div className="flex justify-center gap-2">
                     <ActionButton
                         variant="info"
                         icon="chevron-left"

@@ -3,10 +3,10 @@ import { formatRupiah, getFilterLabel } from "@/Utils/GlobalFunction";
 
 const Widget = ({ data, params }) => {
     return (
-        <div className="grid grid-cols-2 gap-5 mb-5">
+        <div className="grid grid-cols-2 col-span-5 lg:col-span-2 gap-5 mb-5">
             <div className="col-span-1 lg:col-span-1">
                 <ContentWrapper className="flex flex-col justify-between lg:justify-start h-[125px] gap-2 pb-6 text-info border border-2 border-info">
-                    <span className="text-[13px] font-bold">Total Aset</span>
+                    <span className="text-[13px] font-bold">Total Saldo</span>
                     <span className="text-2xl lg:text-3xl font-bold">
                         {formatRupiah(data.totalSaldo)}
                     </span>

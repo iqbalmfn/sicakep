@@ -11,7 +11,7 @@ const ListKategoriPengeluaran = ({ data }) => {
         };
     });
     return (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-3 overflow-y-auto h-[290px]">
             {pengeluaranKategori.map((item) => (
                 <div className="col-span-1 me-2">
                     <div className="flex items-center">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Transaksi\PengeluaranController;
+use App\Models\Perencanaan;
 use App\Models\Rekening;
 use App\Models\Transaksi;
 use App\Models\UtangPiutang;
@@ -31,6 +32,7 @@ class DashboardController extends Controller
         $chartPengeluaranBulanan = $this->chartServices->chartPengeluaranBulanan($request->tahun);
         $chartPengeluaranKategori = $this->chartServices->chartPengeluaranKategori($request->bulan, $request->tahun);
         $chartPemasukanBulanan = $this->chartServices->chartPemasukanBulanan($request->tahun);
+        $chartPengeluaranPemasukanBulanan = $this->chartServices->chartPengeluaranPemasukanBulanan($request->tahun);
 
         $data = [
             "piutang" => $this->piutang(),
@@ -44,10 +46,12 @@ class DashboardController extends Controller
             "persentasePengeluaran" => $this->persentasePengeluaran($request->bulan, $request->tahun),
             "totalUtang" => $this->totalUtang($request->bulan, $request->tahun),
             "listUtang" => $this->listUtang($request->bulan, $request->tahun),
+            "penggunaanAnggaranBulanan" => $this->penggunaanAnggaranBulanan($request->tahun),
             "ChartPengeluaranHarian" => $chartPengeluaranHarian,
             "ChartPengeluaranBulanan" => $chartPengeluaranBulanan,
             "ChartPengeluaranKategori" => $chartPengeluaranKategori,
             "ChartPemasukanBulanan" => $chartPemasukanBulanan,
+            "ChartPengeluaranPemasukanBulanan" => $chartPengeluaranPemasukanBulanan,
         ];
 
         return Inertia::render('Dashboard', [
@@ -154,7 +158,6 @@ class DashboardController extends Controller
         return $transaksi_raw->sum('nominal');
     }
 
-
     public function totalUtang($bulan = null, $tahun = null)
     {
         $today = Carbon::now();
@@ -176,7 +179,6 @@ class DashboardController extends Controller
 
         return $utang_raw->sum('nominal');
     }
-
 
     public function listUtang($bulan = null, $tahun = null)
     {
@@ -234,6 +236,7 @@ class DashboardController extends Controller
 
         return $pemasukan - $pengeluaran;
     }
+
     private function formatPersentase($nilai)
     {
         // Format angka menjadi string dengan dua angka di belakang koma
@@ -265,5 +268,67 @@ class DashboardController extends Controller
         }
 
         return $this->formatPersentase($persentase);
+    }
+
+    public function penggunaanAnggaranBulanan($tahun)
+    {
+        $today = Carbon::now();
+        $anggaran_raw = Perencanaan::query()->whereStatus(1);
+        $pengeluaran_raw = Transaksi::query()->whereTipe('pengeluaran');
+
+        // Filter berdasarkan tahun
+        if ($tahun === 'all') {
+            // Tidak ada filter tahun, ambil semua data
+        } elseif ($tahun !== null) {
+            $anggaran_raw->whereTahun($tahun);
+            $pengeluaran_raw->whereYear('tanggal', $tahun);
+        } else {
+            $tahun_now = $tahun ?? $today->year;
+            $anggaran_raw->whereTahun($tahun_now);
+            $pengeluaran_raw->whereYear('tanggal', $tahun_now);
+        }
+
+        // Grup anggaran berdasarkan bulan
+        $anggaran = $anggaran_raw->selectRaw('bulan, SUM(nominal) as total_anggaran')
+            ->groupBy('bulan')
+            ->orderByRaw('CAST(bulan AS UNSIGNED)')
+            ->pluck('total_anggaran', 'bulan'); // Mengembalikan array [bulan => total_anggaran]
+
+        // Grup pengeluaran berdasarkan bulan
+        $pengeluaran = $pengeluaran_raw->selectRaw('LPAD(MONTH(tanggal), 2, "0") as bulan, SUM(nominal) as total_pengeluaran')
+            ->groupBy('bulan')
+            ->orderByRaw('CAST(bulan AS UNSIGNED)')
+            ->pluck('total_pengeluaran', 'bulan');
+
+        // Daftar semua bulan
+        $allMonths = collect(range(1, 12))->mapWithKeys(function ($month) {
+            $monthString = str_pad($month, 2, '0', STR_PAD_LEFT); // Format '01', '02', ...
+            return [
+                $monthString => [
+                    'bulan' => Carbon::create(null, $month)->locale('id')->translatedFormat('F'),
+                    'anggaran' => 0,
+                    'pengeluaran' => 0,
+                    'realisasi' => 0,
+                ],
+            ];
+        });
+
+        // Gabungkan data anggaran dan pengeluaran dengan daftar semua bulan
+        $result = $allMonths->map(function ($item, $key) use ($anggaran, $pengeluaran) {
+            $total_anggaran = $anggaran[$key] ?? 0; // Total anggaran untuk bulan ini
+            $total_pengeluaran = $pengeluaran[$key] ?? 0; // Total pengeluaran untuk bulan ini
+
+            $item['anggaran'] = (float) $total_anggaran;
+            $item['pengeluaran'] = (float) $total_pengeluaran;
+
+            // Hitung persentase realisasi
+            $item['realisasi'] = $total_anggaran > 0
+                ? round(($total_pengeluaran / $total_anggaran) * 100, 2)
+                : 0;
+
+            return $item;
+        })->values();
+
+        return $result;
     }
 }
