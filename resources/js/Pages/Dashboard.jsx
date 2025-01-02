@@ -296,8 +296,11 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                     )}
                                                                     style={{
                                                                         width: `${
-                                                                            data.realisasi ||
-                                                                            0
+                                                                            data.realisasi >=
+                                                                            100
+                                                                                ? 100
+                                                                                : data.realisasi ||
+                                                                                  0
                                                                         }%`, // Lebar dinamis dengan fallback ke 0 jika `data.realisasi` kosong
                                                                     }}
                                                                 ></div>
