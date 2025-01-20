@@ -284,7 +284,7 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                             "bg-success":
                                                                                 data.realisasi <
                                                                                 70,
-                                                                            "bg-yellow":
+                                                                            "bg-warning":
                                                                                 data.realisasi >=
                                                                                     70 &&
                                                                                 data.realisasi <=
@@ -313,7 +313,7 @@ export default function Dashboard({ auth, data, filtered }) {
                                                                         "text-success":
                                                                             data.realisasi <
                                                                             70,
-                                                                        "text-yellow":
+                                                                        "text-warning":
                                                                             data.realisasi >=
                                                                                 70 &&
                                                                             data.realisasi <=
