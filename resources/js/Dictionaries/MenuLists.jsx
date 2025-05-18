@@ -48,7 +48,7 @@ export const menus = [
                 roles:[1,2]
             },
         ],
-        roles: [1],
+        roles: [1,2],
     },
     {
         href: "/perencanaan",
