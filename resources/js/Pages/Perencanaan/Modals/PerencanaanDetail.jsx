@@ -12,7 +12,7 @@ const PerencanaanDetail = ({ title, showModal, closeModal, data }) => {
 
     // Proses penjumlahan nominal terpakai dari array transaksi
     const totalNominal = data?.transaksi?.reduce((accumulator, item) => {
-        return accumulator + item.nominal;
+        return accumulator + parseInt(item.nominal);
     }, 0); // 0 adalah nilai awal (initial value)
 
     return (
