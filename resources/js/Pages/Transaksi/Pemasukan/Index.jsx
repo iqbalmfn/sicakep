@@ -31,6 +31,7 @@ const Index = ({
     datas,
     categories,
     users,
+    widget,
     rekenings,
     filtered,
     flash,
@@ -125,6 +126,50 @@ const Index = ({
         <AppContentLayout>
             <Head title={title} />
             <Breadcrumbs title={title} breadcrumbs={breadcrumbs} />
+
+            <div className="grid grid-cols-4 gap-5 mb-5">
+                <div className="col-span-2 lg:col-span-1">
+                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-info border border-2 border-info">
+                        <span className="text-md lg:text-xl font-semibold">
+                            Total Pemasukan
+                        </span>
+                        <span className="text-2xl lg:text-4xl font-bold">
+                            {formatRupiah(widget.total_pemasukan)}
+                        </span>
+                    </ContentWrapper>
+                </div>
+                <div className="col-span-2 lg:col-span-1">
+                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-warning border border-2 border-warning">
+                        <span className="text-md lg:text-xl font-semibold">
+                            Total Anggaran
+                        </span>
+                        <span className="text-2xl lg:text-4xl font-bold">
+                            {formatRupiah(widget.total_anggaran)}
+                        </span>
+                    </ContentWrapper>
+                </div>
+                <div className="col-span-2 lg:col-span-1">
+                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
+                        <span className="text-md lg:text-xl font-semibold">
+                            Total Pengeluaran
+                        </span>
+                        <span className="text-2xl lg:text-4xl font-bold">
+                            {formatRupiah(widget.total_pengeluaran)}
+                        </span>
+                    </ContentWrapper>
+                </div>
+                <div className="col-span-2 lg:col-span-1">
+                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-success border border-2 border-success">
+                        <span className="text-md lg:text-xl font-semibold">
+                            Dana Tersedia
+                        </span>
+                        <span className="text-2xl lg:text-4xl font-bold">
+                            {formatRupiah(widget.dana_tersedia)}
+                        </span>
+                    </ContentWrapper>
+                </div>
+            </div>
+
             <ContentWrapper>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div className="flex items-center gap-2">

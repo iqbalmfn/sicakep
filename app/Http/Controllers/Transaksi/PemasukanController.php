@@ -12,11 +12,12 @@ use Inertia\Inertia;
 
 class PemasukanController extends Controller
 {
-    protected $transaksiServices, $kategoriServices;
+    protected $transaksiServices, $kategoriServices, $pengeluaranController;
 
     public function __construct() {
         $this->transaksiServices = app(TransaksiServices::class);
         $this->kategoriServices = app(KategoriServices::class);
+        $this->pengeluaranController = app(PengeluaranController::class);
     }
 
     public function index(Request $request)
@@ -50,6 +51,8 @@ class PemasukanController extends Controller
             true
         );
 
+        $widget = $this->pengeluaranController->widget($request->kategori_id, $request->bulan, $request->tahun);
+
         $users = User::all();
         $rekenings = Rekening::all();
 
@@ -59,6 +62,7 @@ class PemasukanController extends Controller
             "datas" => $datas,
             "categories" => $categories,
             "users" => $users,
+            "widget" => $widget,
             "rekenings" => $rekenings,
             'filtered' => $request ?? [
                 'perPage' => $request->perPage ?? 10,

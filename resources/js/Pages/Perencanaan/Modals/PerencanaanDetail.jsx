@@ -9,6 +9,12 @@ import {
 import clsx from "clsx";
 
 const PerencanaanDetail = ({ title, showModal, closeModal, data }) => {
+
+    // Proses penjumlahan nominal terpakai dari array transaksi
+    const totalNominal = data?.transaksi?.reduce((accumulator, item) => {
+        return accumulator + item.nominal;
+    }, 0); // 0 adalah nilai awal (initial value)
+
     return (
         <Modal
             maxWidth="3xl"
@@ -67,6 +73,15 @@ const PerencanaanDetail = ({ title, showModal, closeModal, data }) => {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th width="20%">Terpakai</th>
+                                    <td width="3%">:</td>
+                                    <td>
+                                        {data?.nominal
+                                            ? formatRupiah(totalNominal)
+                                            : "-"}
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th width="20%">Tipe</th>
                                     <td width="3%">:</td>
                                     <td>
@@ -90,15 +105,15 @@ const PerencanaanDetail = ({ title, showModal, closeModal, data }) => {
                                                 data?.status == 0
                                                     ? "danger"
                                                     : data?.status == 1
-                                                    ? "success"
-                                                    : "warning"
+                                                        ? "success"
+                                                        : "warning"
                                             }
                                         >
                                             {data?.status == 0
                                                 ? "reject"
                                                 : data?.status == 1
-                                                ? "accept"
-                                                : "waiting"}
+                                                    ? "accept"
+                                                    : "waiting"}
                                         </Label>
                                     </td>
                                 </tr>
@@ -122,8 +137,8 @@ const PerencanaanDetail = ({ title, showModal, closeModal, data }) => {
                                         log.status == 2
                                             ? "border-warning"
                                             : log.status == 1
-                                            ? "border-success"
-                                            : "border-danger",
+                                                ? "border-success"
+                                                : "border-danger",
                                         "border flex flex-col"
                                     )}
                                 >
@@ -132,8 +147,8 @@ const PerencanaanDetail = ({ title, showModal, closeModal, data }) => {
                                             log.status == 2
                                                 ? "bg-warning"
                                                 : log.status == 1
-                                                ? "bg-success"
-                                                : "bg-danger",
+                                                    ? "bg-success"
+                                                    : "bg-danger",
                                             "flex justify-center items-center w-full p-1 text-xs"
                                         )}
                                     >
