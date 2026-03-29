@@ -10,6 +10,7 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
     ];
 
     const options = {
+        theme: { mode: 'dark' },
         chart: {
             height: 325,
             type: "bar",
@@ -29,7 +30,7 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
                 },
             },
         },
-        colors: ['#b91c1c'],
+        colors: ['#ff0055'], // neon red/pink
         dataLabels: {
             enabled: false,
         },
@@ -45,8 +46,9 @@ const ChartPengeluaranBulanan = ({ chartData }) => {
             colors: ['transparent']
         },
         grid: {
+            borderColor: "rgba(255,255,255,0.1)",
             row: {
-                colors: ["#f3f3f3", "transparent"],
+                colors: ["transparent", "transparent"],
                 opacity: 0.5,
             },
         },

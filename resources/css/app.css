@@ -1,26 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    --color-primary: #163826;
-    --color-disabled: #999999;
-    --color-primary-hover: #0f261a;
-    --color-success: #2c944b;
-    --color-success-hover: #1f7d3b;
-    --color-info: #125fa3;
-    --color-info-hover: #0c518e;
-    --color-warning: #c79324;
-    --color-warning-hover: #9a6004;
-    --color-danger: #b91c1c;
-    --color-danger-hover: #810a2a;
+    --color-primary: #00f0ff;      /* Cyan neon */
+    --color-disabled: #334155;     /* Slate 700 */
+    --color-primary-hover: #00cce6;
+    --color-success: #00ff88;      /* Neon green */
+    --color-success-hover: #00cc6a;
+    --color-info: #b026ff;         /* Purple neon */
+    --color-info-hover: #8e1acc;
+    --color-warning: #ffea00;      /* Neon yellow */
+    --color-warning-hover: #ccbb00;
+    --color-danger: #ff0055;       /* Neon pink/red */
+    --color-danger-hover: #cc0044;
 }
 
 @layer base {
+    html {
+        color-scheme: dark;
+    }
+
     body {
-        font-family: "Lato", sans-serif;
+        font-family: "Outfit", sans-serif;
         font-size: 14px;
-        color: rgb(107 114 128 / 1);
+        color: #e2e8f0; /* Default text slate-200 */
+        background-color: #0b1120; /* Dark futuristic background */
+        background-image: 
+            radial-gradient(at 0% 0%, rgba(0, 240, 255, 0.1) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(176, 38, 255, 0.1) 0px, transparent 50%);
+        background-attachment: fixed;
         overflow-x: hidden;
     }
 

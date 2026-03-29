@@ -22,8 +22,8 @@ const FormSelect = ({
             className={clsx(
                 className,
                 paddingY,
-                isError ? "border-red-700" : null,
-                "rounded-lg border-gray-200 focus:border-primary outline-1 focus:outline-none text-sm disabled:bg-gray-100"
+                isError ? "border-red-700 text-red-500" : "border-white/20 text-slate-100",
+                "rounded-lg bg-slate-900/40 backdrop-blur-xl shadow-lg focus:border-primary outline-1 focus:outline-none text-sm disabled:bg-slate-800 disabled:text-slate-400 disabled:border-white/10 w-full [&>option]:bg-slate-800 [&>option]:text-slate-200"
             )}
             {...props}
         >

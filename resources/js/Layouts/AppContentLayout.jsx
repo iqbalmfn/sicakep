@@ -10,19 +10,12 @@ import TopMenuDesktop from "./Partials/TopMenuDesktop";
 function AppContentLayout({ children, title, active }) {
     const { auth, setting } = usePage().props;
 
-    useEffect(() => {
-        document.documentElement.style.setProperty(
-            "--color-primary",
-            "#163826"
-        );
-    }, []);
-
     return (
         <div
             id="up-page"
-            className="min-h-screen flex flex-col sm:pt-0 bg-gray-200"
+            className="min-h-screen flex flex-col sm:pt-0 text-slate-200"
         >
-            <div className="w-full h-auto bg-gray-200 overflow-hidden text-gray-500 text-sm mb-20">
+            <div className="w-full h-auto overflow-hidden text-slate-300 text-sm mb-20 relative z-10">
                 <Navbar
                     auth={auth}
                     title={title}
@@ -30,7 +23,7 @@ function AppContentLayout({ children, title, active }) {
                     setting={setting}
                 />
                 <TopMenuDesktop auth={auth.user} />
-                <div className=" bg-gray-200 container mx-auto lg:w-[1500px] h-auto md:h-auto px-2">
+                <div className="container mx-auto lg:w-[1500px] h-auto md:h-auto px-2">
                     <main className="flex flex-col pt-7 pb-24 md:py-5">
                         {children}
                     </main>

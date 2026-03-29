@@ -92,35 +92,27 @@ class TransaksiAsetServices
 
             // cek apakah saldo initial cukup
             $initialRekening = Rekening::find($request->initial_rekening_id);
+            $destinationRekening = Rekening::find($request->destination_rekening_id);
+
             if ($initialRekening) {
                 $totalPotonganBaru = $request->nominal + ($request->biaya_administrasi ?? 0);
 
-                // Cek apakah saldo initialRekening cukup untuk nominal baru
+                // Cek apakah saldo initialRekening cukup 
                 if ($totalPotonganBaru > $initialRekening->saldo) {
                     DB::rollBack();
                     return responseError("Gagal, saldo tidak cukup untuk melakukan transaksi");
                 }
 
-                if ($totalPotonganBaru > $initialRekening->saldo) {
-                    DB::rollBack();
-                    return responseError("Gagal, saldo tidak cukup");
-                }
-
-                // mengurangi saldo initial rekening
-                $initialRekening->update([
-                    'saldo' => $initialRekening->saldo - $totalPotonganBaru
-                ]);
+                // mengurangi saldo initial rekening secara atomic
+                $initialRekening->decrement('saldo', $totalPotonganBaru);
             } else {
                 DB::rollBack();
                 return responseError("Gagal, initial rekening tidak ditemukan");
             }
 
-            // menambah saldo destionation rekening
-            $destinationRekening = Rekening::find($request->destination_rekening_id);
+            // menambah saldo destination rekening secara atomic
             if ($destinationRekening) {
-                $destinationRekening->update([
-                    'saldo' => $destinationRekening->saldo + $request->nominal
-                ]);
+                $destinationRekening->increment('saldo', $request->nominal);
             } else {
                 DB::rollBack();
                 return responseError("Gagal, destination rekening tidak ditemukan");
@@ -200,34 +192,39 @@ class TransaksiAsetServices
                 return responseError("Gagal, destination rekening tidak ditemukan");
             }
 
-            // Rollback saldo ke sebelum transaksi
+            // Rollback saldo ke sebelum transaksi secara atomic
             // Tambahkan kembali nominal sebelumnya ke initialRekening dan kurangi dari destinationRekening
-            $initialRekening->update([
-                'saldo' => $initialRekening->saldo + $transaksiAset->nominal + $transaksiAset->biaya_administrasi
-            ]);
+            $oldInitialRekening = Rekening::find($transaksiAset->initial_rekening_id);
+            $oldDestinationRekening = Rekening::find($transaksiAset->destination_rekening_id);
 
-            $destinationRekening->update([
-                'saldo' => $destinationRekening->saldo - $transaksiAset->nominal
-            ]);
+            if ($oldInitialRekening) {
+                $oldInitialRekening->increment('saldo', $transaksiAset->nominal + $transaksiAset->biaya_administrasi);
+            }
+            if ($oldDestinationRekening) {
+                $oldDestinationRekening->decrement('saldo', $transaksiAset->nominal);
+            }
 
             // Hitung total potongan baru (nominal + biaya administrasi jika ada)
             $totalPotonganBaru = $request->nominal + ($request->biaya_administrasi ?? 0);
 
-            // Cek apakah saldo initialRekening cukup untuk nominal baru
-            if ($totalPotonganBaru > $initialRekening->saldo) {
+            // Ambil data rekening terbaru untuk apply nilai baru
+            $newInitialRekening = Rekening::find($request->initial_rekening_id);
+            $newDestinationRekening = Rekening::find($request->destination_rekening_id);
+
+            if (!$newInitialRekening || !$newDestinationRekening) {
+                DB::rollBack();
+                return responseError("Gagal, rekening tidak ditemukan");
+            }
+
+            // Cek apakah saldo initialRekening cukup untuk nominal baru (setelah rollback)
+            if ($totalPotonganBaru > $newInitialRekening->saldo) {
                 DB::rollBack();
                 return responseError("Gagal, saldo tidak cukup untuk melakukan transaksi");
             }
 
-            // Update saldo initialRekening dengan potongan baru
-            $initialRekening->update([
-                'saldo' => $initialRekening->saldo - $totalPotonganBaru
-            ]);
-
-            // Update saldo destinationRekening dengan nominal baru
-            $destinationRekening->update([
-                'saldo' => $destinationRekening->saldo + $request->nominal
-            ]);
+            // Update saldo secara atomic
+            $newInitialRekening->decrement('saldo', $totalPotonganBaru);
+            $newDestinationRekening->increment('saldo', $request->nominal);
 
             // Update data transaksi utama
             $transaksiAset->update($input);
@@ -310,15 +307,13 @@ class TransaksiAsetServices
                 return responseError("Gagal, destination rekening tidak ditemukan");
             }
 
-            // Rollback saldo sebelum transaksi
-            // Kembalikan nominal dari destinationRekening dan tambahkan ke initialRekening
-            $initialRekening->update([
-                'saldo' => $initialRekening->saldo + $transaksiAset->nominal + $transaksiAset->biaya_administrasi
-            ]);
-
-            $destinationRekening->update([
-                'saldo' => $destinationRekening->saldo - $transaksiAset->nominal
-            ]);
+            // Rollback saldo sebelum transaksi secara atomic
+            if ($initialRekening) {
+                $initialRekening->increment('saldo', $transaksiAset->nominal + $transaksiAset->biaya_administrasi);
+            }
+            if ($destinationRekening) {
+                $destinationRekening->decrement('saldo', $transaksiAset->nominal);
+            }
 
             // Hapus transaksi biaya administrasi jika ada
             if ($transaksiAset->biaya_administrasi) {

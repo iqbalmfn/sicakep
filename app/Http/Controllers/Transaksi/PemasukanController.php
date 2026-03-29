@@ -74,6 +74,58 @@ class PemasukanController extends Controller
         ]);
     }
 
+    public function view(Request $request) {
+        $title = "View Pemasukan";
+        $breadcrumbs = [
+            ['name' => 'Transaksi', 'link' => '#'],
+            ['name' => 'Pemasukan', 'link' => '/transaksi/pemasukan'],
+            ['name' => $title],
+        ];
+
+        $raw = $this->transaksiServices->getDataAll(
+            $request->q,
+            $request->orderBy,
+            $request->orderDirection,
+            $request->kategori_id,
+            $request->bulan,
+            $request->tahun,
+            'pemasukan',
+            $request->rekening_id,
+            null
+        );
+
+        $kategori_map = [];
+        $total_nominal = 0;
+        foreach ($raw as $item) {
+            $kategori_id = $item->kategori_id;
+            $kategori_nama = $item->kategori->nama;
+            
+            if (!isset($kategori_map[$kategori_id])) {
+                $kategori_map[$kategori_id] = [
+                    "kategori" => $kategori_nama,
+                    "list" => [],
+                    "sub_total" => 0
+                ];
+            }
+            $kategori_map[$kategori_id]["list"][] = $item;
+            $kategori_map[$kategori_id]["sub_total"] += $item->nominal;
+            $total_nominal += $item->nominal;
+        }
+
+        $datas = [
+            'bulan' => $request->bulan ?: date('m'),
+            'tahun' => $request->tahun ?: date('Y'),
+            'kategori_list' => array_values($kategori_map),
+             'total' => $total_nominal
+        ];
+
+        return Inertia::render('Transaksi/Pemasukan/View', [
+            "title" => $title,
+            "breadcrumbs" => $breadcrumbs,
+            "datas" => $datas,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $res = $this->transaksiServices->createData($request, "pemasukan");

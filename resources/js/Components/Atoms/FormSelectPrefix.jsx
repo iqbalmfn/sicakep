@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import React from "react";
 
 const FormSelectPrefix = ({
     type = "text",
@@ -19,11 +20,11 @@ const FormSelectPrefix = ({
         paddingY = "h-[55px]";
     }
     return (
-        <div className="relative border flex items-center rounded-lg w-full bg-white">
+        <div className="relative border border-white/20 flex items-center rounded-lg w-full bg-slate-900/40 backdrop-blur-xl text-slate-100 shadow-lg">
             {prefix && (
                 <div
                     className={clsx(
-                        "border-r flex items-center justify-center px-3 overflow-hidden",
+                        "border-r border-white/20 flex items-center justify-center px-3 overflow-hidden text-slate-300",
                         size === "md" ? "pb-2" : "pb-2",
                         paddingY
                     )}
@@ -37,12 +38,18 @@ const FormSelectPrefix = ({
                     className,
                     paddingY,
                     isError ? "border-red-700" : null,
-                    "rounded-lg border-none border-gray-200 focus:border-primary outline-1 focus:outline-none text-sm",
+                    "rounded-lg border-none bg-transparent focus:border-primary outline-1 focus:outline-none text-sm text-slate-100",
                     prefix ? "pl-3 rounded-e-lg" : suffix ? "pe-3 rounded-s-lg" : "rounded-lg"
                 )}
                 {...props}
             >
-                {children}
+                {/* Setting fallback text styles inside options so it's readable when expanded by browser */}
+                {React.Children.map(children, child => {
+                    if (React.isValidElement(child) && child.type === "option") {
+                        return React.cloneElement(child, { className: "text-slate-800 bg-white" });
+                    }
+                    return child;
+                })}
             </select>
         </div>
     );

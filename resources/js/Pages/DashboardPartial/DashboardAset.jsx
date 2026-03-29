@@ -38,9 +38,9 @@ const DashboardAset = ({ data }) => {
 
     return (
         <div className="col-span-5 lg:col-span-2">
-            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg h-[465px]">
-                <div className="border-b py-4 px-5">
-                    <span className="text-lg font-bold">Aset</span>
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl h-[465px]">
+                <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
+                    <span className="text-lg font-bold text-slate-100">Aset</span>
                 </div>
                 <Slider ref={setSliderRef} {...settings} className="py-4 px-5">
                     {chunkedAset.length > 0 ? (

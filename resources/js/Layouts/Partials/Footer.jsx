@@ -23,17 +23,17 @@ const Footer = () => {
     }, []);
 
     return isEndOfPage && (
-        <footer className="fixed bottom-0 w-full flex items-center h-[35px] bg-white shadow-top">
-            <div className="container mx-auto text-center px-5 text-xs">
+        <footer className="fixed bottom-0 w-full flex items-center h-[40px] bg-slate-950/40 backdrop-blur-xl border-t border-white/5 z-[999]">
+            <div className="container mx-auto text-center px-5 text-[10px] tracking-wider text-slate-500">
                 Development{" "}
                 <a
                     target="_blank"
                     href="https://iqbalmfn.com"
-                    className="text-primary hover:text-primary-hover "
+                    className="text-info/80 hover:text-info transition-colors duration-300 font-medium"
                 >
                     {props.app.name}
                 </a>
-                , All rights Reserved &copy; 2024 - v(2.2.0)
+                {" "}• All Rights Reserved &copy; 2024 - v(3.0.0)
             </div>
         </footer>
     );

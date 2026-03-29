@@ -180,12 +180,10 @@ class TransaksiServices
             }
 
             if ($type === "pemasukan") {
-                // update saldo rekening
-                $rekening->update([
-                    'saldo' => $rekening->saldo + $input['nominal']
-                ]);
+                // update saldo rekening secara atomic
+                $rekening->increment('saldo', $input['nominal']);
 
-                Log::info("Pengmasukan : " . $input['judul'] . " = " . formatRupiah($input['nominal']) . " | Sisa Saldo (".$rekening->nama_rekening.") = " . formatRupiah($rekening->saldo));
+                Log::info("Pemasukan : " . $input['judul'] . " = " . formatRupiah($input['nominal']) . " | Sisa Saldo (".$rekening->nama_rekening.") = " . formatRupiah($rekening->fresh()->saldo));
             }
 
             if ($type === "pengeluaran") {
@@ -195,12 +193,10 @@ class TransaksiServices
                     return responseError("Gagal, saldo di rekening tidak cukup");
                 }
 
-                // update saldo rekening
-                $rekening->update([
-                    'saldo' => $rekening->saldo - $input['nominal']
-                ]);
+                // update saldo rekening secara atomic
+                $rekening->decrement('saldo', $input['nominal']);
 
-                Log::info("Pengeluaran : " . $input['judul'] . " = " . formatRupiah($input['nominal']) . " | Sisa Saldo (".$rekening->nama_rekening.") = " . formatRupiah($rekening->saldo));
+                Log::info("Pengeluaran : " . $input['judul'] . " = " . formatRupiah($input['nominal']) . " | Sisa Saldo (".$rekening->nama_rekening.") = " . formatRupiah($rekening->fresh()->saldo));
             }
 
             DB::commit();
@@ -233,20 +229,19 @@ class TransaksiServices
                         return responseError("Gagal, rekening tidak ditemukan");
                     }
 
-                    // update saldo dari rekening lama
-                    $data->rekening->update([
-                        'saldo' => $data->rekening->saldo - $data->nominal
-                    ]);
+                    // update saldo dari rekening lama secara atomic (revert pemasukan)
+                    $data->rekening->decrement('saldo', $data->nominal);
 
-                    // update saldo ke rekening baru
-                    $rekeningBaru->update([
-                        'saldo' => $rekeningBaru->saldo + $input['nominal']
-                    ]);
+                    // update saldo ke rekening baru secara atomic (apply pemasukan baru)
+                    $rekeningBaru->increment('saldo', $input['nominal']);
                 } else {
-                    // update saldo ke rekening yang sama
-                    $data->rekening->update([
-                        'saldo' => $data->rekening->saldo - $data->nominal + $input['nominal']
-                    ]);
+                    // update saldo ke rekening yang sama secara atomic
+                    $diff = $input['nominal'] - $data->nominal;
+                    if ($diff > 0) {
+                        $data->rekening->increment('saldo', abs($diff));
+                    } elseif ($diff < 0) {
+                        $data->rekening->decrement('saldo', abs($diff));
+                    }
                 }
             } elseif ($data->tipe === "pengeluaran") {
                 if ($data->rekening_id != $request->rekening_id) {
@@ -258,26 +253,32 @@ class TransaksiServices
                         return responseError("Gagal, rekening tidak ditemukan");
                     }
 
-                    // cek apakah saldo cukup
+                    // cek apakah saldo cukup di rekening baru setelah nominal baru diaplikasikan
                     if ($rekeningBaru->saldo < $input['nominal']) {
                         DB::rollBack();
-                        return responseError("Gagal, saldo di rekening tidak cukup");
+                        return responseError("Gagal, saldo di rekening baru tidak cukup");
                     }
 
-                    // update saldo dari rekening lama
-                    $data->rekening->update([
-                        'saldo' => $data->rekening->saldo + $data->nominal
-                    ]);
+                    // update saldo dari rekening lama secara atomic (revert pengeluaran)
+                    $data->rekening->increment('saldo', $data->nominal);
 
-                    // update saldo ke rekening baru
-                    $rekeningBaru->update([
-                        'saldo' => $rekeningBaru->saldo - $input['nominal']
-                    ]);
+                    // update saldo ke rekening baru secara atomic (apply pengeluaran baru)
+                    $rekeningBaru->decrement('saldo', $input['nominal']);
                 } else {
-                    // update saldo ke rekening yang sama
-                    $data->rekening->update([
-                        'saldo' => $data->rekening->saldo + $data->nominal - $input['nominal']
-                    ]);
+                    // update saldo ke rekening yang sama secara atomic
+                    $diff = $input['nominal'] - $data->nominal;
+                    
+                    // Jika nominal baru lebih besar, kita perlu cek apakah saldo cukup untuk tambahannya
+                    if ($diff > 0 && $data->rekening->saldo < $diff) {
+                        DB::rollBack();
+                        return responseError("Gagal, saldo tidak cukup untuk perubahan nominal ini");
+                    }
+                    
+                    if ($diff > 0) {
+                        $data->rekening->decrement('saldo', abs($diff));
+                    } elseif ($diff < 0) {
+                        $data->rekening->increment('saldo', abs($diff));
+                    }
                 }
             }
 
@@ -296,6 +297,7 @@ class TransaksiServices
 
     public function deleteData($id)
     {
+        DB::beginTransaction();
         try {
             $data = $this->getDataById($id);
 
@@ -308,23 +310,21 @@ class TransaksiServices
             }
 
             if ($data->tipe === "pemasukan") {
-                // update saldo rekening
-                $rekening->update([
-                    'saldo' => $rekening->saldo - $data->nominal
-                ]);
+                // update saldo rekening secara atomic (revert pemasukan)
+                $rekening->decrement('saldo', $data->nominal);
             }
 
             if ($data->tipe === "pengeluaran") {
-                // update saldo rekening
-                $rekening->update([
-                    'saldo' => $rekening->saldo + $data->nominal
-                ]);
+                // update saldo rekening secara atomic (revert pengeluaran)
+                $rekening->increment('saldo', $data->nominal);
             }
 
             $delete = $data->delete();
+            DB::commit();
 
             return responseSuccess("Berhasil, data telah dihapus", $delete);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return responseError("Gagal, ada kesalahan pada sistem saat menghapus data " . $th->getMessage());
         }
     }

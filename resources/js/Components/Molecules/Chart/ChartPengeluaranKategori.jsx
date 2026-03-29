@@ -5,9 +5,11 @@ const ChartPengeluaranKategori = ({ chartData }) => {
     const series = chartData.data; // Data pengeluaran tiap kategori
 
     const options = {
+        theme: { mode: 'dark' },
         chart: {
             type: "donut",
             height: 330,
+            background: "transparent",
         },
         labels: chartData.categories,
         legend: {

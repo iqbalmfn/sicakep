@@ -66,10 +66,9 @@ class DashboardController extends Controller
 
     public function piutang()
     {
-        $total_piutang = 0;
-        $total_dibayar = 0;
+        $total_aset_piutang = 0;
 
-        // start : total utang
+        // start : get all piutang master
         $total_piutang_raw = $this->utangPiutangServices->getDataPiutangMaster(
             null,
             null,
@@ -80,30 +79,24 @@ class DashboardController extends Controller
             false
         );
 
-        foreach ($total_piutang_raw as $utang) {
-            $total_piutang += $utang->nominal;
-        }
-        // end : total utang
+        foreach ($total_piutang_raw as $master) {
+            $total_hutang_orang = (float) $master->nominal;
+            $total_dibayar = 0;
 
-        // start : total utang dibayar
-        $total_dibayar_raw = $this->utangPiutangServices->getData(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "piutang",
-            1,
-            false
-        );
+            // sum all payments for this specific piutang
+            foreach ($master->piutang_detail as $detail) {
+                $total_dibayar += (float) $detail->nominal;
+            }
 
-        foreach ($total_dibayar_raw as $utang) {
-            $total_dibayar += $utang->nominal;
+            $sisa = $total_hutang_orang - $total_dibayar;
+
+            // yang sudah lunas (sisa <= 0) jangan dihitung
+            if ($sisa > 0) {
+                $total_aset_piutang += $sisa;
+            }
         }
-        // end : total utang dibayar
-        return $total_piutang - $total_dibayar;
+
+        return $total_aset_piutang;
     }
 
     public function aset()

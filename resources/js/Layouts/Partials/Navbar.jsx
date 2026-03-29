@@ -9,7 +9,7 @@ function Navbar({ auth, setting }) {
     const { calendarActive } = usePage().props;
 
     return (
-        <div className="bg-white">
+        <div className="bg-slate-900/40 backdrop-blur-xl border-b border-white/10 sticky top-0 z-50">
             <div className="h-[65px] flex justify-between items-center px-5 lg:px-0 container mx-auto lg:w-[1500px]">
                 <ApplicationLogo setting={setting} />
                 <div className="flex justify-start gap-5 items-center">

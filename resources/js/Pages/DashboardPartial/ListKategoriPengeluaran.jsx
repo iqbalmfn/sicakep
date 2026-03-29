@@ -24,15 +24,15 @@ const ListKategoriPengeluaran = ({ data }) => {
                             <i className="bi bi-tag text-white text-[16px]" />
                         </div>
                         <div className="flex flex-col justify-center w-full">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between text-slate-200">
                                 <span className="font-semibold text-[12px]">
                                     {item.category}
                                 </span>
-                                <span className="text-[12px]">
+                                <span className="text-[12px] font-bold">
                                     {formatRupiah(item.nominal)}
                                 </span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded h-4 overflow-hidden">
+                            <div className="w-full bg-slate-700/50 rounded h-4 overflow-hidden border border-white/5 shadow-inner">
                                 <div
                                     className="h-full rounded transition-all duration-500 ease-out"
                                     style={{

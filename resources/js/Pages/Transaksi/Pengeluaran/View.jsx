@@ -45,10 +45,10 @@ const View = ({ title, breadcrumbs, datas }) => {
                 </div>
                 <div className="border-t my-5 pt-3">
                     <div className="text-center">
-                        <h3 className="text-2xl font-bold text-gray-900">
+                        <h3 className="text-2xl font-bold text-slate-100">
                             Laporan Pengeluaran
                         </h3>
-                        <h5 className="text-lg font-bold text-gray-900">
+                        <h5 className="text-lg font-bold text-slate-100">
                             Bulan {monthNumberToIndonesian(datas.bulan)} Tahun{" "}
                             {datas.tahun}
                         </h5>
@@ -56,39 +56,39 @@ const View = ({ title, breadcrumbs, datas }) => {
                     <div className="my-3">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-100">
+                                <tr className="bg-slate-800">
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-center"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-center"
                                         width="3%"
                                     >
                                         No
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Judul
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Pengguna Dana
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Tanggal
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Jenis
                                     </th>
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-end"
                                         width="10%"
                                     >
                                         Nominal
                                     </th>
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-end"
                                         width="10%"
                                     >
                                         Dana Terpakai
                                     </th>
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-end"
                                         width="10%"
                                     >
                                         Dana Tersisa
@@ -102,7 +102,7 @@ const View = ({ title, breadcrumbs, datas }) => {
                                               <tr>
                                                   <td
                                                       colSpan={8}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold bg-blue-100"
+                                                      className="border border-white/10 px-3 py-1 text-info font-bold bg-info/20"
                                                   >
                                                       {kategori.kategori}
                                                   </td>
@@ -112,8 +112,8 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                       let totalTransaksi = 0;
                                                       return (
                                                           <Fragment key={index}>
-                                                              <tr className="bg-yellow-100">
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-start font-bold">
+                                                              <tr className="bg-warning/10 text-warning">
+                                                                  <td className="border border-white/10 px-3 py-1 text-start font-bold">
                                                                       {index +
                                                                           1}
                                                                   </td>
@@ -121,19 +121,19 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                       colSpan={
                                                                           4
                                                                       }
-                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
+                                                                      className="border border-white/10 px-3 py-1 font-bold"
                                                                   >
                                                                       {
                                                                           data.judul
                                                                       }
                                                                   </td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end font-bold">
+                                                                  <td className="border border-white/10 px-3 py-1 text-end font-bold">
                                                                       {formatRupiah(
                                                                           data.nominal
                                                                       )}
                                                                   </td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                  <td className="border border-white/10 px-3 py-1 text-end"></td>
+                                                                  <td className="border border-white/10 px-3 py-1 text-end"></td>
                                                               </tr>
 
                                                               {data.transaksi.map(
@@ -154,11 +154,11 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                               <tr
                                                                                   className={
                                                                                       !transaksi.is_sesuai
-                                                                                          ? "bg-red-100"
-                                                                                          : null
+                                                                                          ? "bg-danger/20 text-danger"
+                                                                                          : "text-slate-300"
                                                                                   }
                                                                               >
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-start">
+                                                                                  <td className="border border-white/10 px-3 py-1 text-start">
                                                                                       {index +
                                                                                           1}
 
@@ -166,67 +166,67 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                                       {itrax +
                                                                                           1}
                                                                                   </td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                  <td className="border border-white/10 px-3 py-1">
                                                                                       {
                                                                                           transaksi.judul
                                                                                       }
                                                                                   </td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                  <td className="border border-white/10 px-3 py-1">
                                                                                       {
                                                                                           transaksi
                                                                                               .user
                                                                                               .name
                                                                                       }
                                                                                   </td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                  <td className="border border-white/10 px-3 py-1">
                                                                                       {formatDateWithDay(
                                                                                           transaksi.tanggal
                                                                                       )}
                                                                                   </td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                                                  <td className="border border-white/10 px-3 py-1">
                                                                                       {
                                                                                           transaksi.jenis
                                                                                       }
                                                                                   </td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                                  <td className="border border-white/10 px-3 py-1 text-end">
                                                                                       {formatRupiah(
                                                                                           transaksi.nominal
                                                                                       )}
                                                                                   </td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
-                                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                                  <td className="border border-white/10 px-3 py-1 text-end"></td>
+                                                                                  <td className="border border-white/10 px-3 py-1 text-end"></td>
                                                                               </tr>
                                                                           </Fragment>
                                                                       );
                                                                   }
                                                               )}
-                                                              <tr className="font-semibold">
+                                                              <tr className="font-semibold text-slate-300">
                                                                   <td
                                                                       colSpan={
                                                                           5
                                                                       }
-                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
+                                                                      className="border border-white/10 px-3 py-1 text-start"
                                                                   >
                                                                       Sub Total
                                                                   </td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                  <td className="border border-white/10 px-3 py-1 text-end">
                                                                       {formatRupiah(
                                                                           totalTransaksi
                                                                       )}
                                                                   </td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                  <td className="border border-white/10 px-3 py-1 text-end">
                                                                       {formatRupiah(
                                                                           totalTransaksi
                                                                       )}
                                                                   </td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                                  <td className="border border-white/10 px-3 py-1 text-end"></td>
                                                               </tr>
-                                                              <tr className="font-semibold">
+                                                              <tr className="font-semibold text-slate-300">
                                                                   <td
                                                                       colSpan={
                                                                           5
                                                                       }
-                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
+                                                                      className="border border-white/10 px-3 py-1 text-start"
                                                                   >
                                                                       Selisih
                                                                   </td>
@@ -234,7 +234,7 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                       colSpan={
                                                                           1
                                                                       }
-                                                                      className="border border-gray-400 px-3 py-1 text-gray-600 text-end"
+                                                                      className="border border-white/10 px-3 py-1 text-end"
                                                                   >
                                                                       {formatRupiah(
                                                                           parseInt(
@@ -245,8 +245,8 @@ const View = ({ title, breadcrumbs, datas }) => {
                                                                               )
                                                                       )}
                                                                   </td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
-                                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                                  <td className="border border-white/10 px-3 py-1 text-end"></td>
+                                                                  <td className="border border-white/10 px-3 py-1 text-end">
                                                                       {formatRupiah(
                                                                           parseInt(
                                                                               data.nominal
@@ -266,20 +266,20 @@ const View = ({ title, breadcrumbs, datas }) => {
                                     : null}
                             </tbody>
                             <tfoot>
-                                <tr className="bg-green-200 font-extrabold text-md ">
+                                <tr className="bg-success/20 text-success font-extrabold text-md ">
                                     <td
                                         colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 text-start"
+                                        className="border border-white/10 px-3 py-1 text-start"
                                     >
                                         Total Dana
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                    <td className="border border-white/10 px-3 py-1 text-end">
                                         {formatRupiah(totalAnggaran)}
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                    <td className="border border-white/10 px-3 py-1 text-end">
                                         {formatRupiah(totalDanaTerpakai)}
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                    <td className="border border-white/10 px-3 py-1 text-end">
                                         {formatRupiah(totalDanaTersisa)}
                                     </td>
                                 </tr>

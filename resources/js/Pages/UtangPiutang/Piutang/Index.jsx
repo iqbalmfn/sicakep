@@ -101,12 +101,12 @@ const Index = ({
                         <Table.Td>
                             <Label
                                 variant={
-                                    data.nominal <= totalSudahDibayar
+                                    Number(data.nominal) <= totalSudahDibayar
                                         ? "success"
                                         : "danger"
                                 }
                             >
-                                {data.nominal <= totalSudahDibayar
+                                {Number(data.nominal) <= totalSudahDibayar
                                     ? "Lunas"
                                     : "Belum Lunas"}
                             </Label>
@@ -183,41 +183,45 @@ const Index = ({
 
             <div className="grid grid-cols-4 gap-5 mb-5">
                 <div className="col-span-4 lg:col-span-1">
-                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
-                        <span className="text-xl font-semibold">
-                            Total Piutang
+                    <ContentWrapper className="relative flex flex-col gap-1 pb-6 overflow-hidden group border border-white/5 hover:border-white/10">
+                        <div className="absolute -right-6 -top-6 w-24 h-24 bg-danger opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-all duration-700"></div>
+                        <span className="text-sm font-medium text-slate-400 z-10 flex items-center gap-2">
+                            Total Piutang 💳
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-100 z-10 mt-1">
                             {formatRupiah(widget.total_piutang)}
                         </span>
                     </ContentWrapper>
                 </div>
                 <div className="col-span-4 lg:col-span-1">
-                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-success border border-2 border-success">
-                        <span className="text-xl font-semibold">
-                            Sudah Dibayar
+                    <ContentWrapper className="relative flex flex-col gap-1 pb-6 overflow-hidden group border border-white/5 hover:border-white/10">
+                        <div className="absolute -right-6 -top-6 w-24 h-24 bg-success opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-all duration-700"></div>
+                        <span className="text-sm font-medium text-slate-400 z-10 flex items-center gap-2">
+                            Sudah Dibayar 💸
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-100 z-10 mt-1">
                             {formatRupiah(widget.total_dibayar)}
                         </span>
                     </ContentWrapper>
                 </div>
                 <div className="col-span-4 lg:col-span-1">
-                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-danger border border-2 border-danger">
-                        <span className="text-xl font-semibold">
-                            Belum Dibayar
+                    <ContentWrapper className="relative flex flex-col gap-1 pb-6 overflow-hidden group border border-white/5 hover:border-white/10">
+                        <div className="absolute -right-6 -top-6 w-24 h-24 bg-danger opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-all duration-700"></div>
+                        <span className="text-sm font-medium text-slate-400 z-10 flex items-center gap-2">
+                            Belum Dibayar 🧾
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-100 z-10 mt-1">
                             {formatRupiah(widget.total_belum_dibayar)}
                         </span>
                     </ContentWrapper>
                 </div>
                 <div className="col-span-4 lg:col-span-1">
-                    <ContentWrapper className="flex flex-col gap-2 pb-6 text-info border border-2 border-info">
-                        <span className="text-xl font-semibold">
-                            Persentase Lunas
+                    <ContentWrapper className="relative flex flex-col gap-1 pb-6 overflow-hidden group border border-white/5 hover:border-white/10">
+                        <div className="absolute -right-6 -top-6 w-24 h-24 bg-info opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-all duration-700"></div>
+                        <span className="text-sm font-medium text-slate-400 z-10 flex items-center gap-2">
+                            Persentase Lunas 📊
                         </span>
-                        <span className="text-4xl font-bold">
+                        <span className="text-2xl lg:text-3xl font-bold tracking-tight text-slate-100 z-10 mt-1">
                             {widget.persentase}%
                         </span>
                     </ContentWrapper>

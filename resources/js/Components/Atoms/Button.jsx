@@ -33,52 +33,52 @@ function Button({
         if (outline) {
             variantButton = clsx(
                 variantImportant
-                    ? "rounded-lg text-primary-important border-primary-important hover:bg-primary-important"
-                    : "rounded-lg text-primary border-primary hover:bg-primary",
-                "rounded-lg bg-transparent border group hover:text-white"
+                    ? "rounded-xl text-info border-info hover:bg-info/20 shadow-[0_0_10px_rgba(0,250,255,0.2)]"
+                    : "rounded-xl text-info border-info hover:bg-info/20 shadow-[0_0_10px_rgba(0,250,255,0.2)]",
+                "bg-transparent border group hover:text-white"
             );
         } else {
-            variantButton = "rounded-lg text-white border border-primary";
+            variantButton = "rounded-xl text-info hover:text-gray-800 bg-info/90 border border-info hover:bg-info shadow-[0_0_15px_rgba(0,250,255,0.3)] font-semibold";
         }
     } else if (variant == "danger") {
         if (outline) {
             variantButton =
-                "rounded-lg bg-transparent text-danger border border-danger hover:bg-danger group hover:bg-danger hover:text-white";
+                "rounded-xl bg-transparent text-danger border border-danger hover:bg-danger/20 shadow-[0_0_10px_rgba(255,0,85,0.2)] group hover:text-white";
         } else {
             variantButton =
-                "rounded-lg bg-danger text-white border border-danger hover:bg-danger-hover hover:border-danger-hover";
+                "rounded-xl bg-danger/80 text-white border border-danger hover:bg-danger shadow-[0_0_15px_rgba(255,0,85,0.3)]";
         }
     } else if (variant == "success") {
         if (outline) {
             variantButton =
-                "rounded-lg bg-transparent text-success border border-success hover:bg-success group hover:bg-success hover:text-white";
+                "rounded-xl bg-transparent text-success border border-success hover:bg-success/20 shadow-[0_0_10px_rgba(0,255,136,0.2)] group hover:text-white";
         } else {
             variantButton =
-                "rounded-lg bg-success text-white border border-success hover:bg-success-hover hover:border-success-hover";
+                "rounded-xl bg-success/80 text-slate-900 font-semibold border border-success hover:bg-success shadow-[0_0_15px_rgba(0,255,136,0.3)]";
         }
     } else if (variant == "warning") {
         if (outline) {
             variantButton =
-                "rounded-lg bg-transparent text-warning border border-warning hover:bg-warning group hover:bg-warning hover:text-white";
+                "rounded-xl bg-transparent text-warning border border-warning hover:bg-warning/20 shadow-[0_0_10px_rgba(255,200,0,0.2)] group hover:text-white";
         } else {
             variantButton =
-                "rounded-lg bg-warning text-white border border-warning hover:bg-warning-hover hover:border-warning-hover";
+                "rounded-xl bg-warning/80 text-slate-900 font-semibold border border-warning hover:bg-warning shadow-[0_0_15px_rgba(255,200,0,0.3)]";
         }
     } else if (variant == "info") {
         if (outline) {
             variantButton =
-                "rounded-lg bg-transparent text-info border border-info hover:bg-info group hover:bg-info hover:text-white";
+                "rounded-xl bg-transparent text-info border border-info hover:bg-info/20 shadow-[0_0_10px_rgba(0,250,255,0.2)] group hover:text-white";
         } else {
             variantButton =
-                "rounded-lg bg-info text-white border border-info hover:bg-info-hover hover:border-info-hover";
+                "rounded-xl bg-info/80 text-slate-900 font-semibold border border-info hover:bg-info shadow-[0_0_15px_rgba(0,250,255,0.3)]";
         }
     } else if (variant == "gray") {
         if (outline) {
             variantButton =
-                "rounded-lg bg-transparent text-gray-500 border border-gray-500 hover:bg-gray-500 group hover:bg-gray-500 hover:text-white";
+                "rounded-xl bg-transparent text-slate-400 border border-slate-500 hover:bg-slate-700 group hover:text-white";
         } else {
             variantButton =
-                "rounded-lg bg-gray-500 text-white border border-gray-500 hover:bg-gray-500 hover:border-gray-500";
+                "rounded-xl bg-slate-700 text-white border border-slate-600 hover:bg-slate-600 shadow-md";
         }
     }
 
@@ -90,24 +90,12 @@ function Button({
                 sizeButton,
                 isCircle ? "rounded-full" : variantButton,
                 disabled &&
-                    (outline ? "opacity-75" : "opacity-75 cursor-not-allowed"),
-                "transition-all duration-200"
+                    (outline ? "opacity-50" : "opacity-50 cursor-not-allowed"),
+                "transition-all duration-300 ease-out"
             )}
             disabled={disabled}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            style={
-                variant === "primary" && !outline && !variantImportant
-                    ? {
-                          backgroundColor: isHovered
-                              ? darkenedColor
-                              : "#163826",
-                          borderColor: isHovered
-                              ? darkenedColor
-                              : "#163826",
-                      }
-                    : null
-            }
             {...props}
         >
             {warning ? (

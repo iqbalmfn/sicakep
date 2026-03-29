@@ -25,13 +25,11 @@ import Table from "@/Components/Organisms/Table";
 export default function Dashboard({ auth, data, filtered }) {
     const { params, onHandleFilter } = UseDashboard(filtered);
 
-    console.log(data.ChartPengeluaranBulanan.percentage_changes[11]);
-
     return (
         <AppContentLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                <h2 className="font-semibold text-xl text-slate-100 leading-tight">
                     Dashboard
                 </h2>
             }
@@ -45,8 +43,8 @@ export default function Dashboard({ auth, data, filtered }) {
                             <Widget data={data} params={params} />
                             <DashboardAset data={data} />
                             <div className="col-span-5 lg:col-span-1">
-                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div className="border-b py-4 px-5">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
                                         <div className="flex justify-between items-center">
                                             <span className="text-lg font-bold">
                                                 Utang {getFilterLabel(params)}
@@ -66,8 +64,8 @@ export default function Dashboard({ auth, data, filtered }) {
                         {/* Chart */}
                         <div className="grid grid-cols-8 gap-5 mb-5 mt-5 lg:mt-0">
                             <div className="col-span-8 lg:col-span-5">
-                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div className="border-b py-4 px-5">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
                                         <span className="text-lg font-bold">
                                             Pengeluaran Harian{" "}
                                             {getFilterLabel(params)}
@@ -79,8 +77,8 @@ export default function Dashboard({ auth, data, filtered }) {
                                 </div>
                             </div>
                             <div className="col-span-8 lg:col-span-3">
-                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div className="border-b py-4 px-5 flex justify-between items-center">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl">
+                                    <div className="border-b border-white/10 py-4 px-5 flex justify-between items-center bg-gradient-to-r from-white/5 to-transparent">
                                         <span className="text-lg font-bold">
                                             Pengeluaran Bulanan{" "}
                                             {params.tahun &&
@@ -135,8 +133,8 @@ export default function Dashboard({ auth, data, filtered }) {
                         </div>
                         <div className="grid grid-cols-8 gap-5 mb-5">
                             <div className="col-span-8 lg:col-span-5">
-                                <div className="bg-white shadow-sm sm:rounded-lg h-[400px]">
-                                    <div className="border-b py-4 px-5">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl sm:rounded-2xl h-[400px]">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
                                         <span className="text-lg font-bold">
                                             Kategori Pengeluaran{" "}
                                             {getFilterLabel(params)}
@@ -161,8 +159,8 @@ export default function Dashboard({ auth, data, filtered }) {
                                 </div>
                             </div>
                             <div className="col-span-8 lg:col-span-3">
-                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div className="border-b py-4 px-5 flex justify-between items-center">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl">
+                                    <div className="border-b border-white/10 py-4 px-5 flex justify-between items-center bg-gradient-to-r from-white/5 to-transparent">
                                         <span className="text-lg font-bold">
                                             Pemasukan Bulanan{" "}
                                             {params.tahun &&
@@ -217,8 +215,8 @@ export default function Dashboard({ auth, data, filtered }) {
                         </div>
                         <div className="grid grid-cols-8 gap-5 mb-5">
                             <div className="col-span-8 lg:col-span-5">
-                                <div className="bg-white shadow-sm sm:rounded-lg h-[600px]">
-                                    <div className="border-b py-4 px-5">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl sm:rounded-2xl h-[600px]">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
                                         <span className="text-lg font-bold">
                                             Penggunaan Anggaran{" "}
                                             {params.tahun &&
@@ -338,8 +336,8 @@ export default function Dashboard({ auth, data, filtered }) {
                                 </div>
                             </div>
                             <div className="col-span-8 lg:col-span-3">
-                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div className="border-b py-4 px-5 flex justify-between items-center">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl">
+                                    <div className="border-b border-white/10 py-4 px-5 flex justify-between items-center bg-gradient-to-r from-white/5 to-transparent">
                                         <span className="text-lg font-bold">
                                             Rasio Pengeluaran & Pemasukan
                                             Bulanan{" "}

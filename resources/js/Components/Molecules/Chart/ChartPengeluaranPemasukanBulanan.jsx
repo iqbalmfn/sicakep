@@ -14,6 +14,7 @@ const ChartPengeluaranPemasukanBulanan = ({ chartData }) => {
     ];
 
     const options = {
+        theme: { mode: 'dark' },
         chart: {
             height: 325,
             type: "area",  // Ganti tipe chart menjadi 'line'
@@ -33,7 +34,7 @@ const ChartPengeluaranPemasukanBulanan = ({ chartData }) => {
                 },
             },
         },
-        colors: ['#b91c1c', '#28a745'],  // Warna untuk Pengeluaran dan Pemasukan
+        colors: ['#ff0055', '#00ff88'],  // Warna untuk Pengeluaran dan Pemasukan (neon)
         dataLabels: {
             enabled: false,
         },
@@ -45,8 +46,9 @@ const ChartPengeluaranPemasukanBulanan = ({ chartData }) => {
             opacity: 0.2,  // Atur opacity area menjadi 0.2
         },
         grid: {
+            borderColor: "rgba(255,255,255,0.1)",
             row: {
-                colors: ["#f3f3f3", "transparent"],
+                colors: ["transparent", "transparent"],
                 opacity: 0.5,
             },
         },

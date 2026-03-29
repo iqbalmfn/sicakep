@@ -6,19 +6,18 @@ function AppLayout({ children }) {
 
     return (
         <div
-            className="min-h-screen flex flex-col justify-center items-center sm:pt-0 bg-gray-100 relative"
-            style={{
-                backgroundImage: `url('/images/background.jpg')`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-            }}
+            className="min-h-screen flex flex-col justify-center items-center sm:pt-0 bg-slate-950 relative overflow-hidden"
         >
-            <div className="absolute inset-0 bg-primary opacity-75 mix-blend-multiply" />
-            <div className="w-[350px] sm:w-[500px] px-6 py-4 bg-white shadow-md rounded-lg z-10">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-info/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+
+            <div className="w-[350px] sm:w-[450px] px-8 py-10 bg-slate-900/40 backdrop-blur-2xl shadow-2xl rounded-2xl border border-white/10 z-10 relative">
+                {/* Subtle shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent rounded-2xl pointer-events-none" />
                 {children}
             </div>
-            <ToastContainer />
+            <ToastContainer theme="dark" />
         </div>
     );
 }

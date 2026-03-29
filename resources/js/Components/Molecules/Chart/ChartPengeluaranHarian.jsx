@@ -17,6 +17,7 @@ const ChartPengeluaranHarian = ({ chartData }) => {
     ];
 
     const options = {
+        theme: { mode: 'dark' },
         chart: {
             height: 325,
             type: "area",
@@ -36,7 +37,7 @@ const ChartPengeluaranHarian = ({ chartData }) => {
                 },
             },
         },
-        colors: ['#c79324'],
+        colors: ['#00f0ff'],
         dataLabels: {
             enabled: false,
         },
@@ -45,11 +46,12 @@ const ChartPengeluaranHarian = ({ chartData }) => {
         },
         fill: {
             type: "solid",
-            opacity: 0.2, // Opacity untuk area
+            opacity: 0.3, // Opacity untuk area
         },
         grid: {
+            borderColor: "rgba(255,255,255,0.1)",
             row: {
-                colors: ["#f3f3f3", "transparent"],
+                colors: ["transparent", "transparent"],
                 opacity: 0.5,
             },
         },

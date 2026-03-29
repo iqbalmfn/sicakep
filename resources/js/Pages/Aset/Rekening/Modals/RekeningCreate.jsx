@@ -136,7 +136,6 @@ const RekeningCreate = ({
                                     defaultValue={data.saldo}
                                     placeholder="Masukkan Saldo Awal"
                                     isError={errors?.saldo}
-                                    disabled={mode == "edit"}
                                     required
                                 />
                                 <FormError message={errors?.saldo} />

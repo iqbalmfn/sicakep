@@ -23,11 +23,11 @@ const FormInput = ({
     }
 
     return (
-        <div className="relative flex items-center border rounded-lg w-full">
+        <div className="relative flex items-center border border-white/20 rounded-lg w-full bg-slate-900/40 backdrop-blur-xl shadow-lg">
             {prefix && (
                 <div
                     className={clsx(
-                        "border-r flex items-center justify-center px-3",
+                        "border-r border-white/20 flex items-center justify-center px-3 text-slate-300",
                         size === "sm" ? "pb-2" : "pb-0",
                         paddingY
                     )}
@@ -42,9 +42,9 @@ const FormInput = ({
                     paddingY,
                     fontSize,
                     isError
-                        ? "border-red-700 focus:border-red-700"
-                        : "border-transparent",
-                    "placeholder-gray-400 focus:border-primary outline-1 focus:outline-none w-full disabled:bg-gray-100",
+                        ? "border-red-700 focus:border-red-700 text-red-500"
+                        : "border-transparent text-slate-100",
+                    "placeholder-slate-500 bg-transparent focus:border-primary outline-1 focus:outline-none w-full disabled:bg-slate-800 disabled:text-slate-400 disabled:border-white/10",
                     prefix ? "pl-3 rounded-e-lg" : suffix ? "pe-3 rounded-s-lg" : "rounded-lg"
                 )}
                 {...props}
@@ -53,7 +53,7 @@ const FormInput = ({
                 <div
                     className={clsx(
                         size == "sm" ? "pb-2" : "pb-0",
-                        "border-l flex items-center justify-center px-3",
+                        "border-l border-white/20 flex items-center justify-center px-3 text-slate-300",
                         paddingY
                     )}
                 >

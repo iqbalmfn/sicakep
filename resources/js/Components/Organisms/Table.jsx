@@ -30,7 +30,7 @@ function TrHead({ children, className }) {
         <tr
             className={clsx(
                 className,
-                "sticky-table-header fw-bolder fs-6 text-gray-500 bg-gray-100 px-7"
+                "sticky-table-header fw-bolder fs-6 text-slate-300 bg-slate-800/80 backdrop-blur-md border-b border-white/10 px-7"
             )}
         >
             {children}
@@ -99,7 +99,7 @@ function Td({
                 className,
                 valign,
                 nowrap && `whitespace-nowrap`,
-                `text-${align} ps-3 py-2 border-b text-xs sm:text-sm`
+                `text-${align} ps-3 py-2 border-b border-white/5 text-slate-200 text-xs sm:text-sm`
             )}
             width={`${width}%`}
             {...props}

@@ -23,7 +23,7 @@ const TopMenuDesktop = ({auth}) => {
     const activeUrl = currentUrl.split(baseUrl)[1];
 
     return (
-        <div className="bg-primary">
+        <div className="bg-slate-900/60 backdrop-blur-lg border-b border-white/5 relative z-40">
             <div className="container mx-auto lg:w-[1500px] h-[55px] flex items-center gap-2 overflow-x-auto whitespace-nowrap px-5 lg:px-0">
                 {menus.map((menu, i) => (
                     <MenuDesktopItem

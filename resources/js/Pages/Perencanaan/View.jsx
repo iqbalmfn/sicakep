@@ -25,10 +25,10 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                 </div>
                 <div className="border-t my-5 pt-3">
                     <div className="text-center">
-                        <h3 className="text-2xl font-bold text-gray-900">
+                        <h3 className="text-2xl font-bold text-slate-100">
                             Perencanaan Anggaran
                         </h3>
-                        <h5 className="text-lg font-bold text-gray-900">
+                        <h5 className="text-lg font-bold text-slate-100">
                             Bulan {monthNumberToIndonesian(datas.bulan)} Tahun{" "}
                             {datas.tahun}
                         </h5>
@@ -36,36 +36,36 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                     <div className="my-3">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-100">
+                                <tr className="bg-slate-800">
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-center"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-center"
                                         width="3%"
                                     >
                                         No
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Judul
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Pemegang Anggaran
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Jenis
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Tipe
                                     </th>
-                                    <th className="border border-gray-400 px-3 py-2 text-gray-600">
+                                    <th className="border border-white/10 px-3 py-2 text-slate-300">
                                         Status
                                     </th>
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-end"
                                         width="10%"
                                     >
                                         Besarnya
                                     </th>
                                     <th
-                                        className="border border-gray-400 px-3 py-2 text-gray-600 text-end"
+                                        className="border border-white/10 px-3 py-2 text-slate-300 text-end"
                                         width="10%"
                                     >
                                         Kalkulasi
@@ -79,33 +79,33 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                               <tr>
                                                   <td
                                                       colSpan={8}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold bg-blue-100"
+                                                      className="border border-white/10 px-3 py-1 text-info font-bold bg-info/20"
                                                   >
                                                       {kategori.kategori}
                                                   </td>
                                               </tr>
                                               {kategori.list.map(
                                                   (data, index) => (
-                                                      <tr key={index}>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600 text-center">
+                                                      <tr key={index} className="text-slate-300">
+                                                          <td className="border border-white/10 px-3 py-1 text-center">
                                                               {index + 1}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                          <td className="border border-white/10 px-3 py-1">
                                                               {data.judul}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                          <td className="border border-white/10 px-3 py-1">
                                                               {data.pic.name}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                          <td className="border border-white/10 px-3 py-1">
                                                               {
                                                                   data.kategori
                                                                       .nama
                                                               }
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                          <td className="border border-white/10 px-3 py-1">
                                                               {data.tipe}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600">
+                                                          <td className="border border-white/10 px-3 py-1">
                                                               {data.status == 0
                                                                   ? "reject"
                                                                   : data.status ==
@@ -113,143 +113,143 @@ const View = ({ title, breadcrumbs, datas, limit_anggaran }) => {
                                                                   ? "accept"
                                                                   : "waiting"}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end">
+                                                          <td className="border border-white/10 px-3 py-1 text-end">
                                                               {formatRupiah(
                                                                   data.nominal
                                                               )}
                                                           </td>
-                                                          <td className="border border-gray-400 px-3 py-1 text-gray-600 text-end"></td>
+                                                          <td className="border border-white/10 px-3 py-1 text-end"></td>
                                                       </tr>
                                                   )
                                               )}
-                                              <tr>
+                                              <tr className="text-slate-300">
                                                   <td
                                                       colSpan={2}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
+                                                      className="border border-white/10 px-3 py-1 font-bold"
                                                   >
                                                       Total Cash
                                                   </td>
                                                   <td
                                                       colSpan={5}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"
+                                                      className="border border-white/10 px-3 py-1 font-bold text-end"
                                                   >
                                                       {formatRupiah(
                                                           kategori.sub_total_cash
                                                       )}
                                                   </td>
-                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
+                                                  <td className="border border-white/10 px-3 py-1 font-bold text-end"></td>
                                               </tr>
-                                              <tr>
+                                              <tr className="text-slate-300">
                                                   <td
                                                       colSpan={2}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
+                                                      className="border border-white/10 px-3 py-1 font-bold"
                                                   >
                                                       Total Transfer
                                                   </td>
                                                   <td
                                                       colSpan={5}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"
+                                                      className="border border-white/10 px-3 py-1 font-bold text-end"
                                                   >
                                                       {formatRupiah(
                                                           kategori.sub_total_transfer
                                                       )}
                                                   </td>
-                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
+                                                  <td className="border border-white/10 px-3 py-1 font-bold text-end"></td>
                                               </tr>
-                                              <tr>
+                                              <tr className="text-slate-200">
                                                   <td
                                                       colSpan={2}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold"
+                                                      className="border border-white/10 px-3 py-1 font-bold"
                                                   >
                                                       Sub Total
                                                   </td>
                                                   <td
                                                       colSpan={5}
-                                                      className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"
+                                                      className="border border-white/10 px-3 py-1 font-bold text-end"
                                                   >
                                                       {formatRupiah(
                                                           kategori.sub_total
                                                       )}
                                                   </td>
-                                                  <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
+                                                  <td className="border border-white/10 px-3 py-1 font-bold text-end"></td>
                                               </tr>
                                           </Fragment>
                                       ))
                                     : null}
                             </tbody>
-                            <tfoot>
-                                <tr className="bg-red-200">
+                            <tfoot className="text-slate-100">
+                                <tr className="bg-danger/20 text-danger">
                                     <td
                                         colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
+                                        className="border border-white/10 px-3 py-1 font-extrabold"
                                     >
                                         Limit Anggaran
                                     </td>
                                     <td
                                         colSpan={6}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
+                                        className="border border-white/10 px-3 py-1 font-extrabold text-end"
                                     >
                                         {formatRupiah(limit_anggaran)}
                                     </td>
                                 </tr>
-                                <tr className="bg-yellow-200">
+                                <tr className="bg-warning/20 text-warning">
                                     <td
                                         colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
+                                        className="border border-white/10 px-3 py-1 font-extrabold"
                                     >
                                         Total Cash
                                     </td>
                                     <td
                                         colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
+                                        className="border border-white/10 px-3 py-1 font-extrabold text-end"
                                     >
                                         {formatRupiah(datas.total_cash)}
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
+                                    <td className="border border-white/10 px-3 py-1 font-bold text-end"></td>
                                 </tr>
-                                <tr className="bg-yellow-200">
+                                <tr className="bg-warning/20 text-warning">
                                     <td
                                         colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
+                                        className="border border-white/10 px-3 py-1 font-extrabold"
                                     >
                                         Total Transfer
                                     </td>
                                     <td
                                         colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
+                                        className="border border-white/10 px-3 py-1 font-extrabold text-end"
                                     >
                                         {formatRupiah(datas.total_transfer)}
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 font-bold text-end"></td>
+                                    <td className="border border-white/10 px-3 py-1 font-bold text-end"></td>
                                 </tr>
-                                <tr className="bg-yellow-200">
+                                <tr className="bg-warning/20 text-warning">
                                     <td
                                         colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
+                                        className="border border-white/10 px-3 py-1 font-extrabold"
                                     >
                                         Total Anggaran
                                     </td>
                                     <td
                                         colSpan={5}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
+                                        className="border border-white/10 px-3 py-1 font-extrabold text-end"
                                     >
                                         {formatRupiah(datas.total)}
                                     </td>
-                                    <td className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end">
+                                    <td className="border border-white/10 px-3 py-1 font-extrabold text-end">
                                         {formatRupiah(datas.total)}
                                     </td>
                                 </tr>
 
-                                <tr className="bg-green-200">
+                                <tr className="bg-success/20 text-success">
                                     <td
                                         colSpan={2}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold"
+                                        className="border border-white/10 px-3 py-1 font-extrabold"
                                     >
                                         Selisih Anggaran
                                     </td>
                                     <td
                                         colSpan={6}
-                                        className="border border-gray-400 px-3 py-1 text-gray-600 font-extrabold text-end"
+                                        className="border border-white/10 px-3 py-1 font-extrabold text-end"
                                     >
                                         {formatRupiah(
                                             limit_anggaran - datas.total

@@ -68,10 +68,10 @@ const MenuDesktopItem = ({
                     <div
                         className={clsx(
                             isMobile ? "left-0 w-full" : null,
-                            "absolute bg-white top-[123px] z-20 lg:min-w-[175px] shadow-lg rounded h-auto border-danger overflow-hidden"
+                            "absolute bg-slate-900/95 backdrop-blur-2xl top-[50px] z-50 lg:min-w-[175px] shadow-[0_10px_30px_rgba(0,0,0,0.5)] rounded-lg h-auto border border-white/10 overflow-hidden"
                         )}
                     >
-                        <div className="flex flex-col">
+                        <div className="flex flex-col py-2">
                             {subMenus.map((subMenu, i) => (
                                 <Link
                                     key={i}
@@ -84,9 +84,9 @@ const MenuDesktopItem = ({
                                             ? null
                                             : "hidden",
                                         activeUrl.includes(subMenu.href)
-                                            ? "bg-gray-100 font-semibold"
-                                            : null,
-                                        "text-standard hover:bg-gray-100 px-4 py-3"
+                                            ? "bg-white/10 font-medium text-white"
+                                            : "text-slate-300",
+                                        "hover:text-white hover:bg-white/5 transition-colors duration-200 px-4 py-2"
                                     )}
                                 >
                                     <div className="flex items-center gap-2">

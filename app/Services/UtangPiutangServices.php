@@ -191,11 +191,14 @@ class UtangPiutangServices
                     'deskripsi'     => $input['deskripsi'],
                 ]);
 
-                // update saldo rekening
+                // update saldo rekening secara atomic
                 $rekening = Rekening::find($input['rekening_id']);
-                $rekening->update([
-                   'saldo' => $rekening->saldo + $input['nominal'],
-                ]);
+                if ($rekening) {
+                    $rekening->increment('saldo', $input['nominal']);
+                } else {
+                    DB::rollBack();
+                    return responseError("Gagal, rekening tidak ditemukan");
+                }
             }
 
             DB::commit();
@@ -286,12 +289,37 @@ class UtangPiutangServices
 
     public function deleteData($id)
     {
+        DB::beginTransaction();
         try {
             $data = $this->getDataById($id);
+            
+            // Jika ini piutang yang sudah ada nominalnya, kita harus revert saldonya jika dihapus
+            // (Karena saat create piutang di sini, kita menambah saldo rekening)
+            if ($data->tipe == "piutang" && $data->rekening_id) {
+                $rekening = Rekening::find($data->rekening_id);
+                if ($rekening) {
+                    $rekening->decrement('saldo', $data->nominal);
+                }
+                
+                // Hapus juga transaksi pemasukan yang berkaitan
+                $transaksi = Transaksi::where('rekening_id', $data->rekening_id)
+                    ->where('nominal', $data->nominal)
+                    ->where('tipe', 'pemasukan')
+                    ->where('kategori_id', 21) // Kategori Piutang
+                    ->where('judul', 'like', '%Pembayaran Piutang%')
+                    ->orderByDesc('id')
+                    ->first();
+                if ($transaksi) {
+                    $transaksi->delete();
+                }
+            }
+
             $data->delete();
+            DB::commit();
 
             return responseSuccess("Berhasil, data telah dihapus", $data);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return responseError("Gagal, ada kesalahan pada sistem saat menghapus data " . $th->getMessage());
         }
     }
@@ -310,12 +338,19 @@ class UtangPiutangServices
                 $item->delete();
             }
 
-            // Hapus pemasukan yang berkaitan
+            // Hapus pemasukan yang berkaitan dan kembalikan saldo rekening
             $pemasukan = Transaksi::where('tipe', 'pemasukan')
                 ->whereKategoriId(21)
                 ->where('judul', 'like', '%' . $data->nama . '%')
                 ->get();
             foreach ($pemasukan as $item) {
+                // Revert saldo rekening secara atomic
+                if ($item->rekening_id) {
+                    $rekening = Rekening::find($item->rekening_id);
+                    if ($rekening) {
+                        $rekening->decrement('saldo', $item->nominal);
+                    }
+                }
                 $item->delete();
             }
 
@@ -355,17 +390,20 @@ class UtangPiutangServices
                 'deskripsi' => "Pembayaran utang " . $data->judul,
             ]);
 
-            // update saldo rekening
+            // update saldo rekening secara atomic (decrement karena pengeluaran)
             $rekening = Rekening::find($request->rekening_id);
+
+            if (!$rekening) {
+                DB::rollBack();
+                return responseError("Gagal, rekening tidak ditemukan");
+            }
 
             if ($rekening->saldo < $data->nominal) {
                 DB::rollBack();
                 return responseError("Gagal, saldo di rekening tidak cukup");
             }
 
-            $rekening->update([
-                'saldo' => $rekening->saldo - $data->nominal
-            ]);
+            $rekening->decrement('saldo', $data->nominal);
 
             DB::commit();
 
