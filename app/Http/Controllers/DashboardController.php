@@ -47,6 +47,9 @@ class DashboardController extends Controller
             "totalUtang" => $this->totalUtang($request->bulan, $request->tahun),
             "listUtang" => $this->listUtang($request->bulan, $request->tahun),
             "penggunaanAnggaranBulanan" => $this->penggunaanAnggaranBulanan($request->tahun),
+            "piutangJatuhTempo" => $this->piutangJatuhTempo(),
+            "recentActivity" => $this->recentActivity(),
+            // "kalenderTransaksi" => $this->kalenderTransaksi($request->bulan, $request->tahun),
             "ChartPengeluaranHarian" => $chartPengeluaranHarian,
             "ChartPengeluaranBulanan" => $chartPengeluaranBulanan,
             "ChartPengeluaranKategori" => $chartPengeluaranKategori,
@@ -323,5 +326,75 @@ class DashboardController extends Controller
         })->values();
 
         return $result;
+    }
+
+    public function piutangJatuhTempo()
+    {
+        $today = Carbon::today();
+        $thirtyDaysLater = Carbon::today()->addDays(30);
+
+        $piutangMasters = $this->utangPiutangServices->getDataPiutangMaster(
+            null, null, null, null, null, null, false
+        );
+
+        $result = [];
+
+        foreach ($piutangMasters as $master) {
+            $totalHutang = (float) $master->nominal;
+            $totalDibayar = 0;
+
+            foreach ($master->piutang_detail as $detail) {
+                $totalDibayar += (float) $detail->nominal;
+            }
+
+            $sisa = $totalHutang - $totalDibayar;
+
+            // Hanya tampilkan yang masih ada sisa dan punya jatuh_tempo
+            if ($sisa > 0 && $master->jatuh_tempo) {
+                $jatuhTempo = Carbon::parse($master->jatuh_tempo);
+
+                // Hanya tampilkan yang jatuh tempo dalam 30 hari ke depan (termasuk yang sudah lewat)
+                if ($jatuhTempo->lte($thirtyDaysLater)) {
+                    $sisaHari = $today->diffInDays($jatuhTempo, false); // negative = sudah lewat
+                    $result[] = [
+                        'id'          => $master->id,
+                        'nama'        => $master->nama,
+                        'jatuh_tempo' => $master->jatuh_tempo,
+                        'nominal'     => $master->nominal,
+                        'sisa'        => $sisa,
+                        'sisa_hari'   => (int) $sisaHari,
+                        'status'      => $sisaHari < 0 ? 'overdue' : ($sisaHari <= 7 ? 'urgent' : 'soon'),
+                    ];
+                }
+            }
+        }
+
+        // Urutkan berdasarkan jatuh tempo terdekat
+        usort($result, fn($a, $b) => $a['sisa_hari'] <=> $b['sisa_hari']);
+
+        return $result;
+    }
+
+    public function recentActivity()
+    {
+        $transaksi = Transaksi::query()
+            ->with(['kategori', 'rekening.bank'])
+            ->orderByDesc('tanggal')
+            ->orderByDesc('id')
+            ->limit(10)
+            ->get();
+
+        return $transaksi->map(function ($item) {
+            return [
+                'id'        => $item->id,
+                'judul'     => $item->judul,
+                'tipe'      => $item->tipe,
+                'nominal'   => $item->nominal,
+                'tanggal'   => $item->tanggal,
+                'kategori'  => $item->kategori?->nama ?? '-',
+                'rekening'  => $item->rekening?->nama_rekening ?? '-',
+                'bank_logo' => $item->rekening?->bank?->logo ?? null,
+            ];
+        });
     }
 }

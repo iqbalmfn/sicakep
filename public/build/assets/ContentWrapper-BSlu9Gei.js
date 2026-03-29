@@ -1,1 +1,0 @@
-import{j as t}from"./app-CLHbgAy1.js";import{c as s}from"./clsx-B-dksMZM.js";const p=({children:r,className:o})=>t.jsx("div",{className:s(o,"bg-slate-900/40 backdrop-blur-xl shadow-xl rounded-2xl lg:h-auto py-3 lg:py-4 px-3 lg:px-5 hover:bg-white/5 transition-all"),children:r});export{p as C};

@@ -2,6 +2,7 @@ import ChartPemasukanBulanan from "@/Components/Molecules/Chart/ChartPemasukanBu
 import ChartPengeluaranBulanan from "@/Components/Molecules/Chart/ChartPengeluaranBulanan";
 import ChartPengeluaranHarian from "@/Components/Molecules/Chart/ChartPengeluaranHarian";
 import ChartPengeluaranKategori from "@/Components/Molecules/Chart/ChartPengeluaranKategori";
+import ChartDistribusiRekening from "@/Components/Molecules/Chart/ChartDistribusiRekening";
 import UseDashboard from "@/Hooks/UseDashboard";
 import AppContentLayout from "@/Layouts/AppContentLayout";
 import {
@@ -17,6 +18,8 @@ import Filter from "./DashboardPartial/Filter";
 import ListKategoriPengeluaran from "./DashboardPartial/ListKategoriPengeluaran";
 import ListUtang from "./DashboardPartial/ListUtang";
 import Widget from "./DashboardPartial/Widget";
+import PiutangJatuhTempo from "./DashboardPartial/PiutangJatuhTempo";
+import RecentActivity from "./DashboardPartial/RecentActivity";
 import Icon from "@/Components/Atoms/Icon";
 import clsx from "clsx";
 import ChartPengeluaranPemasukanBulanan from "@/Components/Molecules/Chart/ChartPengeluaranPemasukanBulanan";
@@ -355,6 +358,51 @@ export default function Dashboard({ auth, data, filtered }) {
                                 </div>
                             </div>
                         </div>
+                        {/* === ROW: Piutang Jatuh Tempo | Distribusi Rekening | Recent Activity === */}
+                        <div className="grid grid-cols-12 gap-5 mb-5">
+
+                            {/* Piutang Jatuh Tempo */}
+                            <div className="col-span-12 lg:col-span-4">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl h-full">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-lg font-bold">⚠️ Piutang Jatuh Tempo</span>
+                                            {data.piutangJatuhTempo.length > 0 && (
+                                                <span className="text-xs bg-orange-500/20 text-orange-400 border border-orange-500/30 rounded-full px-2 py-0.5 font-medium">
+                                                    {data.piutangJatuhTempo.length} item
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-xs text-slate-500 mt-0.5">Dalam 30 hari ke depan</p>
+                                    </div>
+                                    <PiutangJatuhTempo data={data.piutangJatuhTempo} />
+                                </div>
+                            </div>
+
+                            {/* Distribusi Saldo per Rekening */}
+                            <div className="col-span-12 lg:col-span-4">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl h-full">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
+                                        <span className="text-lg font-bold">🏦 Distribusi Saldo</span>
+                                        <p className="text-xs text-slate-500 mt-0.5">Per rekening bank</p>
+                                    </div>
+                                    <ChartDistribusiRekening aset={data.aset} />
+                                </div>
+                            </div>
+
+                            {/* Recent Activity */}
+                            <div className="col-span-12 lg:col-span-4">
+                                <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden sm:rounded-2xl h-full">
+                                    <div className="border-b border-white/10 py-4 px-5 bg-gradient-to-r from-white/5 to-transparent">
+                                        <span className="text-lg font-bold">🕐 Aktivitas Terbaru</span>
+                                        <p className="text-xs text-slate-500 mt-0.5">10 transaksi terakhir</p>
+                                    </div>
+                                    <RecentActivity data={data.recentActivity} />
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
