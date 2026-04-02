@@ -2,8 +2,10 @@ import { formatRupiah } from "@/Utils/GlobalFunction";
 import ReactApexChart from "react-apexcharts";
 
 const ChartDistribusiRekening = ({ aset }) => {
-    // Filter out accounts with 0 balance & prepare data
-    const filtered = (aset || []).filter((r) => r.saldo > 0);
+    // Map and Filter out accounts with 0 balance & prepare data
+    const filtered = (aset || [])
+        .map((r) => ({ ...r, saldo: Number(r.saldo) }))
+        .filter((r) => r.saldo > 0);
 
     const labels = filtered.map((r) => r.nama_rekening);
     const series = filtered.map((r) => r.saldo);
